@@ -1,0 +1,13 @@
+{
+    "name":        "MBC-Ping-Pong",
+    "version":     "0.1.0",
+    "description": "Browser-based multipleayer Ping-Pong game.",
+    "license":     "SEE LICENCE IN license (https://raw.githubusercontent.com/Transport-Protocol/MBC-Ping-Pong/master/license)",
+    "repository": {
+        "type": "git",
+        "url":  "https://github.com/Transport-Protocol/MBC-Ping-Pong"
+    },
+    "dependencies": {
+        "express": "^4.10.2"
+    }
+}
