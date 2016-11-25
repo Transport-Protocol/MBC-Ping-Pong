@@ -1,0 +1,58 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[german]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\author{Andreas Mueller}
+\title{Milestones MBC-Ping-Pong}
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Meilensteine}
+\subsection{25.11.2016 Projekt Aufsetzen}
+Komponenten wie Node.JS github, npm sowie simple Standartanwendung auf Node.js.
+
+\subsection{09.12.2016 Prototyp (Technik)}
+Kommunikationsaufbau WebRTC: Smartphone -> Monitor, node.JS Server als Mittelsmann. (ICE-Server?!)
+
+Positionsdaten vom Smartphone abgreifen.
+Positionsdaten von Frontend (Smartphone) an Backend (Monitor) senden.
+Frontend (Monitor) zeigt Kugel in Canvas (eventuell inkl. WebGL) gemäß empfangenen positionsdaten (x, y).
+Es können sich 2 Personen (Spieler) mit der selben Spielsession verbinden.
+
+REST für Spielaufruf, webRTC für andauernde Kommunikation.
+Node.JS Server für static content, 
+sowie Kommunikationsaufbau für WebRTC.
+
+github.com/nplab/WebRTC-Data-Channel-Playground
+
+\subsection{06.01.2017 Zwei Spieler}
+Anzeige der Spielobjekte auf Client-Seite. 
+Übertragung relevanter Positionsdaten.
+Spieler soll spielen können.
+Daher: Spielbar!
+
+\subsection{06.01.2017 Angestrebtes Release 1.0}
+Release der Version 1.0.
+Senden an Martin.
+Spielen in Live-Umgebung.
+
+\subsection{bis 24.02.2017 Diverse Features TBD}
+Austrittswinkel abhängig von trefferposition auf Balken abhängig.
+Drall auf Ball bei bewegtem Balken bei Treffer.
+
+\subsection{24.02.2017 Definitives Release 1.x}
+Release der Version 1.x.
+Inklusive aller bis hier implementiereten Zusatz-Features.
+
+
+
+
+\end{document}
