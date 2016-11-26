@@ -1,0 +1,430 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{hawstyle}[2010/04/26 v1.0 HAW Thesis Style]
+
+\PassOptionsToPackage{absolute}{textpos}
+\PassOptionsToPackage{automark,autooneside}{scrpage2}
+\PassOptionsToPackage{colorlinks=true}{hyperref}
+
+\RequirePackage{xkeyval}
+\RequirePackage{ifthen}
+\PassOptionsToPackage{rgb}{xcolor}
+\RequirePackage{xcolor}
+\RequirePackage{calc}
+\RequirePackage{textpos}
+\RequirePackage{scrpage2}
+\RequirePackage{hyperref}
+\RequirePackage{graphicx}
+
+\newif\if@haw@printer
+\DeclareOption{printer}{\@haw@printertrue}
+\ExecuteOptions{}
+
+\ProcessOptions\relax
+
+\graphicspath{{./logo/}}
+
+%% title
+\def\haw@theThesisTitle{}
+% getter
+\newcommand*{\theHAWThesisTitle}{%
+  \haw@theThesisTitle}
+
+%% subtitle
+\def\haw@theThesisSubTitle{}
+% getter
+\newcommand*{\theHAWThesisSubTitle}{%
+  \haw@theThesisSubTitle}
+
+%% english title
+\def\haw@theThesisEnglishTitle{}
+% getter
+\newcommand*{\theHAWThesisEnglishTitle}{%
+  \haw@theThesisEnglishTitle}
+
+%% english subtitle
+\def\haw@theThesisEnglishSubTitle{}
+% getter
+\newcommand*{\theHAWThesisEnglishSubTitle}{%
+  \haw@theThesisEnglishSubTitle}
+
+%% author
+\def\haw@theThesisAuthor{}
+% getter
+\newcommand*{\theHAWThesisAuthor}{%
+  \haw@theThesisAuthor}
+
+%% type
+\def\haw@theThesisType{}
+% getter
+\newcommand*{\theHAWThesisType}{%
+  \haw@theThesisType}
+
+%% examination type
+\def\haw@theExaminationType{}
+% getter
+\newcommand*{\theHAWExaminationType}{%
+  \haw@theExaminationType}
+
+%% degree programme
+\def\haw@theDegreeProgramme{}
+% getter
+\newcommand*{\theHAWDegreeProgramme}{%
+  \haw@theDegreeProgramme}
+
+%% experts
+\def\haw@theThesisExperts{}
+% getter
+\newcommand*{\theHAWExperts}{%
+  \haw@theThesisExperts}
+
+%% subtitle delimiter, defaults to . (dot)
+\def\haw@theSubTitleDelimiter{}
+% getter
+\newcommand*{\theHAWSubTitleDelimiter}{%
+  \haw@theSubTitleDelimiter}
+
+%% date of release, default to \today
+\def\haw@theReleaseDate{}
+% getter
+\newcommand*{\theHAWReleaseDate}{%
+  \haw@theReleaseDate}
+
+\def\haw@FullTitle{}
+\newcommand{\haw@createFullTitle}[2]{%
+  \ifthenelse{\equal{#2}{}}{
+    \def\haw@FullTitle{#1}
+  }{
+    \def\haw@FullTitle{#1\theHAWSubTitleDelimiter\ #2}
+  }}
+
+\define@key[haw]{prop}{Title}{\def\haw@theThesisTitle{#1}}
+\define@key[haw]{prop}{SubTitle}[]{\def\haw@theThesisSubTitle{#1}}
+\define@key[haw]{prop}{Author}{\def\haw@theThesisAuthor{#1}}
+\define@key[haw]{prop}{EnglishTitle}{\def\haw@theThesisEnglishTitle{#1}}
+\define@key[haw]{prop}{EnglishSubTitle}[]{\def\haw@theThesisEnglishSubTitle{#1}}
+\define@key[haw]{prop}{ThesisType}{\def\haw@theThesisType{#1}}
+\define@key[haw]{prop}{ExaminationType}{\def\haw@theExaminationType{#1}}
+\define@key[haw]{prop}{DegreeProgramme}{\def\haw@theDegreeProgramme{#1}}
+\define@key[haw]{prop}{ThesisExperts}{\def\haw@theThesisExperts{#1}}
+\define@key[haw]{prop}{SubTitleDelimiter}[.]{\def\haw@theSubTitleDelimiter{#1}}
+\define@key[haw]{prop}{ReleaseDate}[\today]{\def\haw@theReleaseDate{#1}}
+
+%% preset values
+\presetkeys[haw]{prop}{ReleaseDate}{}
+
+\newcommand{\HAWThesisProperties}[1]{%
+  \setkeys[haw]{prop}{#1}
+  \ifthenelse{\equal{\theHAWThesisTitle}{}}{
+    \PackageWarningNoLine{hawstyle}{%
+      No thesis title set, add something like:\MessageBreak
+      `\string\HAWThesisProperties[Title={Your Title}'\MessageBreak
+      `\string              EnglishTitle={Your English Title}'\MessageBreak
+      `\string              Author={Your Name}'\MessageBreak
+      to your document.}}
+  \ifthenelse{\equal{\theHAWThesisAuthor}{}}{
+    \PackageWarningNoLine{hawstyle}{%
+      No thesis author set, add something like:\MessageBreak
+      `\string\HAWThesisProperties[Title={Your Title}'\MessageBreak
+      `\string              EnglishTitle={Your English Title}'\MessageBreak
+      `\string              Author={Your Name}'\MessageBreak
+      to your document.}}
+  \ifthenelse{\equal{\theHAWThesisEnglishTitle}{}}{
+    \PackageWarningNoLine{hawstyle}{%
+      No thesis author set, add something like:\MessageBreak
+      `\string\HAWThesisProperties[Title={Your Title}'\MessageBreak
+      `\string              EnglishTitle={Your English Title}'\MessageBreak
+      `\string              Author={Your Name}'\MessageBreak
+      to your document.}}
+
+  \haw@createFullTitle{\haw@theThesisTitle}{\haw@theThesisSubTitle}
+  \hypersetup{pdfsubject={\haw@FullTitle}
+             ,pdftitle={\haw@FullTitle}
+             ,pdfauthor={\haw@theThesisAuthor}
+  }}
+
+\renewcommand*{\maketitle}{
+  \begin{titlepage}%
+  \haw@Cover
+  \haw@Title
+  \end{titlepage}
+}
+
+\newcommand*{\haw@Cover}{%
+  \begingroup
+  \thispagestyle{empty}%
+  \enlargethispage{\footskip}%
+  \setlength{\parindent}{0em} % remove indent
+  \sffamily % the title page in sans serif
+
+  \if@haw@printer
+  \colorlet{HAWBannerColor}{white}
+  \else
+  \definecolor{HAWBannerColor}{rgb}{0.00,0.78,0.54}
+  \fi
+
+  \ifthenelse{\equal{\theHAWThesisTitle}{}}{
+    \PackageWarningNoLine{hawstyle}{%
+      No thesis title set, add something like:\MessageBreak
+      `\string\HAWThesisProperties[Title={Your Title}'\MessageBreak
+      `\string              EnglishTitle={Your English Title}'\MessageBreak
+      `\string              Author={Your Name}'\MessageBreak
+      to your document.}}
+  \ifthenelse{\equal{\theHAWThesisAuthor}{}}{
+    \PackageWarningNoLine{hawstyle}{%
+      No author set, add something like:\MessageBreak
+      `\string\HAWThesisProperties[Title={Your Title}'\MessageBreak
+      `\string              EnglishTitle={Your English Title}'\MessageBreak
+      `\string              Author={Your Name}'\MessageBreak
+      to your document.}}
+
+  %% use HAW for online version, nothing if the file is to be printed
+  \begin{textblock*}{2cm}(10cm,2cm)
+    \begin{minipage}[r]{\textwidth}%
+      \if@haw@printer % hide logo if printer is true
+      \relax
+      \else
+      \includegraphics[width=10cm]{HAW_logo}%
+      \fi
+    \end{minipage}%
+  \end{textblock*}
+
+  %% color bar
+  \begin{textblock*}{10cm}(0cm,9cm)
+    \colorbox{HAWBannerColor}{%
+      %% use a minipage that is the size of the colored banner
+      %% center the minipage
+      \begin{minipage}[l][10cm][c]{\paperwidth}%
+        %% put the box on the right side
+        \hspace*{0.25\textwidth}
+        \parbox[t]{0.7\textwidth}{%
+          {\centering\bfseries\Huge\theHAWThesisType
+
+          \bigskip
+          \Large\theHAWThesisAuthor
+
+          \vspace{2em}
+          \theHAWThesisTitle
+
+          \bigskip
+          \large\theHAWThesisSubTitle\par
+        }}%
+      \end{minipage}%
+    }
+  \end{textblock*}
+  %% HAW information
+  \newlength{\haw@xpos}\newlength{\haw@fw}
+  \setlength{\haw@xpos}{1.5cm}
+  \setlength{\haw@fw}{\paperwidth}
+  \addtolength{\haw@fw}{-2\haw@xpos}
+  \begin{textblock*}{2cm}(\haw@xpos,0.85\paperheight)
+    \begin{minipage}[c]{\haw@fw}
+      \centering\newlength{\haw@tw}
+      \settowidth{\haw@tw}{Fakult\"at Technik und Informatik}
+      \parbox[t]{\haw@tw}{%
+        \normalfont\itshape%
+        Fakultät Technik und Informatik\\
+        Studiendepartment Informatik
+      }\hfill
+      \settowidth{\haw@tw}{Faculty of Engineering and Computer Science}
+      \parbox[t]{\haw@tw}{%
+        \normalfont\itshape%
+        Faculty of Engineering and Computer Science\\
+        Department of Computer Science
+      }
+    \end{minipage}
+  \end{textblock*}
+  \null\newpage
+  \endgroup
+}
+
+% internal function
+\newcommand*{\haw@Title}{
+  \begingroup
+  \enlargethispage{\footskip}
+  \thispagestyle{empty}
+  \setlength{\parindent}{0em} %% remove indent
+  {\centering\Large\theHAWThesisAuthor\\
+    \bigskip
+    \bfseries\theHAWThesisTitle\\
+    \ifthenelse{\equal{\theHAWThesisSubTitle}{}}{}{
+      \medskip\large\theHAWThesisSubTitle\\}%
+  }
+  \vfill
+  \ifthenelse{\NOT\equal{\theHAWThesisType}{} \AND
+    \NOT\equal{\theHAWExaminationType}{} \AND
+    \NOT\equal{\theHAWDegreeProgramme}{}}{
+    \theHAWThesisType\ eingereicht im Rahmen der \theHAWExaminationType\\ \par
+    im Studiengang \theHAWDegreeProgramme\\
+    am Department Informatik\\
+    der Fakultät Technik und Informatik\\
+    der Hochschule für Angewandte Wissenschaften Hamburg\par
+  \bigskip}
+
+  \@tempcnta=0
+  \def\and{\strut\\
+    \advance\@tempcnta by 1
+    \ifcase\@tempcnta Betreuender Prüfer:\ \ignorespaces
+    \or Zweitgutachter:\ \ignorespaces 
+    \fi
+  }%
+  \ifthenelse{\not\equal{\theHAWExperts}{}}{%
+    Betreuender Prüfer:\ \ignorespaces\theHAWExperts\par \bigskip} \par
+  Eingereicht am: \theHAWReleaseDate
+  \endgroup
+}
+
+%% abstract page
+% Parameter 1: keywords german
+% Parameter 2: abstract german
+% Parameter 3: keywords english
+% Parameter 4: abstract english
+\newcommand{\HAWAbstractPage}[4]{
+  \begingroup
+%  \setlength{\parindent}{0em}
+  %% german version
+  \thispagestyle{empty}
+  \ifthenelse{\equal{\theHAWThesisSubTitle}{}}{
+    \ifthenelse{\equal{\theHAWThesisEnglishSubTitle}{}}{
+    }{%% Only English subtitle is defined.
+      \PackageWarningNoLine{hawstyle}{%
+        Only English subtitle has been set}
+    }
+  }{
+    \ifthenelse{\equal{\theHAWThesisEnglishSubTitle}{}}{
+      %% Only German subtitle is defined.
+      \PackageWarningNoLine{hawstyle}{%
+        Only German subtitle has been set}
+    }{
+    }
+  }
+  \@ifundefined{otherlanguage}{%
+    \PackageWarningNoLine{hawstyle}{%
+      You should use babel package.\MessageBreak
+      Simply add `\string\usepackage[ngerman,<your main language>]{babel}'
+      to the\MessageBreak
+      document preamble}%
+  }{%
+    \begin{otherlanguage}{ngerman}
+  }
+  {\setlength{\parindent}{0em}\bfseries\theHAWThesisAuthor}\\
+  \medskip
+
+  {\setlength{\parindent}{0em}\bfseries Thema der Arbeit}\\
+  \theHAWThesisTitle%
+  \ifthenelse{\equal{\theHAWThesisSubTitle}{}}{}{%
+    \theHAWSubTitleDelimiter\ \theHAWThesisSubTitle}
+  \medskip
+
+  {\setlength{\parindent}{0em}\bfseries Stichworte}\\
+  #1
+  \medskip
+
+  {\setlength{\parindent}{0em}\bfseries Kurzzusammenfassung}\\
+  #2
+  \@ifundefined{otherlanguage}{}{\end{otherlanguage}}
+
+  %% english version
+  \thispagestyle{empty}
+  \@ifundefined{otherlanguage}{%
+    \PackageWarningNoLine{hawstyle}{%
+      You should use babel package.\MessageBreak
+      Simply add `\string\usepackage[english,<your main language>]{babel}'
+      to the\MessageBreak
+      document preamble}%
+  }{%
+    \begin{otherlanguage}{ngerman}
+  }
+  %% set the author name in German language (allows umlauts with "a)
+  {\setlength{\parindent}{0em}\bfseries\theHAWThesisAuthor}\\
+  \medskip
+  \@ifundefined{otherlanguage}{}{\end{otherlanguage}}
+
+  \@ifundefined{otherlanguage}{}{\begin{otherlanguage}{english}}
+  {\setlength{\parindent}{0em}\bfseries Title of the paper}\\
+  \theHAWThesisEnglishTitle%
+  \ifthenelse{\equal{\theHAWThesisEnglishSubTitle}{}}{}{%
+    \theHAWSubTitleDelimiter\ \theHAWThesisEnglishSubTitle}
+  \medskip
+
+  {\setlength{\parindent}{0em}\bfseries Keywords}\\
+  #3
+  \medskip
+
+  {\setlength{\parindent}{0em}\bfseries Abstract}\\
+  #4
+  \@ifundefined{otherlanguage}{}{\end{otherlanguage}}
+  \endgroup
+  \pagebreak
+}
+
+\AtBeginDocument{
+  % redefine PDF info fields
+  \ifpdfoutput{
+    \def\haw@title{}
+    \ifthenelse{\equal{\theHAWThesisSubTitle}{}}{
+      \def\haw@title{\theHAWThesisTitle}
+    }{
+      \def\haw@title{\theHAWThesisTitle\theHAWSubTitleDelimiter\ %
+        \theHAWThesisSubTitle}
+    }
+
+    \pdfcompresslevel=9
+    \DeclareGraphicsExtensions{.png,.pdf,.jpg}
+    \DeclareGraphicsRule{*}{mps}{*}{}
+
+    \if@haw@printer
+    \colorlet{LinkColor}{black}
+    \colorlet{CiteColor}{black}
+    \else
+    \colorlet{LinkColor}{blue}
+    \colorlet{CiteColor}{red}
+    \fi
+    \hypersetup{pdfsubject={\haw@title}
+      ,pdftitle={\haw@title}
+      ,pdfauthor={\theHAWThesisAuthor}
+      ,linkcolor=CiteColor
+      ,citecolor=CiteColor
+      ,urlcolor=LinkColor
+      ,filecolor=LinkColor}
+  }{
+    \RequirePackage{nameref}
+    \DeclareGraphicsExtensions{.eps,.ps}
+  }
+
+  \pagestyle{scrheadings}
+  \clearscrheadfoot
+  \ihead{\headmark}
+  \chead{}
+  \ohead{}
+  \ifoot{}
+  \cfoot[\pagemark]{\pagemark}
+  \ofoot{}
+}
+
+%% conditional test
+%% executes arg 1 if printer option has been passed to package
+%% else arg 2 is executed
+\newcommand{\HAWifprinter}[2]{%
+  \if@haw@printer
+  \expandafter#1\relax
+  \else
+  \expandafter#2\relax
+  \fi
+}
+
+\newcommand*{\detailref}[1]{\ref{#1} (S.~\pageref{#1})}
+
+\def\haw@defaultAsurency{%
+  Hiermit versichere ich, dass ich die vorliegende
+  Arbeit  ohne fremde Hilfe selb\-st\"an\-dig verfasst und nur die
+  angegebenen Hilfsmittel benutzt habe.
+}
+
+\newcommand{\HAWasurency}[1][\haw@defaultAsurency]{%
+  \thispagestyle{empty}
+
+  \noindent\emph{#1}
+
+  \vspace{2cm}\noindent Hamburg,
+  \theHAWReleaseDate\quad$\overline{\textsf{\theHAWThesisAuthor}\hspace{6cm}}$
+}
