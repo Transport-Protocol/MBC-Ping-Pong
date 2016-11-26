@@ -1,0 +1,7 @@
+version: '2'
+
+services:
+
+  mbc-ping-pong:
+    volumes:
+      - ./src:/opt/MBC-Ping-Pong

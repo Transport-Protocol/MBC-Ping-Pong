@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+
+  mbc-ping-pong:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    image: torbenhaug/mbc-ping-pong
+    ports:
+      - "8080:8080"
