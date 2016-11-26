@@ -6,4 +6,4 @@ cd MBC-Ping-Pong
 
 npm install
 
-nodejs server.js
+exec nodejs server.js
