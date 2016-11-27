@@ -1,1 +1,58 @@
 \chapter{Architektur}
+
+\section{Arbeitsablauf zur Bearbeitung eines Issue}
+Um eine erfolgreiche Zusammenarbeit zu gewährleisten, sind allgemein gültige Regeln nötig. Insbesondere wird festgelegt, wie die einzelnen Arbeitsschritte ablaufen sollten, um ein Issue zu bearbeiten. Zudem werden weiterhin die Zuständigkeiten geregelt. 
+
+\subsubsection{Verwaltung der zu bearbeitenden Issues}
+Die zu bearbeitenden Issues werden auf GitHub unter Issues (\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues}{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues}) gepflegt. Um den Verlauf eines Issues darzustellen wird das Kanbanboard von GitHub (\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/projects}{https://github.com/Transport-Protocol/MBC-Ping-Pong/projects}) genutzt.
+
+\subsubsection{Erstellen der zu bearbeitenden Issues}
+Prinzipiell kann und darf jedes Projektmitglied zu jeder Zeit Issues erstellen. Gerade bei Bugs ist dies ein gewünschtes vorgehen. In der Regel sollten dies jedoch aus Gruppensitzungen hervorgehen und durch den Architekten ausformuliert werden.\newline
+Ein Issue besteht aus drei Absätzen:
+\begin{itemize}
+	\item \textbf{Beschreibung} \newline
+	In der Beschreibung wird allgemein auf den Kontext des Issues eingegangen.
+	\item \textbf{Anforderung} \newline
+	In Anforderung wird die Zielvision dargestellt.
+	\item \textbf{Abnahmekriterien} \newline
+	In Abnahmekriterien werden alle Punkte aufgeführt, die notwendig sind, um das Issue als erfolgreich bearbeitet anzusehen.
+\end{itemize}
+
+\subsubsection{Das Kanbanboard}
+Das Kanbanboard ist in fünf Abschnitte eingeteilt: 
+\begin{itemize}
+	\item \textbf{Selected for Development} \newline
+	Diese Spalte enthält alle Issues, die der Architekt zur Bearbeitung in nächster Zeit ausgewählt hat. Hier enthaltene Issues sind entweder durch den Architekten einem bestimmten Teammitglied zugeordnet. Diese sollten dann auch vorrangig bearbeitet werden. Oder (dies sollte der Normalfall sein) sie sind niemandem zugeordnet, dann kann sich jedes Teammitglied entscheiden, ob er das Issue bearbeitet. Gründe für das direkte zuweisen können unteranderem sein, dass es eine entsprechende vorhergehende Absprache gab, dass der Architekt das Issue speziell einem Bereich zugehörig sieht bzw. eine spezielle Paarung erreichen möchte, oder aber auch, weil ein Issue schon zu lange in "Selected for Development" verweilt. Hat sich ein Teammitglied für ein Issue entschieden, trägt er sich als Bearbeiter ein und zieht es in auf "In Development".
+	\item \textbf{In Development} \newline
+	In dieser Spalte verweilen alle Issues, an denen gerade entwickelt wird. Wenn die Entwicklung an einem Issue abgeschlossen ist, zieht der Bearbeiter das Issue weiter auf "Needs Review".
+	\item \textbf{Needs Review} \newline
+	Hier verweilen alle Issues, deren Entwicklung abgeschlossen ist, aber noch nicht geprüft wurde, ob die Abnahmebedingungen erfüllt sind. Normalerweise sollte die Abnahme durch den Architekten erfolgen. Issues, die der Architekt bearbeitet hat, muss das Review von einem anderen Teammitglied gemacht werden. Ein Issue bei dem das Review durchgeführt wird, wird in die Spalte "In Review" verschoben.
+	\item \textbf{In Review} \newline
+	Hier sind alle Issues enthalten, die sich gerade im Review befinden. Sind alle Abnahmekriterien erfüllt, und sind durch die Bearbeitung des Issue keine neuen Probleme/Fehler hinzugekommen, wird es in die Spalte "Done" verschoben und das Issue geschlossen. Ist dies nicht der Fall, wird ein Entsprechender Kommentar mit einer möglichst detaillierten Beschreibung des Problems an das Issue angehängt, und es wieder auf "In Development" geschoben. 
+	\item \textbf{Done} \newline
+	Diese Spalte enthält alle abgeschlossenen Issues.
+\end{itemize}
+
+\subsubsection{Git}
+Hier sind die Verhaltensweisen für die Nutzung von Git aufgeführt. Alles hier nicht aufgeführte kann von jedem Teammitglied nach eigenen ermessen gehandhabt werden.
+\begin{itemize}
+	\item \textbf{Branches} \newline
+	Für jedes Issue wird ein Branch erstellt, außer es handelt sich um reine Dokumentation (im Ordner Docu). Ein Branchname folgt folgendem Muster: "\#<IssueNummer> <KurzerName>". Dadurch lässt sich 
+	\item \textbf{Commits} \newline
+	Commits folgen folgendem Namensschema: "\#<IssueNummer> <Beschreibung>".
+	\item \textbf{Push und Pull} \newline
+	Es sollte möglichst häufig gepusht werden, um einen eventuellen Datenverlust zu vermeiden. Beim Pull sollte mit "--rebase" gearbeitet werden, um die Historie möglichst sauber zu halten.
+	\item \textbf{Merge und Pullrequest} \newline
+	Bevor ein Issue auf "Needs Review" geschoben wird, ist der Master in den Branch zu mergen und ein Pullrequest (\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/pulls}{https://github.com/Transport-Protocol/MBC-Ping-Pong/pulls}) zu erstellen. Derjenige der das Issue reviewt hat, merget den Branch dann mithilfe des Pullrequests in den Master und löscht ihn.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
