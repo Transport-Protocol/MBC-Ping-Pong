@@ -46,9 +46,77 @@ Hier sind die Verhaltensweisen für die Nutzung von Git aufgeführt. Alles hier 
 	Bevor ein Issue auf "Needs Review" geschoben wird, ist der Master in den Branch zu mergen und ein Pullrequest (\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/pulls}{https://github.com/Transport-Protocol/MBC-Ping-Pong/pulls}) zu erstellen. Derjenige der das Issue reviewt hat, merget den Branch dann mithilfe des Pullrequests in den Master und löscht ihn.
 \end{itemize}
 
+\section{Meilensteine}
+In diesem Abschnitt werden die Meilensteine festgelegt. Hierbei wird beschrieben, was wan erreicht sein sollte.
+\subsection{Projekt Aufsetzen}
+\begin{itemize}
+	\item \textbf{Beschreibung}\newline
+	Die Grundlegenden für die Entwicklung notwendigen anfangs Infrastrukturen sind aufgesetzt.
+	\item \textbf{Kriterien}
+	\begin{itemize}
+		\item \textbf{NodeJS-Server aufsetzen} \newline
+		Der NodeJS Server ist aufgesetzt und stellt eine statische Website zur Verfügung
+		\item \textbf{Docker} \newline
+		Eine einheitliche Umgebung wird durch Docker und Docker-Compose ermöglicht.
+	\end{itemize}
+	\item \textbf{Beendet:} 25.11.2016
+\end{itemize}
 
+\subsection{Prototyp (Technik)}
+\begin{itemize}
+	\item \textbf{Beschreibung}\newline
+	Um die identifizierten technischen Risiken schnellst möglich in den Griff zu bekommen, werden diese möglichst früh bearbeitet. In dem Prototyp (Technik) soll gezeigt werden, das die kritische Technik funktioniert. Dies wird anhand von kleine losgelösten Beispielen, die aber nahe der Zielarchitektur sind gezeigt.
+	\item \textbf{Kriterien}
+	\begin{itemize}
+		\item \textbf{Darstellung} \newline
+		Es wird gezeigt, das im Webbrowser eine Flüssige Darstellung möglich ist.
+		\item \textbf{Kollisionserkennung} \newline
+		Es wird gezeigt, dass eine Kollisionserkennung erreichbar ist.
+		\item \textbf{Kommunikation mittels WebRTC} \newline
+		Architektur bedingt ist die Nutzung von WebRTC unumgänglich. Es ist zu zeigen, dass eine Verbindung von mehreren Handys zum Darstellungsmedium möglich ist.
+		\item \textbf{Steuerung} \newline
+		Die Steuerung soll über den Touchscreen geschehen. Es ist zu zeigen, dass es möglich ist, die Position des Fingers auf dem Touchscreen im Browser auszulesen. 
+		\item \textbf{Größen der Handys/Tabletts} \newline
+		Unterschiedliche Handys und Tabletts haben verschiedene Größen und Formen. Somit ist ein Konzept zu erarbeiten, welches diesem Problem bei der Steuerung gerecht wird.
+	\end{itemize}
+	\item \textbf{Beendet:} 16.12.2016
+\end{itemize}
 
+\subsection{Release 1.0 (Zwei Spieler)}
+\begin{itemize}
+	\item \textbf{Beschreibung}\newline
+	In diesem ersten Release ist eine Basisversion des Spieles implementiert. Es können zwei Spieler gegeneinander Spielen, indem sie ihre Schläger mit den Handys steuern. Gleichzeitig ist diese Version die minimal Version und enthält alle "Must"-Features.
+	\item \textbf{Kriterien}
+	\begin{itemize}
+		\item \textbf{Schläger} \newline
+		Für jeden Spieler existiert ein Schläger, der mit dem Handy Steuer
+		\item \textbf{Ball} \newline
+		Es gibt ein Ball, der sich über das Spielfeld bewegt. Kollidiert er mit einem Schläger oder der Wand, an der sich kein Schläger befindet, prallt er davon ab. Es gilt hierbei, dass der Einfallwinkel dem Ausfallwinkel entspricht. Zudem beschleunigt der Ball, wenn er mit einem Schläger kollidiert. Wenn der Ball mit der Wand hinter einem Schläger kollidiert, wir er in die Ausgangsposition versetzt und erhält die Ausgangsgeschwindigkeit.
+		\item \textbf{Punkte} \newline
+		Immer wenn der Ball mit der Wand hinter einem Schläger kollidiert, erhält der andere Spieler einen Punkt.
+		\item \textbf{Spielende} \newline
+		Das Spiel endet automatisch nach X Spielen (wobei gilt: $X \in  \mathbb{N} \land X \mod 2 = 1$ ). \textit{Das genaue X ist noch zu definieren.}
+	\end{itemize}
+	\item \textbf{Beendet:} 13.01.2017
+\end{itemize}
 
+\subsection{Release 1.X (Diverse Features)}
+\begin{itemize}
+	\item \textbf{Beschreibung}\newline
+	Basierend auf der Version 1.0 wird das Spiel weiterentwickelt. Jedoch sind alle Features die hier bearbeitet werden können "Can"-Features. Daher kann es sein, dass das Release 1.X äquivalent zu dem Release 1.0 ist. Zudem sind alle hier genannten möglichen Features noch nicht näher spezifiziert und auf ihre Machbarkeit geprüft. Es gilt jedoch, dass je Umgesetztes Feature die Versionsnummer im Minorbereich um Eins steigt.
+	\item \textbf{mögliche Kriterien}
+	\begin{itemize}
+		\item \textbf{N Spieler} \newline
+		Mehr als 2 Spieler
+		\item \textbf{Zusätzliche Hindernisse} \newline
+		Auf dem Spielfeld sind zusätzliche Hindernisse.
+		\item \textbf{Highscore-Liste} \newline
+		Es wird eine Highscore-Liste geführt und angezeigt.
+		\item \textbf{TBD} \newline
+		To be discussed.
+	\end{itemize}
+	\item \textbf{Beendet:} 24.02.2017
+\end{itemize}
 
 
 
