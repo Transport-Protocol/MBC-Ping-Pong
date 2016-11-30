@@ -154,7 +154,166 @@ Der Ansatz 2 ist architektonisch recht Komplex, da die Aufteilung auf Client und
 \subsection{Fazit}
 Auch wenn der Ansatz 2 zunächst komplexer erscheint und einen geringeren Funktionsumfang bittet, da nur ein AusgabeClient pro spiel unterstützt wird und WebRTC eingesetzt werden muss, überwiegen doch die Vorteile dieses Ansatzes. Durch die fehlende zweite Netzwerkübertragung und der mögliche Einsatz von UDP, werden Delays minimiert. Gleichzeitig wird mehr Rechenleistung auf die Clients ausgelagert und eine aufwändige Verwaltung, welcher Spieler zu welchem Spiel gehört ist auch nicht notwendig.
 
-
-
-
-
+\section{Risiken}
+In diesem Kapitel wird auf die Risiken eingegangen, die zu Schwierigkeiten bei der Projektdurchführung führen können. Die Auswirkungen und Eintrittswahrscheinlichkeit werden in 3 Kategorien eingeteilt: "1:Gering, 2:Mittel, 3: Hoch". Das potenzielle Risiko ist das Produkt aus Auswirkungen und Eintrittswahrscheinlichkeit.
+\subsection{Technische Risiken}
+Zunächst wird auf die technischen Risiken eingegangen
+\subsubsection{Darstellung ist nicht möglich}
+\begin{itemize}
+	\item \textbf{Beschreibung:} \newline
+	Gerade bei Ping-Pong wird die Bewegung des Balls irgendwann sehr schnell. Dies muss trotzdem im Browser darstellbar sein, ohne das es ruckelt.
+	\item \textbf{Eintrittsgründe;}
+	\begin{itemize}
+		\item Das gewählte Grafikframework ist nicht leistungsfähig genug.
+		\item Das gewählte Grafikframework wurde nicht richtig genutzt.
+		\item Das Zielsystem ist nicht Leistungsfähig genug.
+	\end{itemize}
+	\item \textbf{Folgen:}
+	\begin{itemize}
+		\item Das Spielen ist nicht möglich => Projektfehlschlag.
+	\end{itemize}
+	\item \textbf{Eintrittswahrscheinlichkeit:} 2
+	\item \textbf{Auswirkungen:} 3
+	\item \textbf{Risiko:} 6
+	\item \textbf{Maßnahmen:}
+	\begin{itemize}
+		\item Bereits im Prototyp eine Beispielimplementierung durchführen.
+		\item Möglichst früh einen Test auf der Zielplattform absolvieren.
+	\end{itemize}
+\end{itemize}
+\subsubsection{Kollisionserkennung funktioniert nicht}
+\begin{itemize}
+	\item \textbf{Beschreibung:} \newline
+	Durch die schnelle Ballbewegung bei Ping-Pong ist eine gute Kollisionserkennung notwendig. 
+	\item \textbf{Eintrittsgründe;}
+	\begin{itemize}
+		\item Die gewählte Physicsengine ist nicht leistungsfähig genug.
+		\item Die gewählte Physicsengine wurde nicht richtig genutzt.
+		\item Das Zielsystem ist nicht Leistungsfähig genug.
+	\end{itemize}
+	\item \textbf{Folgen:}
+	\begin{itemize}
+		\item Das Spielen ist nicht möglich => Projektfehlschlag.
+	\end{itemize}
+	\item \textbf{Eintrittswahrscheinlichkeit:} 2
+	\item \textbf{Auswirkungen:} 3
+	\item \textbf{Risiko:} 6
+	\item \textbf{Maßnahmen:}
+	\begin{itemize}
+		\item Bereits im Prototyp eine Beispielimplementierung durchführen.
+		\item Möglichst früh einen Test auf der Zielplattform absolvieren.
+	\end{itemize}
+\end{itemize}
+\subsubsection{Kommunikation mittels WebRTC funktioniert nicht}
+\begin{itemize}
+	\item \textbf{Beschreibung:} \newline
+	Um die Übertragung in akzeptabler Geschwindigkeit zu gewährleisten, ist der Einsatz von WebRTC unausweichlich. WebRTC ist jedoch absolutes Neuland für das gesamte Team.
+	\item \textbf{Eintrittsgründe;}
+	\begin{itemize}
+		\item WebRTC wird nicht korrekt genutzt.
+		\item Im Zielnetzwerk wird die Verwendung durch Firewalls behindert.
+	\end{itemize}
+	\item \textbf{Folgen:}
+	\begin{itemize}
+		\item Die Architektur muss von Fat-Client Ansatz auf einen Serverzentrierten Ansatz umgestellt werden => Projektverzögerung.
+	\end{itemize}
+	\item \textbf{Eintrittswahrscheinlichkeit:} 2
+	\item \textbf{Auswirkungen:} 2
+	\item \textbf{Risiko:} 4
+	\item \textbf{Maßnahmen:}
+	\begin{itemize}
+		\item Bereits im Prototyp eine Beispielimplementierung durchführen.
+		\item Möglichst früh einen Test auf der Zielplattform absolvieren.
+	\end{itemize}
+\end{itemize}
+\subsubsection{Steuerung ist nicht möglich}
+\begin{itemize}
+	\item \textbf{Beschreibung:} \newline
+	Das auslesen der Position des Fingers auf dem Bildschirm über den Browser funktioniert nicht, bzw. nicht schnell genug.
+	\item \textbf{Eintrittsgründe;}
+	\begin{itemize}
+		\item Zu altes Handy verwendet (Browser unterstützt es nicht).
+		\item Schnittstelle nicht korrekt verwendet
+	\end{itemize}
+	\item \textbf{Folgen:}
+	\begin{itemize}
+		\item Das Spiel ist nicht Steuerbar => Projektfehlschlag.
+	\end{itemize}
+	\item \textbf{Eintrittswahrscheinlichkeit:} 1
+	\item \textbf{Auswirkungen:} 3
+	\item \textbf{Risiko:} 3
+	\item \textbf{Maßnahmen:}
+	\begin{itemize}
+		\item Bereits im Prototyp eine Beispielimplementierung durchführen.
+	\end{itemize}
+\end{itemize}
+\subsection{Konzeptuelle Risiken}
+\subsubsection{Steuerung ist nicht Fair}
+\begin{itemize}
+	\item \textbf{Beschreibung:} \newline
+	Gerade mit dem Prinzip des Browser basierten Ansatzes werden sehr viele unterschiedliche Endgerätetypen angesprochen. Jedes Endgerät hat jedoch eine andere Bildschirmgröße und Pixeldichte.
+	\item \textbf{Eintrittsgründe;}
+	\begin{itemize}
+		\item Es möchten Personen mit unterschiedlichen Endgeräten gegeneinander antreten
+	\end{itemize}
+	\item \textbf{Folgen:}
+	\begin{itemize}
+		\item Das Spiel ist unfair => geringere Akzeptanz.
+	\end{itemize}
+	\item \textbf{Eintrittswahrscheinlichkeit:} 3
+	\item \textbf{Auswirkungen:} 1
+	\item \textbf{Risiko:} 3
+	\item \textbf{Maßnahmen:}
+	\begin{itemize}
+		\item Das Risiko wird durch die weitergehende Analyse, und dem Entwurf eines möglichst Fairen Steuerungskonzeptes verringert.
+		\item Ggf. zum Teil ignorieren
+	\end{itemize}
+\end{itemize}
+\subsection{Organisatorische Risiken}
+\subsubsection{Temporärer Personalausfall}
+\begin{itemize}
+	\item \textbf{Beschreibung:} \newline
+	Es kann jederzeit zu einem temporären Personalausfall kommen.
+	\item \textbf{Eintrittsgründe;}
+	\begin{itemize}
+		\item Krankheit.
+		\item Klausuren.
+		\item Unmotiviertheit.
+	\end{itemize}
+	\item \textbf{Folgen:}
+	\begin{itemize}
+		\item Arbeitskraftmangel => Projektverzögerung.
+		\item Fachwissensmangel => Projektverzögerung.
+	\end{itemize}
+	\item \textbf{Eintrittswahrscheinlichkeit:} 3
+	\item \textbf{Auswirkungen:} 1
+	\item \textbf{Risiko:} 3
+	\item \textbf{Maßnahmen:}
+	\begin{itemize}
+		\item Puffer einplanen.
+		\item Möglichst wenig Must-Anforderungen definieren.
+	\end{itemize}
+\end{itemize}
+\subsubsection{Kompletter Personalausfall}
+\begin{itemize}
+	\item \textbf{Beschreibung:} \newline
+	Es kann jederzeit zu einem temporären Personalausfall kommen.
+	\item \textbf{Eintrittsgründe;}
+	\begin{itemize}
+		\item Krankheit.
+		\item Unmotiviertheit.
+	\end{itemize}
+	\item \textbf{Folgen:}
+	\begin{itemize}
+		\item Arbeitskraftverlust => Projektverzögerung.
+		\item Fachwissensverlust => Projektverzögerung.
+	\end{itemize}
+	\item \textbf{Eintrittswahrscheinlichkeit:} 2
+	\item \textbf{Auswirkungen:} 2
+	\item \textbf{Risiko:} 4
+	\item \textbf{Maßnahmen:}
+	\begin{itemize}
+		\item Puffer einplanen.
+		\item Möglichst wenig Must-Anforderungen definieren.
+	\end{itemize}
+\end{itemize}
