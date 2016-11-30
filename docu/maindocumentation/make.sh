@@ -1,6 +1,6 @@
 #!/bin/sh
 
-latex MBC-Ping-Pong
+pdflatex MBC-Ping-Pong
 state=$?
 if [ ! $state = "0" ]; then
 	echo "Failed to compile latex!" 1>&2
@@ -15,16 +15,10 @@ if [ ! $state = "0" ]; then
 	exit $state
 fi
 
-latex MBC-Ping-Pong
+pdflatex MBC-Ping-Pong
 state=$?
 if [ ! $state = "0" ]; then
 	echo "Failed to compile latex!" 1>&2
 	exit $state
 fi
 
-pdflatex MBC-Ping-Pong
-state=$?
-if [ ! $state = "0" ]; then
-	echo "Failed to create pdf!" 1>&2
-	exit $state
-fi
