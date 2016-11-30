@@ -121,20 +121,38 @@ In diesem Abschnitt werden die Meilensteine festgelegt. Hierbei wird beschrieben
 \section{Highlevel View}
 In diesem Abschnitt wird die Grob-/Gesamtarchitektur betrachtet. Hierbei wird nicht nur auf wesentliche Schnittstellen und Komponenten eingegangen. Zur engeren Auswahl standen zwei mögliche Ansätze. Es werden beide betrachtet, und erläutert warum der Ansatz 2 umgesetzt werden wird.
 \subsection{Ansatz 1}
+Der Ansatz 1 verfolgt den Klassischen Client-Server-Ansatz. Hierbei dient der Server als zentrale Instanz, die alle signifikanten Logikoperationen übernimmt. Die Clients dienen lediglich zur Ein-/Ausgabe.
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{architecture/highLevelAnsatz1.png}
 	\caption{Highlevel Ansatz 1}
 	\label{fig1}
 \end{figure}
-
+\subsubsection{Server}
+Der Server stellt die statischen Inhalte (HTML, CSS, JS) bereit. Zudem enthält er die gesamte Spiellogik. Der Server empfängt Steuerinformationen vom ControlClient, verarbeitet diese und sendet einen aktuellen Gamestate an den OutputClient.
+\subsubsection{ControlClient}
+Der ControlClient erfasst die Steuereingaben des Nutzers und sendet sie an den Server.
+\subsubsection{OutputClient}
+Der OutputClient empfängt den Gamestate vom Server und aktualisiert die Anzeige entsprechend.
+\subsubsection{Analyse}
+Einerseits ist dieser Ansatz architektonisch sehr einfach zu umzusetzen, da es eine zentrale Instanz gibt und Seperation of Concerns Architektur bedingt unterstützt wird. Zudem ist es möglich ein Spiel auf mehreren OutputClients darzustellen. Da sich die Clients mit dem Server verbinden, ist der Einsatz von WebSockets möglich. Mit socket.io gibt es eine sehr gute Abstraktionsschicht für WebSockets. Andererseits kann durch den Einsatz von WebSockets ein nicht zu vernachlässigendes Delay entstehen, da diese auf TCP basieren. Um diesem zu begegnen ist der Einsatz des WebRTC Protokollstacks notwendig. Zudem muss der Server die Zuordnung der ControlClients und OutputClients zu einem Spiel organisieren. Außerdem sind zwei Netzwerkübertragungen von Nöten, damit die Eingabe des Spielers auf dem OutputClient sichtbar wir. Dadurch wird das Netzwerk doppelt belastet, und es ist zweimal das Übertragungsdelay vorhanden.  
 \subsection{Ansatz 2}
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.9\textwidth]{architecture/highLevelAnsatz2.png}
 	\caption{Highlevel Ansatz 2}
-	\label{fig1}
+	\label{fig2}
 \end{figure}
+\subsubsection{Server}
+Der Server stellt die statischen Inhalte (HTML, CSS, JS) bereit. Zudem fungiert er als zentrale Instanz für den WebRTC-Protokollstack
+\subsubsection{ControlClient}
+Der ControlClient erfasst die Steuereingaben des Nutzers und sendet sie an den OutputClient.
+\subsubsection{OutputClient}
+Der OutputClient ist ein Fat-Client. Er enthält die gesamte Spiellogik und empfängt über den WebRTC-Protokollstack direkt die Steuereingaben des Spielers. Zudem zeigt er das Spiel an.
+\subsubsection{Analyse}
+Der Ansatz 2 ist architektonisch recht Komplex, da die Aufteilung auf Client und Server (der Fat-Client-Ansatz) unterstützt Seperation of Concern nicht direkt. Es muss während der Entwicklung verstärkt darauf geachtet werden, das die Trennung von Spiellogik und Ausgabe getrennt wird. Zu dem ist man auf den WebRTC-Protokollstack angewiesen, da die Clients direkt miteinander Kommunizieren müssen. Außerdem ist man auf einen einzelnen OutputClient beschränkt. Andererseits erfolgt die Steuerung direkt an dem OutputClient, dadurch ist das kleinst mögliche Delay zwischen Eingabe,Verarbeitung und Ausgabe gewährleistet. Außerdem ermöglicht der Einsatz von WebRTC den Einsatz von UDP als Transportprotokoll, wodurch das Delay weiter verkleinert werden kann, da UDP Verbindungslos ist.
+\subsection{Fazit}
+Auch wenn der Ansatz 2 zunächst komplexer erscheint und einen geringeren Funktionsumfang bittet, da nur ein AusgabeClient pro spiel unterstützt wird und WebRTC eingesetzt werden muss, überwiegen doch die Vorteile dieses Ansatzes. Durch die fehlende zweite Netzwerkübertragung und der mögliche Einsatz von UDP, werden Delays minimiert. Gleichzeitig wird mehr Rechenleistung auf die Clients ausgelagert und eine aufwändige Verwaltung, welcher Spieler zu welchem Spiel gehört ist auch nicht notwendig.
 
 
 
