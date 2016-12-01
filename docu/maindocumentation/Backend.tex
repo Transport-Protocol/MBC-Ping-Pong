@@ -1,1 +1,79 @@
 \chapter{Backend}
+
+\section{Kommunikation}
+
+\subsection{Zeitkritische Informationen}
+Als zeitkritisch werden Informationen eingestuft, sofern sie die direkten Eingaben der 
+ControlClients und eventuelles Feedback des OutputClient betreffen. Da es sich um ein Reaktionsspiel handel,t müssen diese Daten zeitnah von Sender zu Empfänger gelangen. Solch eine Relation ist nur über eine Peer-to-Peer Verbindung zu realisieren.
+
+\subsection{Möglichkeit 1: Predefined Packages 'rtc.io'}
+Der NodeJS Server wird als Verbindungsserver für die Etablierung einer Peer-to-Peer Verbindung zwischen ControlClients und OutputClient genutzt. Als Technik wird konret WebRTC eingesetzt. Auf dem NodeJS-Server wir das Package "rtc-switchboard" eingesetzt, welches eine Grundlage für einen  Signalisierungsserver ist. Die Clients nutzen "rtc-quickconnect" um neues Channels anzufordern und eine Peer-to-Peer Verbindung zu etablieren.
+
+
+
+Vorteile:
+\begin{itemize}
+\item
+Leichtere Implementierung, da alle Ebenen der Kommunikation bereits abgedeckt wurden und nur noch semantisch auf Informationen eingegangen werden muss.
+\end{itemize}
+
+Nachteile:
+\begin{itemize}
+\item
+Durch Generalisierung ein deutlicher Overhead.
+
+\item
+Status ist offiziell noch 'unstable'.
+\end{itemize}
+
+\subsection{Möglichkeit 2: Abstrakte WebRTC implementation 'WebRTC'}
+Wie auch bei Möglichkeit 1 wird der NodeJS-Server als Verbindungsserver genutzt. Jedoch muss auf Client-Seite, also für OutputClient und ControlClient, eine eigene Signalling Implementation stattfinden. Es wird eine viel abtraktere Schicht genutzt.
+
+
+Vorteile:
+\begin{itemize}
+\item
+Da die genutzen Packages nur eine Grundlage bilden, ist eine spezialisierte Implementierung möglich.
+\end{itemize}
+
+Nachteile:
+\begin{itemize}
+\item
+Implementierungsaufwand deutlich höher.
+
+\item
+Spezialisierung für dieses Projekt eventuell nicht nötig.
+
+\item
+Status ist offiziell noch 'unstable'.
+\end{itemize}
+
+\subsection{Möglichkeit 3: Socket.io P2P}
+Das Package Socket.io bietet auch selber eine Peer-to-Peer lösung auf WebRTC Basis. Hierbei wird eine Spezielle Art eines Sockets genutzt, welche wie ein normaler WebSocket agiert, bis ein Upgrade durchgeführt wird und die Clients nun direkt miteinander Kommunizieren.
+
+
+Vorteile:
+\begin{itemize}
+\item
+Das Signalling und die P2P Kommunikation können mit einem Package geregelt werden.
+
+\item
+Variabel kann die Kommunikation über den Server, oder P2P ablaufen.
+
+\item
+Signalling events werden von Client-Server Kommunikation direkt zu P2P übernommen.
+\end{itemize}
+
+Nachteile:
+\begin{itemize}
+\item
+Wenig Einfluss auf die Upgrade-Mechanismen.
+\end{itemize}
+
+\subsection{Statusinformationen}
+Für den Austausch nicht zeitkritischer Statusinformationen werden zwischen den Clienten und dem Server einfache WebSockets verwendet. Der Austausch von Zeitkritischen Statusinformationen muss über das Signalling des WebRTC durchgeführt werden.
+
+\subsection{Fazit}
+Die eigene Implementation auf Basis des WebRTC bietet die meisten Möglichkeiten, birgt jedoch auch enorme Risiken. RTC.io bietet eine Implementation die sehr gut für Prototypen geeignet ist, aber neben dem Zeitunkritischen Signalling eine eigene Einheit bietet, welche eine Generalisierung des WebRTC darstellt und somit viel Overhead besitzt. Die P2P Imeplementierung von Socket.io steht von der Implementierungs Komplexität in der Mitte. Es bietet viele bereits bekannte Mechanismen des Client-Server Signalling über Events, welche mit einem Upgrade nun auch von Client zu Client funktionieren. 
+
+Socket.io P2P entspricht den Anforderungen und wird für den Prototypen verwendet.
