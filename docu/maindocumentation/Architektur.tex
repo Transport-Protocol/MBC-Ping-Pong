@@ -145,6 +145,8 @@ Einerseits ist dieser Ansatz architektonisch sehr einfach zu umzusetzen, da es e
 \end{figure}
 \subsubsection{Server}
 Der Server stellt die statischen Inhalte (HTML, CSS, JS) bereit. Zudem fungiert er als zentrale Instanz für den WebRTC-Protokollstack
+\subsubsection{ExternerServer}
+Der externe Server ist ein öffentlicher Stun-/Turn-/Ice-Server, der beispielsweise von Google bereitgestellt wird.
 \subsubsection{ControlClient}
 Der ControlClient erfasst die Steuereingaben des Nutzers und sendet sie an den OutputClient.
 \subsubsection{OutputClient}
