@@ -319,3 +319,29 @@ Zunächst wird auf die technischen Risiken eingegangen
 		\item Möglichst wenig Must-Anforderungen definieren.
 	\end{itemize}
 \end{itemize}
+
+\section{Reviews}
+\subsection{\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/3}{Auswahl einer geeigneten 2D-/Physiksengine}}
+\begin{itemize}
+	\item \textbf{Datum:} 05.12.16 
+	\item \textbf{Prüfung der Anforderungen:}
+	\begin{itemize}
+		\item \checkmark Aufruf der Seite http://<IpDesNodeJsServers>:<HttpPortDesNodeJsServers>/test2DEngine.html zeigt die Testseite.
+		\item \checkmark Ein quadratischer Bereich mit einer Form in der Mitte auf dem Bildschirm wird dargestellt.
+		\item \checkmark In diesem Bereich bewegt sich eine Form (am besten eine Kugel) waagerecht von Links nach Rechts.
+		\item \checkmark Kollidiert die Form mit der rechten Wand, bewegt sich die Form von Rechts nach Links.
+		\item \checkmark Kollidiert die Form mit der linken Wand, bewegt sich die Form von Links nach Rechts.
+	\end{itemize}
+	\item \textbf{Prüfung des Codes:}
+	\begin{itemize}
+		\item Der Code ist strukturiert und lesbar.
+		\item Bis auf 2 Zeilen ist der Code verständlich: 
+		\begin{itemize}
+			\item this.ball.body.immovable = true; \newline
+			Ein besserer Kommentar, warum wäre gut gewesen. Nach einigem suchen, gehe ich davon aus, dass nur Objekte, die mit dem Ball kollidieren, beeinflusst werden, aber nicht der Ball selbst.\newline
+			Dieses Verhalten ist zunächst OK, sollte jedoch bei späteren Features noch einmal geprüft werden.
+			\item this.ball.body.bounce.set(1); \newline
+			Es funktioniert in der momentan verwendeten Version, daher ist es OK, sollte jedoch geprüft werden. Laut Dokumentation (\href{http://phaser.io/docs/2.6.2/Phaser.Physics.Ninja.Body.html#bounce}{http://phaser.io/docs/2.6.2/Phaser.Physics.Ninja.Body.html#bounce}) Sollte der Wert zwischen 0 und 1 liegen, also nicht 1.0 sein. Empfohlen wird ein wert von 0.999. Eine Prüfung ergab, das auch Werte oberhalb von 1.0 akzeptiert werden. Dies führt dann zu einer Beschleunigung des Balls.
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
