@@ -123,3 +123,76 @@ Der fertige Prototyp sieht so aus:
 	\caption{Erster Prototyp}
 	\label{figx}
 \end{figure}
+\newpage
+\section{Analyse - Steuerung}
+\begin{quote}
+	\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/11}{Analyse - Steuerung \#11}
+	\newline
+	\textit{Die Steuerung des Spiels erfolgt über das Handydisplay. Jedes Handy ist unterschiedlich groß, zudem sollte der Schläger nicht springen können.}
+\end{quote}
+Es zu analysieren wie sich verschiedene Auflösungen und verschiedene Pixeldichten auf das Spielgefühl auswirken können.
+Denkbar ist das Geräte mit einer geringen Pixeldichte gegenüber Spielern mit einer hohen Pixeldichte im Vorteil sind da aus Geräten mit einer hohen Pixeldichte sehr viel kleinere Gesten zur Steuerung ausreichen.
+\newline
+\textbf{Zielsetzung dieser Analyse}
+\begin{enumerate}
+	\item
+	      \textbf{Feststellung} Es soll festgestellt werden in wie weit sich ein Unterschied der Pixeldichte auf die Spielweise auswirken kann.
+	\item
+	      \textbf{Behandlung} Es soll geprüft werden ob sich eine mögliche Unfairness beheben lässt und ein mögliches Konzept erstellt werden.
+\end{enumerate}
+\subsection{Feststellung der Auswirkung verschiedener Pixeldichten}
+\subsection{Behandeln verschiedener Pixeldichten}
+\paragraph{Ermitteln von der PPI im Browser} Es wird nach vorhanden Lösungen zum erkennen der Pixeldichte in PPI bzw DPI gesucht.
+Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die Ergebnisse mit den tatsächlichen DPI verglichen.
+\newline\textbf{Die Testgeräte}
+\begin{enumerate}
+	\item \begin{tabular}{cc}
+	      Name & PC Monitor\\
+	      Diagonale & 23.6zoll\\
+	      Auflösung & 1920*1080\\
+	      Pixeldichte & 93 PPI \\
+	\end{tabular}
+	\item \begin{tabular}{cc}
+	      Name & Samsung Galaxy S4\\
+	      Diagonale & 4.99zoll\\
+	      Auflösung & 1920*1080\\
+	      Pixeldichte & 441 PPI
+	\end{tabular}
+	\item \begin{tabular}{cc}
+	      Name & Samsung Galaxy Tab A\\
+	      Diagonale & 9.7zoll\\
+	      Auflösung & 1024*768\\
+	      Pixeldichte & 132 PPI\\
+	\end{tabular}
+\end{enumerate}
+\begin{itemize}
+	\item
+	      \textbf{http://www.infobyip.com/detectmonitordpi.php} Eine Website zur Ermittlung der DPI. Es wird ein Quadrat per CSS auf eine bestimmte Größe, zum Beispiel 1 Zoll, formatiert und dann die Größe in Pixeln ausgelesen. Auf diese Weise lässt sich ein DPI wert berechnen.
+	      \newline
+	      Tests:
+	      \begin{enumerate}
+	      	\begin{tabular}{ccc}
+	      		                     & Erwarteter Wert & Ermittelter Wert           \\
+	      		PC Monitor 1         &                 &                            \\
+	      		Pixeldichte          & 93 DPI          & \colorbox{red!30}{96 DPI}  \\
+	      		Größe des Feldes     & 8 cm            & \colorbox{red!30}{8.2 cm}  \\
+	      		                     &                 &                            \\
+	      		Samsung Galaxy S4    &                 &                            \\
+	      		Pixeldichte          & 441 DPI         & \colorbox{red!30}{288 DPI} \\
+	      		Größe des Feldes     & 8 cm            & \colorbox{red!30}{1.8 cm}  \\
+	      		                     &                 &                            \\
+	      		Samsung Galaxy Tab A &                 &                            \\
+	      		Pixeldichte          & 132 DPI         & \colorbox{red!30}{96 DPI}  \\
+	      		Größe des Feldes     & 8 cm            & \colorbox{red!30}{5.7cm}   \\
+	      	\end{tabular}
+	      \end{enumerate}
+	      Getestet wurde jeweils mit Firefox & Chrome, der PC Monitor wurde auch noch mit dem Edge Browser getestet. Die Ergebnisse waren allesamt für das Gerät identisch.
+	      \newline
+	      \textbf{Ergebnis:} Die DPI wurden nicht korrekt erkannt. Die Werte weichen auf dem Mobiltelefon um \underline{77.5\%} ab.
+\end{itemize}
+\paragraph{Verwenden von 'window.devicePixelRatio'} Die Eigenschaft \textit{window.devicePixelRatio} gibt das Verhältnis der Größe der physikalischen Pixel des aktuellen Displays zu der Größe der Geräteunabhängigen-Pixel (\textit{device independent pixels(dips)}) wieder.
+\begin{displaymath}
+	window.devicePixelRatio = physical pixels / dips 
+\end{displaymath}
+
+Es wird vor allem dafür genutzt um eine Einheitliche Darstellung von Webinhalten auf verschiedenen Displaygrößen zu erreichen.
