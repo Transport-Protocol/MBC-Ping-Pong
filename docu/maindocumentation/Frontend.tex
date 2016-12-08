@@ -190,9 +190,39 @@ Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die
 	      \newline
 	      \textbf{Ergebnis:} Die DPI wurden nicht korrekt erkannt. Die Werte weichen auf dem Mobiltelefon um \underline{77.5\%} ab.
 \end{itemize}
+\newpage
 \paragraph{Verwenden von 'window.devicePixelRatio'} Die Eigenschaft \textit{window.devicePixelRatio} gibt das Verhältnis der Größe der physikalischen Pixel des aktuellen Displays zu der Größe der Geräteunabhängigen-Pixel (\textit{device independent pixels(dips)}) wieder.
 \begin{displaymath}
 	window.devicePixelRatio = physical pixels / dips 
 \end{displaymath}
 
 Es wird vor allem dafür genutzt um eine Einheitliche Darstellung von Webinhalten auf verschiedenen Displaygrößen zu erreichen.
+\newline
+Die Methode klingt sehr vielversprechend, also entschied ich einen Test zu erstellen. Meine Idee ist es ein Quadrat zeichnen zu lassen bei dem die Größe abhängig von dem devicePixelRatio ist und dann die Seitenlänge auf dem Display zu messen.
+Mein verwendeter Code:
+\begin{lstlisting}
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+var w = 100*window.devicePixelRatio;
+ctx.rect(20,20,w,w);
+ctx.fillText(w,30,30); 
+ctx.stroke(); 
+\end{lstlisting}
+
+\textbf{Tests:}
+\newline
+\begin{tabular}{ccc}
+	Gerät                 & DevicePixelRatio & Größe TestQuadrat \\
+	PC Monitor 23.6"       & 1.0              & 2.7 cm              \\
+	Samsung Galaxy S4      & 3.0              & 1.9 cm              \\
+	Samsung Galaxy Tab A   & 1.0              & 1.5 cm              \\
+	Samsung Galaxy S3 Neo  & 2.0              & 1.3 cm              \\
+	Samsung Galaxy S5 mini & 2.0              & 1.1 cm              \\
+	Samsung Galaxy S7 edge & 4.0              & >4 cm               \\
+\end{tabular}
+\paragraph{Ergebnis:} Das Ergebnis der Tests ist leider ernüchternd. Die ersten Geräte zeigten das Quardrat allesamt in einer ähnlichen Größe. Doch auf weiteren Testgeräten zeigte sich das die Größe sehr stark variierte. Auf dem Samsung Galaxy S7 edge war das Quadrat sogar sehr viel größer als der vordefinierte Bereich.
+\newpage
+\subsection{Ergebis der Analyse}
+Es gibt leider keine Möglichkeit eine Webapp mit exakten physikalischen Größen zu gestalten.
+\paragraph{Gestaltung per CSS Einheiten} In CSS besteht die Möglichkeit Größen in CM oder Zoll zu definieren. Leider entsprechen die Werte auf Mobilen Endgeräten nicht den gewünschten Werten.
+\paragraph{Gestaltung mit Device Pixel Ratio} Die Gestaltung per devicePixelRatio erscheint wesentlich genauer als die Gestaltung mit CSS Längenangaben allerdings ist auch diese Lösung sehr ungenau und lässt sich nicht einheitlich nutzen. 
