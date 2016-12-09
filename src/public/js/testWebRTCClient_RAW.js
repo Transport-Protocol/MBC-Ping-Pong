@@ -7,7 +7,8 @@
 var P2P = require('socket.io-p2p');
 var io = require('socket.io-client');
 var iosocket = io.connect();
-var p2psocket = new P2P(iosocket, {}, null);
+var opts = {autoUpgrade: false, peerOpts: {numClients: 10}};
+var p2psocket = new P2P(iosocket, opts, null);
 
 var connected = false;
 
@@ -27,6 +28,16 @@ p2psocket.on('ready', function(){
     console.log("P2P Socket ready.");
 });
 
+p2psocket.on('userping', function(data){
+    console.log("Received a Ping.");
+});
+
+p2psocket.on('upgradewebrtc', function(data){
+    if(p2psocket.usePeerConnection == true) return;
+    console.log("Now upgrading.");
+    p2psocket.upgrade();
+});
+
 // Add Event Listeners for buttons
 btn_connect.addEventListener('click', connecttomonitor);
 btn_sendping.addEventListener('click', sendping);
@@ -44,7 +55,7 @@ function connecttomonitor(){
 // Simple ping
 function sendping(){
     console.log("Send Ping pressed.");
-    p2psocket.emit("ping");
+    p2psocket.emit("userping", {text: "HALLO"});
 }
 
 // Later for variable up-/downgrade of connection

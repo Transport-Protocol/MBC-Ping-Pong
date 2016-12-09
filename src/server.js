@@ -28,12 +28,12 @@ app.get('/', function(req, res) {
 io.on('connection', function(socket){
     console.log("Some user connected.");
     
-    var room = "";
+    var room = undefined;
     
     // Disconnect is called upton client disconnection
     socket.on('disconnect', function(){
         console.log("User disconnected.");
-        if(room !== "") {
+        if(room !== undefined) {
             // Remove Client Socket data from room
             room.users.splice(room.users.indexOf(socket), 1);
         }
@@ -41,6 +41,10 @@ io.on('connection', function(socket){
     
     // Client wants to join a room
     socket.on('joinroom', function(data){
+        if(room !== undefined) {
+            console.log("User already in a room.");
+            return;
+        }
         console.log("User wants to join room <" + data.roomname + ">");
         
         // Give default room
@@ -58,17 +62,28 @@ io.on('connection', function(socket){
         // This will hold information regarding all peers in one room
         // to allow them to upgrade to WebRTC only with those in the room
         p2p(socket, null, room);
-        
-        // Ping handle, ack to others in the same room
-        socket.on('ping', function(data){
-            console.log("User send Ping.");
-            var otherUsers = room.users.filter(function(user){
-                return user !== socket;
-            });
-        
-            otherUsers.forEach(function(user){
-                user.emit('ping', data);
-           });
+    });
+    
+    // Ping handle, ack to others in the same room
+    socket.on('userping', function(data){
+        if(room === undefined) {
+            console.log("User send Ping but in no room.");
+            return;
+        }
+        console.log("User send Ping.");
+        var otherUsers = room.users.filter(function(user){
+            return user !== socket;
+        });
+
+        otherUsers.forEach(function(user){
+            user.emit('userping', data);
+       });
+    });
+    
+    socket.on('toggletec', function(data){
+        console.log("User upgrading to WebRTC.");
+        room.users.forEach(function(user){
+            user.emit('upgradewebrtc', data);
         });
     });
     
