@@ -4,7 +4,7 @@
 *
 *   For further information:
 *
-*   Sequence including this Entity: 
+*   Sequence including this Entity:
 *   https://raw.githubusercontent.com/Transport-Protocol/MBC-Ping-Pong
 *   /master/docu/maindocumentation/architecture/prototypSequenceDiagram.png
 *
@@ -15,6 +15,11 @@
 
 var P2P = require('socket.io-p2p');
 var io = require('socket.io-client');
+
+//Interface
+module.exports.init = init;
+module.exports.sendPosition = sendPosition;
+
 var opts = { autoUpgrade: false, peerOpts: {numClients: 10} };
 
 // Predefined vars used in init
@@ -34,17 +39,17 @@ function init(){
 function initCommunication(){
     iosocket = io.connect();
     p2psocket = new P2P(iosocket, opts, null);
-    
+
     iosocket.on('connect', function(){
         console.log("Now Connected to the Server.");
         isConnected = true;
     });
-    
+
     p2psocket.on('ready', function(){});
-    
+
     p2psocket.on('upgradewebrtc', function(){
         if(isPeer2Peer) return;
-        
+
         p2psocket.upgrade();
         isPeer2Peer = true;
     });
@@ -52,9 +57,9 @@ function initCommunication(){
 
 function sendPosition(posx, posy){
     if(!isConnected || !isPeer2Peeer) return;
-    
+
     console.log("Sending new Position: ["+posx+","+posy+"]");
-    
+
     var position = {PlayerId: "someID", X: posx, Y: posy};
     p2psocket.emit('changeposition', position);
 }
