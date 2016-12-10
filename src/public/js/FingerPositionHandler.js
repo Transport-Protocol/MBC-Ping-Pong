@@ -48,8 +48,6 @@ function FingerPositionHandler(canvas, interval, callbackFunctions){
           for (var i = 0, len = callbackFunctions.length; i < len; i++) {
             callbackFunctions[i](_x, _y);
           }
-          console.log("send: x= " + _x + "y= " + _y + ", after : " + (currentTime - _lastSendTime));
-          console.error("send has to be implemented");
           if(_lastSendTime){
             _lastSendDiff = (currentTime - _lastSendTime) - _interval;
             if(_lastSendDiff < 0){
