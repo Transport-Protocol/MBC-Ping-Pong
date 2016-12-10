@@ -56,7 +56,7 @@ function initCommunication(){
 }
 
 function sendPosition(posx, posy){
-    if(!isConnected || !isPeer2Peeer) return;
+    if(!isConnected || !isPeer2Peer) return;
 
     console.log("Sending new Position: ["+posx+","+posy+"]");
 
