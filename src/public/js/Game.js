@@ -29,8 +29,7 @@ game.state.start('main');*/
 
 
 function addPlayerToGame(){
-  var player = new Player(game, 0, 0, 'paddle');
-  console.log(player);
+  var player = new Player(game, 0, 0, 'paddle', 0);
   game.add.existing(player);
   return player;
 }

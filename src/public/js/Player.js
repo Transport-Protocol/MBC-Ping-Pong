@@ -1,8 +1,6 @@
 
-var Player = function (game, x, y, key){
-  console.log(game);
-  console.log(key);
-  Phaser.Sprite.call(this, game, x, y, key);
+var Player = function (game, x, y, key, frame){
+  Phaser.Sprite.call(this, game, x, y, key, frame);
   var _buffer = [];
 
   this.addPositionToBuffer = function(x, y){
