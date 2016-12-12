@@ -10,11 +10,17 @@ window.addTestPlayer = function(){
   var y = 0;
 
 
-  console.log(player);
-  setInterval(
-    function(){
-      player.addPositionToBuffer(x++, y++);
-    },
-    500
-  )
+  if(player !== undefined){
+    var interval = setInterval(
+      function(){
+        Game.addPositionToPlayerBuffer(player, x++, y++);
+      },
+      500
+    );
+  }
+
+  this.removeTestPlayer = function(){
+    clearInterval(interval);
+    Game.removePlayerFromGame(player);
+  }
 }

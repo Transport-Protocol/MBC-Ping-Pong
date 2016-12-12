@@ -4,8 +4,9 @@ var gameProperties = {
     name: 'engineTest',
     width: 640,
     height: 320,
-    playerCount: 0,
-    aryPlayers: []
+    playerIdCount: 0,
+    players: new Map(),
+    freeSprites:[0,1,2,3,4,5]
 };
 
 
@@ -29,14 +30,40 @@ game.state.start('main');*/
 
 
 function addPlayerToGame(){
-  var player = new Player(game, 0, 0, 'paddle', 0);
-  game.add.existing(player);
-  return player;
+  if(gameProperties.freeSprites.length > 0){
+    var player = new Player(game, 0, 0, 'paddle', gameProperties.freeSprites.shift());
+    var playerId = gameProperties.playerIdCount++;
+    gameProperties.players.set(playerId, player);
+    game.add.existing(player);
+    return playerId;
+  }else {
+    return undefined;
+  }
 }
-window.LogData = function(){
-  addPlayerToGame();
+
+function removePlayerFromGame(playerId){
+  player = gameProperties.players.get(playerId);
+  if(player){
+    gameProperties.players.delete(playerId)
+    gameProperties.freeSprites.push(player.frame);
+    player.destroy();
+  } else {
+    console.error("Cannot find Player with Id: " + playerId);
+  }
 }
+
+function addPositionToPlayerBuffer(playerId, x, y){
+  player = gameProperties.players.get(playerId);
+  if(player){
+    player.addPositionToBuffer(x,y);
+  } else {
+    console.error("Cannot find Player with Id: " + playerId);
+  }
+}
+
+module.exports.removePlayerFromGame = removePlayerFromGame;
 module.exports.addPlayerToGame = addPlayerToGame;
+module.exports.addPositionToPlayerBuffer = addPositionToPlayerBuffer;
 
 /*
 function addNewPlayer() {
