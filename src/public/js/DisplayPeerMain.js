@@ -1,8 +1,10 @@
-//var commHandler = require('./DisplayPeerCommunicationHandler');
+var commHandler = require('./DisplayPeerCommunicationHandler');
 var Game = require('./Game.js')
 
 // Example of a exported function call
 //commHandler.initPlayer();
+
+commHandler.init();
 
 window.addTestPlayer = function(){
   var player = Game.addPlayerToGame();

@@ -87,5 +87,12 @@ io.on('connection', function(socket){
         });
     });
     
+    socket.on('changeposition', function(data){
+        console.log("Got <changeposition> from user.");
+        room.users.forEach(function(user){
+            user.emit('changeposition', data);
+        });
+    });
+    
     
 });

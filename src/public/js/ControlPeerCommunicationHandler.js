@@ -43,23 +43,23 @@ function initCommunication(){
     iosocket.on('connect', function(){
         console.log("Now Connected to the Server.");
         isConnected = true;
+        p2psocket.emit("joinroom", {roomname: "testroom"});
     });
 
     p2psocket.on('ready', function(){});
 
     p2psocket.on('upgradewebrtc', function(){
-        if(isPeer2Peer) return;
-
+        if(p2psocket.usePeerConnection == true) return;
+        console.log("Now upgrading.");
         p2psocket.upgrade();
-        isPeer2Peer = true;
     });
 }
 
 function sendPosition(posx, posy){
-    if(!isConnected || !isPeer2Peer) return;
+    //if(!isConnected || !isPeer2Peer) return;
 
     console.log("Sending new Position: ["+posx+","+posy+"]");
 
-    var position = {PlayerId: "someID", X: posx, Y: posy};
+    var position = { PlayerId: "someID", X: posx, Y: posy };
     p2psocket.emit('changeposition', position);
 }
