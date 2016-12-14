@@ -15,12 +15,13 @@
 
 var P2P = require('socket.io-p2p');
 var io = require('socket.io-client');
+var Peer = require('simple-peer');
 
 //Interface
 module.exports.init = init;
 module.exports.sendPosition = sendPosition;
 
-var opts = { autoUpgrade: false, peerOpts: {numClients: 10} };
+var opts = { autoUpgrade: false, peerOpts: {trickle: false, numClients: 25} };
 
 // Predefined vars used in init
 var iosocket;
@@ -31,6 +32,18 @@ var p2psocket;
 var isConnected = false;
 var isPeer2Peer = false;
 
+Peer.config = {
+    iceServers: [
+        {
+        urls: 'stun:stun.l.google.com:19302',
+        urls: 'stun:stun2.l.google.com:19302',
+        urls: 'stun:stun3.l.google.com:19302',
+        urls: 'stun:stun4.l.google.com:19302',
+        urls: 'stun:stunserver.org:3478'
+        }
+    ]
+};
+
 // @TODO check for name collision 'init'
 function init(){
     initCommunication();
@@ -38,10 +51,13 @@ function init(){
 
 function initCommunication(){
     iosocket = io.connect();
-    p2psocket = new P2P(iosocket, opts, null);
+    p2psocket = new P2P(iosocket, opts, function(){
+        p2psocket.emit('peer-obj', "Hello");
+    });
 
     iosocket.on('connect', function(){
         console.log("Now Connected to the Server.");
+        console.log(p2psocket);
         isConnected = true;
         p2psocket.emit("joinroom", {roomname: "testroom"});
     });
@@ -52,6 +68,11 @@ function initCommunication(){
         if(p2psocket.usePeerConnection == true) return;
         console.log("Now upgrading.");
         p2psocket.upgrade();
+        console.log(p2psocket);
+    });
+    
+    p2psocket.on('playerdisconnected', function(data){  
+        console.log("A Player disconnected :(");
     });
 }
 
@@ -60,6 +81,6 @@ function sendPosition(posx, posy){
 
     console.log("Sending new Position: ["+posx+","+posy+"]");
 
-    var position = { PlayerId: "someID", X: posx, Y: posy };
+    var position = { playerId: p2psocket.peerId, X: posx, Y: posy };
     p2psocket.emit('changeposition', position);
 }

@@ -5,6 +5,9 @@ var Game = require('./Game.js')
 //commHandler.initPlayer();
 
 commHandler.init();
+commHandler.addPlayerToGameListener(Game.addPlayerToGame);
+commHandler.removePlayerFromGameListener(Game.removePlayerFromGame);
+commHandler.addPositionToPlayerBufferListener(Game.addPositionToPlayerBuffer);
 
 window.addTestPlayer = function(){
   var player = Game.addPlayerToGame();
