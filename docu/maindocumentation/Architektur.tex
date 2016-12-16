@@ -1,7 +1,7 @@
 \chapter{Architektur}
 
 \section{Arbeitsablauf zur Bearbeitung eines Issue}
-Um eine erfolgreiche Zusammenarbeit zu gewährleisten, sind allgemein gültige Regeln nötig. Insbesondere wird festgelegt, wie die einzelnen Arbeitsschritte ablaufen sollten, um ein Issue zu bearbeiten. Zudem werden weiterhin die Zuständigkeiten geregelt. 
+Um eine erfolgreiche Zusammenarbeit zu gewährleisten, sind allgemein gültige Regeln nötig. Insbesondere wird festgelegt, wie die einzelnen Arbeitsschritte ablaufen sollten, um ein Issue zu bearbeiten. Zudem werden weiterhin die Zuständigkeiten geregelt.
 
 \subsection{Verwaltung der zu bearbeitenden Issues}
 Die zu bearbeitenden Issues werden auf GitHub unter Issues (\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues}{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues}) gepflegt. Um den Verlauf eines Issues darzustellen wird das Kanbanboard von GitHub (\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/projects}{https://github.com/Transport-Protocol/MBC-Ping-Pong/projects}) genutzt.
@@ -19,7 +19,7 @@ Ein Issue besteht aus drei Absätzen:
 \end{itemize}
 
 \subsection{Das Kanbanboard}
-Das Kanbanboard ist in fünf Abschnitte eingeteilt: 
+Das Kanbanboard ist in fünf Abschnitte eingeteilt:
 \begin{itemize}
 	\item \textbf{Selected for Development} \newline
 	Diese Spalte enthält alle Issues, die der Architekt zur Bearbeitung in nächster Zeit ausgewählt hat. Hier enthaltene Issues sind entweder durch den Architekten einem bestimmten Teammitglied zugeordnet. Diese sollten dann auch vorrangig bearbeitet werden. Oder (dies sollte der Normalfall sein) sie sind niemandem zugeordnet, dann kann sich jedes Teammitglied entscheiden, ob er das Issue bearbeitet. Gründe für das direkte zuweisen können unteranderem sein, dass es eine entsprechende vorhergehende Absprache gab, dass der Architekt das Issue speziell einem Bereich zugehörig sieht bzw. eine spezielle Paarung erreichen möchte, oder aber auch, weil ein Issue schon zu lange in "Selected for Development" verweilt. Hat sich ein Teammitglied für ein Issue entschieden, trägt er sich als Bearbeiter ein und zieht es in auf "In Development".
@@ -28,7 +28,7 @@ Das Kanbanboard ist in fünf Abschnitte eingeteilt:
 	\item \textbf{Needs Review} \newline
 	Hier verweilen alle Issues, deren Entwicklung abgeschlossen ist, aber noch nicht geprüft wurde, ob die Abnahmebedingungen erfüllt sind. Normalerweise sollte die Abnahme durch den Architekten erfolgen. Issues, die der Architekt bearbeitet hat, muss das Review von einem anderen Teammitglied gemacht werden. Ein Issue bei dem das Review durchgeführt wird, wird in die Spalte "In Review" verschoben.
 	\item \textbf{In Review} \newline
-	Hier sind alle Issues enthalten, die sich gerade im Review befinden. Sind alle Abnahmekriterien erfüllt, und sind durch die Bearbeitung des Issue keine neuen Probleme/Fehler hinzugekommen, wird es in die Spalte "Done" verschoben und das Issue geschlossen. Ist dies nicht der Fall, wird ein Entsprechender Kommentar mit einer möglichst detaillierten Beschreibung des Problems an das Issue angehängt, und es wieder auf "In Development" geschoben. 
+	Hier sind alle Issues enthalten, die sich gerade im Review befinden. Sind alle Abnahmekriterien erfüllt, und sind durch die Bearbeitung des Issue keine neuen Probleme/Fehler hinzugekommen, wird es in die Spalte "Done" verschoben und das Issue geschlossen. Ist dies nicht der Fall, wird ein Entsprechender Kommentar mit einer möglichst detaillierten Beschreibung des Problems an das Issue angehängt, und es wieder auf "In Development" geschoben.
 	\item \textbf{Done} \newline
 	Diese Spalte enthält alle abgeschlossenen Issues.
 \end{itemize}
@@ -37,7 +37,7 @@ Das Kanbanboard ist in fünf Abschnitte eingeteilt:
 Hier sind die Verhaltensweisen für die Nutzung von Git aufgeführt. Alles hier nicht aufgeführte kann von jedem Teammitglied nach eigenen ermessen gehandhabt werden.
 \begin{itemize}
 	\item \textbf{Branches} \newline
-	Für jedes Issue wird ein Branch erstellt, außer es handelt sich um reine Dokumentation (im Ordner Docu). Ein Branchname folgt folgendem Muster: "\#<IssueNummer> <KurzerName>". Dadurch lässt sich 
+	Für jedes Issue wird ein Branch erstellt, außer es handelt sich um reine Dokumentation (im Ordner Docu). Ein Branchname folgt folgendem Muster: "\#<IssueNummer> <KurzerName>". Dadurch lässt sich
 	\item \textbf{Commits} \newline
 	Commits folgen folgendem Namensschema: "\#<IssueNummer> <Beschreibung>".
 	\item \textbf{Push und Pull} \newline
@@ -75,7 +75,7 @@ In diesem Abschnitt werden die Meilensteine festgelegt. Hierbei wird beschrieben
 		\item \textbf{Kommunikation mittels WebRTC} \newline
 		Architektur bedingt ist die Nutzung von WebRTC unumgänglich. Es ist zu zeigen, dass eine Verbindung von mehreren Handys zum Darstellungsmedium möglich ist.
 		\item \textbf{Steuerung} \newline
-		Die Steuerung soll über den Touchscreen geschehen. Es ist zu zeigen, dass es möglich ist, die Position des Fingers auf dem Touchscreen im Browser auszulesen. 
+		Die Steuerung soll über den Touchscreen geschehen. Es ist zu zeigen, dass es möglich ist, die Position des Fingers auf dem Touchscreen im Browser auszulesen.
 		\item \textbf{Größen der Handys/Tabletts} \newline
 		Unterschiedliche Handys und Tabletts haben verschiedene Größen und Formen. Somit ist ein Konzept zu erarbeiten, welches diesem Problem bei der Steuerung gerecht wird.
 	\end{itemize}
@@ -135,7 +135,7 @@ Der ControlClient erfasst die Steuereingaben des Nutzers und sendet sie an den S
 \subsubsection{OutputClient}
 Der OutputClient empfängt den Gamestate vom Server und aktualisiert die Anzeige entsprechend.
 \subsubsection{Analyse}
-Einerseits ist dieser Ansatz architektonisch sehr einfach zu umzusetzen, da es eine zentrale Instanz gibt und Seperation of Concerns Architektur bedingt unterstützt wird. Zudem ist es möglich ein Spiel auf mehreren OutputClients darzustellen. Da sich die Clients mit dem Server verbinden, ist der Einsatz von WebSockets möglich. Mit socket.io gibt es eine sehr gute Abstraktionsschicht für WebSockets. Andererseits kann durch den Einsatz von WebSockets ein nicht zu vernachlässigendes Delay entstehen, da diese auf TCP basieren. Um diesem zu begegnen ist der Einsatz des WebRTC Protokollstacks notwendig. Zudem muss der Server die Zuordnung der ControlClients und OutputClients zu einem Spiel organisieren. Außerdem sind zwei Netzwerkübertragungen von Nöten, damit die Eingabe des Spielers auf dem OutputClient sichtbar wir. Dadurch wird das Netzwerk doppelt belastet, und es ist zweimal das Übertragungsdelay vorhanden.  
+Einerseits ist dieser Ansatz architektonisch sehr einfach umzusetzen, da es eine zentrale Instanz gibt und Seperation of Concerns Architektur bedingt unterstützt wird. Zudem ist es möglich ein Spiel auf mehreren OutputClients darzustellen. Da sich die Clients mit dem Server verbinden, ist der Einsatz von WebSockets möglich. Mit socket.io gibt es eine sehr gute Abstraktionsschicht für WebSockets. Andererseits kann durch den Einsatz von WebSockets ein nicht zu vernachlässigendes Delay entstehen, da diese auf TCP basieren. Um diesem zu begegnen ist der Einsatz des WebRTC Protokollstacks notwendig. Zudem muss der Server die Zuordnung der ControlClients und OutputClients zu einem Spiel organisieren. Außerdem sind zwei Netzwerkübertragungen von Nöten, damit die Eingabe des Spielers auf dem OutputClient sichtbar wir. Dadurch wird das Netzwerk doppelt belastet, und es ist zweimal das Übertragungsdelay vorhanden.
 \subsection{Ansatz 2}
 \begin{figure}[ht]
 	\centering
@@ -147,14 +147,14 @@ Einerseits ist dieser Ansatz architektonisch sehr einfach zu umzusetzen, da es e
 Der Server stellt die statischen Inhalte (HTML, CSS, JS) bereit. Zudem fungiert er als zentrale Instanz für den WebRTC-Protokollstack
 \subsubsection{ExternerServer}
 Der externe Server ist ein öffentlicher Stun-/Turn-/Ice-Server, der beispielsweise von Google bereitgestellt wird.
-\subsubsection{ControlClient}
-Der ControlClient erfasst die Steuereingaben des Nutzers und sendet sie an den OutputClient.
-\subsubsection{OutputClient}
-Der OutputClient ist ein Fat-Client. Er enthält die gesamte Spiellogik und empfängt über den WebRTC-Protokollstack direkt die Steuereingaben des Spielers. Zudem zeigt er das Spiel an.
+\subsubsection{ControlPeer}
+Der ControlPeer erfasst die Steuereingaben des Nutzers und sendet sie an den DisplayPeer.
+\subsubsection{DisplayPeer}
+Der DisplayPeer ist ein Fat-Client. Er enthält die gesamte Spiellogik und empfängt über den WebRTC-Protokollstack direkt die Steuereingaben des Spielers. Zudem zeigt er das Spiel an.
 \subsubsection{Analyse}
-Der Ansatz 2 ist architektonisch recht Komplex, da die Aufteilung auf Client und Server (der Fat-Client-Ansatz) unterstützt Seperation of Concern nicht direkt. Es muss während der Entwicklung verstärkt darauf geachtet werden, das die Trennung von Spiellogik und Ausgabe getrennt wird. Zu dem ist man auf den WebRTC-Protokollstack angewiesen, da die Clients direkt miteinander Kommunizieren müssen. Außerdem ist man auf einen einzelnen OutputClient beschränkt. Andererseits erfolgt die Steuerung direkt an dem OutputClient, dadurch ist das kleinst mögliche Delay zwischen Eingabe,Verarbeitung und Ausgabe gewährleistet. Außerdem ermöglicht der Einsatz von WebRTC den Einsatz von UDP als Transportprotokoll, wodurch das Delay weiter verkleinert werden kann, da UDP Verbindungslos ist.
+Der Ansatz 2 ist architektonisch recht Komplex, da die Aufteilung auf Client und Server wegfällt, und somit die native Unterstützung von Seperation of Concern nicht gegeben ist. Es muss während der Entwicklung verstärkt darauf geachtet werden, das die Trennung von Spiellogik und Ausgabe eingehalten wird. Zu dem ist man auf den WebRTC-Protokollstack angewiesen, da die Peers direkt miteinander Kommunizieren müssen. Außerdem ist man auf einen einzelnen DisplayPeer beschränkt. Andererseits erfolgt die Übertragung der Steuerung direkt von dem ControlPeer an den DisplayPeer, dadurch ist das kleinst mögliche Delay zwischen Eingabe, Verarbeitung und Ausgabe gewährleistet. Außerdem ermöglicht der Einsatz von WebRTC den Einsatz von UDP als Transportprotokoll, wodurch das Delay weiter verringer werden kann, da UDP Verbindungslos ist.
 \subsection{Fazit}
-Auch wenn der Ansatz 2 zunächst komplexer erscheint und einen geringeren Funktionsumfang bittet, da nur ein AusgabeClient pro spiel unterstützt wird und WebRTC eingesetzt werden muss, überwiegen doch die Vorteile dieses Ansatzes. Durch die fehlende zweite Netzwerkübertragung und der mögliche Einsatz von UDP, werden Delays minimiert. Gleichzeitig wird mehr Rechenleistung auf die Clients ausgelagert und eine aufwändige Verwaltung, welcher Spieler zu welchem Spiel gehört ist auch nicht notwendig.
+Auch wenn der Ansatz 2 zunächst komplexer erscheint und einen geringeren Funktionsumfang bietet, da nur ein AusgabeClient pro Spiel unterstützt wird und WebRTC eingesetzt werden muss, überwiegen doch die Vorteile dieses Ansatzes. Durch die fehlende zweite Netzwerkübertragung und der mögliche Einsatz von UDP, werden Delays minimiert. Gleichzeitig wird mehr Rechenleistung auf die Clients ausgelagert und eine aufwändige Verwaltung, welcher Spieler zu welchem Spiel gehört ist auch nicht notwendig.
 
 \section{Risiken}
 In diesem Kapitel wird auf die Risiken eingegangen, die zu Schwierigkeiten bei der Projektdurchführung führen können. Die Auswirkungen und Eintrittswahrscheinlichkeit werden in 3 Kategorien eingeteilt: "1:Gering, 2:Mittel, 3: Hoch". Das potenzielle Risiko ist das Produkt aus Auswirkungen und Eintrittswahrscheinlichkeit.
@@ -186,7 +186,7 @@ Zunächst wird auf die technischen Risiken eingegangen
 \subsubsection{Kollisionserkennung funktioniert nicht}
 \begin{itemize}
 	\item \textbf{Beschreibung:} \newline
-	Durch die schnelle Ballbewegung bei Ping-Pong ist eine gute Kollisionserkennung notwendig. 
+	Durch die schnelle Ballbewegung bei Ping-Pong ist eine gute Kollisionserkennung notwendig.
 	\item \textbf{Eintrittsgründe;}
 	\begin{itemize}
 		\item Die gewählte Physicsengine ist nicht leistungsfähig genug.
@@ -323,7 +323,7 @@ Zunächst wird auf die technischen Risiken eingegangen
 \section{Reviews}
 \subsection{\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/3}{Auswahl einer geeigneten 2D-/Physiksengine}}
 \begin{itemize}
-	\item \textbf{Datum:} 05.12.16 
+	\item \textbf{Datum:} 05.12.16
 	\item \textbf{Prüfung der Anforderungen:}
 	\begin{itemize}
 		\item \checkmark Aufruf der Seite http://<IpDesNodeJsServers>:<HttpPortDesNodeJsServers>/test2DEngine.html zeigt die Testseite.
@@ -335,7 +335,7 @@ Zunächst wird auf die technischen Risiken eingegangen
 	\item \textbf{Prüfung des Codes:}
 	\begin{itemize}
 		\item Der Code ist strukturiert und lesbar.
-		\item Bis auf 2 Zeilen ist der Code verständlich: 
+		\item Bis auf 2 Zeilen ist der Code verständlich:
 		\begin{itemize}
 			\item this.ball.body.immovable = true; \newline
 			Ein besserer Kommentar, warum wäre gut gewesen. Nach einigem suchen, gehe ich davon aus, dass nur Objekte, die mit dem Ball kollidieren, beeinflusst werden, aber nicht der Ball selbst.\newline
@@ -348,13 +348,21 @@ Zunächst wird auf die technischen Risiken eingegangen
 
 \section{Prototyp}
 In diesem Kapitel wird der Prototyp behandelt.
-\subsection{Fachlicher Ablauf}
-Im fachlichen Ablauf wird dargestellt, wie sich das Programm verhalten soll. Es wird jedoch nicht auf genaue Implementierungsdetails wert gelegt. Er dient dem allgemeine Verständnis, wie der Programmablauf sein soll. Auch die Funktionsnamen bei fremd-APIs dienen lediglich der Beschreibung, welches Verhalten von der API erwartet wird. \textbf{Allerdings sollte der Ablauf später im Programmcode ersichtlich sein.}
+
+\subsection{Schnittstellen}
+Dieses Diagramm (Abbildung \ref{Prototyp Schnittstellen - Klassendiagram}) dient dem gemeinsamen Verständnis, welche Klasse welche Schnittstelle bietet.
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.9\textwidth]{architecture/prototypSequenceDiagram.png}
+	\includegraphics[width=0.9\textwidth]{architecture/PrototypeClassDiagram.png}
+	\caption{Prototyp Schnittstellen - Klassendiagram}
+	\label{Prototyp Schnittstellen - Klassendiagram}
+\end{figure}
+
+\subsection{Fachlicher Ablauf}
+Im fachlichen Ablauf (Abbildung \ref{Prototyp fachlicher Ablauf - Sequenzdiagramm}) wird dargestellt, wie sich das Programm verhalten soll. Es wird jedoch nicht auf genaue Implementierungsdetails wert gelegt. Er dient dem allgemeine Verständnis, wie der Programmablauf sein soll. Auch die Funktionsnamen bei fremd-APIs dienen lediglich der Beschreibung, welches Verhalten von der API erwartet wird. \textbf{Allerdings sollte der Ablauf später im Programmcode ersichtlich sein.}
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width = 0.9\textheight, angle=270]{architecture/PrototypeSequenceDiagram.png}
 	\caption{Prototyp fachlicher Ablauf - Sequenzdiagramm}
 	\label{Prototyp fachlicher Ablauf - Sequenzdiagramm}
 \end{figure}
-
-

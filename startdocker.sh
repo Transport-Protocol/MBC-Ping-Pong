@@ -1,8 +1,10 @@
 #!/bin/bash
 
-cd /opt
+# cd /opt
+#
+# cd MBC-Ping-Pong
 
-cd MBC-Ping-Pong
+cd src
 
 npm install
 browserify public/js/DisplayPeerMain.js -o public/js/DisplayPeer_Bundle.js
