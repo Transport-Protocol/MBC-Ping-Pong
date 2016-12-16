@@ -145,9 +145,9 @@ Je nachdem wie die Steuerung implementiert wird die Pixeldichte eines Steuerger�
 Theoretisch kann dies dazu führen das Spieler auf einem Tablet mit niedriger Auflösung immer im Nachteil zu Hochauflösenden Smartphones sind.
 Laut der Android Spezifikation muss die Pixeldichte von Android Geräten mindestens 100 dpi betragen. Ferner sind in den Spezifikationen Pixeldichten bis zu 640dpi (xxxhdpi) definiert. Geräte mit 640dpi wären Geräten mit 100dpi um 640\% überlegen.
 \paragraph{} Angenommen die Schläger würden 1:1 um den Pixelabstand der Controller bewegt werden und das Spielfeld habe eine Höhe von 400 Pixeln.
-Auf einem Gerät mit 100dpi müsste der Spieler über eine Stecke von 4 cm streichen müssen um den Schläger von einem Ende zum anderen zu bewegen. Auf einem Gerät mit 640dpi müsste der Spieler nur über eine Stecke von unter einem Centimeter streichen.
+Auf einem Gerät mit 100dpi müsste der Spieler über eine Stecke von 4 cm streichen müssen um den Schläger von einem Ende zum anderen zu bewegen. Auf einem Gerät mit 640dpi müsste der Spieler nur über eine Stecke von unter einem Zentimeter streichen.
 \subsection{Behandeln verschiedener Pixeldichten}
-\paragraph{Ermitteln von der PPI im Browser}
+\paragraph{Ermitteln von der DPI im Browser}
 \mbox{}\\
 Es wird nach vorhanden Lösungen zum erkennen der Pixeldichte in PPI bzw DPI gesucht.
 Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die Ergebnisse mit den tatsächlichen DPI verglichen.
@@ -157,19 +157,19 @@ Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die
 	      Name & PC Monitor\\
 	      Diagonale & 23.6zoll\\
 	      Auflösung & 1920*1080\\
-	      Pixeldichte & 93 PPI \\
+	      Pixeldichte & 93 DPI\\
 	\end{tabular}
 	\item \begin{tabular}{cc}
 	      Name & Samsung Galaxy S4\\
 	      Diagonale & 4.99zoll\\
 	      Auflösung & 1920*1080\\
-	      Pixeldichte & 441 PPI
+	      Pixeldichte & 441 DPI\\
 	\end{tabular}
 	\item \begin{tabular}{cc}
 	      Name & Samsung Galaxy Tab A\\
 	      Diagonale & 9.7zoll\\
 	      Auflösung & 1024*768\\
-	      Pixeldichte & 132 PPI\\
+	      Pixeldichte & 132 DPI\\
 	\end{tabular}
 \end{enumerate}
 \newpage
@@ -238,7 +238,7 @@ Das Ergebnis der Tests ist leider ernüchternd. Die ersten Geräte zeigten das Q
 \mbox{}\\
 An vielen Stellen habe ich gelesen das der DevicePixelRatio sehr häufig gerundet wird. Dies fiel ebenfalls bei den Testgeräten auf.
 \newline
-Also kam mir die Idee eine eigene Version der Funktion zu schreiben. In Javascript kann man mit folgender Funktion testen ob ein bestimmter device-pixel-ratio unterstützt wird.
+Also kam mir die Idee eine eigene Version der Funktion zu schreiben. In Javascript kann man mit folgender Funktion testen ob ein bestimmter DevicePixelRatio unterstützt wird.
 \begin{lstlisting}
 if (window.matchMedia('(-webkit-min-device-pixel-ratio: 1)').matches) 
 \end{lstlisting}
@@ -257,7 +257,7 @@ function getDPR() {
 }
 \end{lstlisting}
 Leider ergaben die Test mit dieser Funktion keine nennenswerte Ergebnisse weswegen ich auf eine Auflistung und Auswertung der Ergebnisse in diesem Falle verzichte.
-\paragraph{Verwendung der CSS3 MediaQuery eigenschaften}
+\paragraph{Verwendung der CSS3 MediaQuery Eigenschaften}
 \mbox{}\\
 Mit CSS3 lassen sich verschiedene Fälle für verschiedene Auflösungen definieren.
 \begin{figure}[ht]
@@ -276,7 +276,7 @@ Hiermit ist es möglich für die verschiedenen Pixeldichten die Kontrollfelder a
 \subsection{Ergebnis der Analyse}
 Es gibt leider keine Möglichkeit eine Webapp mit exakten physikalischen Größen zu gestalten.
 \paragraph{Gestaltung per CSS Einheiten} In CSS besteht die Möglichkeit Größen in CM oder Zoll zu definieren. Leider entsprechen die Werte auf Mobilen Endgeräten nicht den gewünschten Werten.
-\paragraph{Gestaltung mit Device Pixel Ratio} Die Gestaltung per devicePixelRatio erscheint wesentlich genauer als die Gestaltung mit CSS Längenangaben allerdings ist auch diese Lösung sehr ungenau und lässt sich nicht einheitlich nutzen. 
+\paragraph{Gestaltung mit Device Pixel Ratio} Die Gestaltung per DevicePixelRatio erscheint wesentlich genauer als die Gestaltung mit CSS Längenangaben allerdings ist auch diese Lösung sehr ungenau und lässt sich nicht einheitlich nutzen. 
 \paragraph{Gestaltung der Steuerung} Man könnte die Steuerung so definieren das ein Vorteil der Pixeldichte sich nicht zu sehr auf das Spiel auswirkt. Beispielsweise Kann man eine Maximalgeschwindigkeit der Schläger so definieren das sie auch auf Geräten mit geringer Pixeldichte leicht erreicht werden kann. Dadurch sind allerdings möglicherweise Geräte mit hoher Pixeldichte im Nachteil da man für kurze Bewegungen nur noch minimale Bewegungen auf dem Bildschirm durchführen dürfte.
 \newline
 Denkbar wäre auch eine Steuerung mit fester Bewegungsgeschwindigkeit sodass nur noch die Richtung der Schläger durch die Controller geregelt wird. Diese Art Steuerung verspricht allerdings nicht viel Spaß oder Reaktionsmöglichkeiten der Spieler.
