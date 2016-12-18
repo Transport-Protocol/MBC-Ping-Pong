@@ -123,3 +123,198 @@ Der fertige Prototyp sieht so aus:
 	\caption{Erster Prototyp}
 	\label{figx}
 \end{figure}
+\newpage
+\section{Analyse - Steuerung}
+\begin{quote}
+	\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/11}{Analyse - Steuerung \#11}
+	\newline
+	\textit{Die Steuerung des Spiels erfolgt über das Handydisplay. Jedes Handy ist unterschiedlich groß, zudem sollte der Schläger nicht springen können.}
+\end{quote}
+Es zu analysieren wie sich verschiedene Auflösungen und verschiedene Pixeldichten auf das Spielgefühl auswirken können.
+Denkbar ist das Geräte mit einer geringen Pixeldichte gegenüber Spielern mit einer hohen Pixeldichte im Vorteil sind da aus Geräten mit einer hohen Pixeldichte sehr viel kleinere Gesten zur Steuerung ausreichen.
+\newline
+\textbf{Zielsetzung dieser Analyse}
+\begin{enumerate}
+	\item
+	      \textbf{Feststellung} Es soll festgestellt werden in wie weit sich ein Unterschied der Pixeldichte auf die Spielweise auswirken kann.
+	\item
+	      \textbf{Behandlung} Es soll geprüft werden ob sich eine mögliche Unfairness beheben lässt und ein mögliches Konzept erstellt werden.
+\end{enumerate}
+\subsection{Feststellung der Auswirkung verschiedener Pixeldichten}
+Je nachdem wie die Steuerung implementiert wird die Pixeldichte eines Steuergerätes mehr oder weniger Einfluss auf das Spiel haben. Das birgt die Gefahr das Spieler mit einem Gerät mit einer geringen Pixeldichte gegenüber einem Spieler mit einem Gerät mit hoher Pixeldichte im Nachteil ist da er wesentlich stärkere Bewegungen auf der Touchfläche ausführen muss.
+Theoretisch kann dies dazu führen das Spieler auf einem Tablet mit niedriger Auflösung immer im Nachteil zu Hochauflösenden Smartphones sind.
+Laut der Android Spezifikation muss die Pixeldichte von Android Geräten mindestens 100 dpi betragen. Ferner sind in den Spezifikationen Pixeldichten bis zu 640dpi (xxxhdpi) definiert. Geräte mit 640dpi wären Geräten mit 100dpi um 640\% überlegen.
+\paragraph{} Angenommen die Schläger würden 1:1 um den Pixelabstand der Controller bewegt werden und das Spielfeld habe eine Höhe von 400 Pixeln.
+Auf einem Gerät mit 100dpi müsste der Spieler über eine Stecke von 4 cm streichen müssen um den Schläger von einem Ende zum anderen zu bewegen. Auf einem Gerät mit 640dpi müsste der Spieler nur über eine Stecke von unter einem Zentimeter streichen.
+\subsection{Behandeln verschiedener Pixeldichten}
+\paragraph{Ermitteln von der DPI im Browser}
+\mbox{}\\
+Es wird nach vorhanden Lösungen zum erkennen der Pixeldichte in PPI bzw DPI gesucht.
+Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die Ergebnisse mit den tatsächlichen DPI verglichen.
+\newline\textbf{Die Testgeräte}
+\begin{enumerate}
+	\item \begin{tabular}{cc}
+	      Name & PC Monitor\\
+	      Diagonale & 23.6zoll\\
+	      Auflösung & 1920*1080\\
+	      Pixeldichte & 93 DPI\\
+	\end{tabular}
+	\item \begin{tabular}{cc}
+	      Name & Samsung Galaxy S4\\
+	      Diagonale & 4.99zoll\\
+	      Auflösung & 1920*1080\\
+	      Pixeldichte & 441 DPI\\
+	\end{tabular}
+	\item \begin{tabular}{cc}
+	      Name & Samsung Galaxy Tab A\\
+	      Diagonale & 9.7zoll\\
+	      Auflösung & 1024*768\\
+	      Pixeldichte & 132 DPI\\
+	\end{tabular}
+\end{enumerate}
+\newpage
+\begin{itemize}
+	\item
+	      \textbf{http://www.infobyip.com/detectmonitordpi.php} Eine Website zur Ermittlung der DPI. Es wird ein Quadrat per CSS auf eine bestimmte Größe, zum Beispiel 1 Zoll, formatiert und dann die Größe in Pixeln ausgelesen. Auf diese Weise lässt sich ein DPI wert berechnen.
+	      \newline
+	      Tests:
+	      \begin{enumerate}
+	      	\begin{tabular}{ccc}
+	      		                     & Erwarteter Wert & Ermittelter Wert           \\
+	      		PC Monitor 1         &                 &                            \\
+	      		Pixeldichte          & 93 DPI          & \colorbox{red!30}{96 DPI}  \\
+	      		Größe des Feldes   & 8 cm            & \colorbox{red!30}{8.2 cm}  \\
+	      		                     &                 &                            \\
+	      		Samsung Galaxy S4    &                 &                            \\
+	      		Pixeldichte          & 441 DPI         & \colorbox{red!30}{288 DPI} \\
+	      		Größe des Feldes   & 8 cm            & \colorbox{red!30}{1.8 cm}  \\
+	      		                     &                 &                            \\
+	      		Samsung Galaxy Tab A &                 &                            \\
+	      		Pixeldichte          & 132 DPI         & \colorbox{red!30}{96 DPI}  \\
+	      		Größe des Feldes   & 8 cm            & \colorbox{red!30}{5.7 cm}  \\
+	      	\end{tabular}
+	      \end{enumerate}
+	      Getestet wurde jeweils mit Firefox & Chrome, der PC Monitor wurde auch noch mit dem Edge Browser getestet. Die Ergebnisse waren allesamt für das Gerät identisch.
+	      \newline
+	      \textbf{Ergebnis:} Die DPI wurden nicht korrekt erkannt. Die Werte weichen auf dem Mobiltelefon um bis zu \underline{77.5\%} ab.
+\end{itemize}
+\newpage
+\paragraph{Verwenden von 'window.devicePixelRatio'}
+\mbox{}\\
+Die Eigenschaft \textit{window.devicePixelRatio} gibt das Verhältnis der Größe der physikalischen Pixel des aktuellen Displays zu der Größe der Geräteunabhängigen-Pixel (\textit{device independent pixels(dips)}) wieder.
+\begin{displaymath}
+	window.devicePixelRatio = physical pixels / dips 
+\end{displaymath}
+
+Es wird vor allem dafür genutzt um eine Einheitliche Darstellung von Webinhalten auf verschiedenen Displaygrößen zu erreichen.
+\newline
+Die Methode klingt sehr vielversprechend, also entschied ich einen Test zu erstellen. Meine Idee ist es ein Quadrat zeichnen zu lassen bei dem die Größe abhängig von dem devicePixelRatio ist und dann die Seitenlänge auf dem Display zu messen.
+Mein verwendeter Code:
+\begin{lstlisting}
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+var w = 100*window.devicePixelRatio;
+ctx.rect(20,20,w,w);
+ctx.fillText(w,30,30); 
+ctx.stroke(); 
+\end{lstlisting}
+
+\textbf{Tests:}
+\newline
+\begin{tabular}{ccc}
+	Gerät                 & DevicePixelRatio & Größe TestQuadrat \\
+	PC Monitor 23.6"       & 1.0              & 2.7 cm              \\
+	Samsung Galaxy S4      & 3.0              & 1.9 cm              \\
+	Samsung Galaxy Tab A   & 1.0              & 1.5 cm              \\
+	Samsung Galaxy S3 Neo  & 2.0              & 1.3 cm              \\
+	Samsung Galaxy S5 mini & 2.0              & 1.1 cm              \\
+	Samsung Galaxy S7 edge & 4.0              & >4 cm               \\
+\end{tabular}
+\paragraph{Ergebnis:}
+\mbox{}\\
+Das Ergebnis der Tests ist leider ernüchternd. Die ersten Geräte zeigten das Quardrat allesamt in einer ähnlichen Größe. Doch auf weiteren Testgeräten zeigte sich das die Größe sehr stark variierte. Auf dem Samsung Galaxy S7 edge war das Quadrat sogar sehr viel größer als der vordefinierte Bereich.
+\newpage
+\paragraph{Suche nach Alternativen zu DevicePixelRatio}
+\mbox{}\\
+An vielen Stellen habe ich gelesen das der DevicePixelRatio sehr häufig gerundet wird. Dies fiel ebenfalls bei den Testgeräten auf.
+\newline
+Also kam mir die Idee eine eigene Version der Funktion zu schreiben. In Javascript kann man mit folgender Funktion testen ob ein bestimmter DevicePixelRatio unterstützt wird.
+\begin{lstlisting}
+if (window.matchMedia('(-webkit-min-device-pixel-ratio: 1)').matches) 
+\end{lstlisting}
+Meine Idee war es den gewünschten Wert der Funktion schrittweise zu erhöhen und den zuletzt akzeptierten Wert zurückzugeben.
+\newline
+Daraus ergab sich folgende Funktion:
+\begin{lstlisting}
+function getDPR() {
+    var numb = 1.0;
+    while(window.matchMedia(
+    	'(-webkit-min-device-pixel-ratio: ' + numb + ')'
+    	).matches) {
+        	numb += 0.1;
+    }
+    return numb - 0.1;
+}
+\end{lstlisting}
+Leider ergaben die Test mit dieser Funktion keine nennenswerte Ergebnisse weswegen ich auf eine Auflistung und Auswertung der Ergebnisse in diesem Falle verzichte.
+\paragraph{Verwendung der CSS3 MediaQuery Eigenschaften}
+\mbox{}\\
+Mit CSS3 lassen sich verschiedene Fälle für verschiedene Auflösungen definieren.
+\begin{figure}[ht]
+	\centering
+	\begin{lstlisting}
+@media (resolution: 96dpi) { /* Exakt 96 Bildpunkte pro Zoll */ }
+@media (min-resolution: 200dpcm) { /* Mindestens 200 Punkte pro cm */ }
+@media (max-resolution: 300dpi) { /* Maximal 300 Punkte pro Zoll */ }
+	\end{lstlisting}
+	\caption{Quelle: https://wiki.selfhtml.org/wiki/CSS/Media_Queries}
+	\label{figx}
+\end{figure}
+\newline
+Hiermit ist es möglich für die verschiedenen Pixeldichten die Kontrollfelder anzupassen. Allerdings werden die Pixeldichten der Geräte nicht immer richtig erkannt. Es 
+\newpage
+\subsection{Ergebnis der Analyse}
+Es gibt leider keine Möglichkeit eine Webapp mit exakten physikalischen Größen zu gestalten.
+\paragraph{Gestaltung per CSS Einheiten} In CSS besteht die Möglichkeit Größen in CM oder Zoll zu definieren. Leider entsprechen die Werte auf Mobilen Endgeräten nicht den gewünschten Werten.
+\paragraph{Gestaltung mit Device Pixel Ratio} Die Gestaltung per DevicePixelRatio erscheint wesentlich genauer als die Gestaltung mit CSS Längenangaben allerdings ist auch diese Lösung sehr ungenau und lässt sich nicht einheitlich nutzen. 
+\paragraph{Gestaltung der Steuerung} Man könnte die Steuerung so definieren das ein Vorteil der Pixeldichte sich nicht zu sehr auf das Spiel auswirkt. Beispielsweise Kann man eine Maximalgeschwindigkeit der Schläger so definieren das sie auch auf Geräten mit geringer Pixeldichte leicht erreicht werden kann. Dadurch sind allerdings möglicherweise Geräte mit hoher Pixeldichte im Nachteil da man für kurze Bewegungen nur noch minimale Bewegungen auf dem Bildschirm durchführen dürfte.
+\newline
+Denkbar wäre auch eine Steuerung mit fester Bewegungsgeschwindigkeit sodass nur noch die Richtung der Schläger durch die Controller geregelt wird. Diese Art Steuerung verspricht allerdings nicht viel Spaß oder Reaktionsmöglichkeiten der Spieler.
+\newline
+\newline
+\textbf{Lösungsmöglichkeit:}
+\paragraph{Verrechnung der Information zur Pixeldichte} 
+\mbox{}\\
+Mit den CSS3 Media Queries ist es zumindest ansatzweise Möglich die Pixeldichte der Geräte zu erkennen. Allerdings sich auch sie sehr ungenau und keinesfalls verlässlich.
+\newline
+Zur fairen Gestaltung der Touchfelder sollten wir die Media Queries bzw den DevicePixelRatio verwenden um zwischen Geräten mit hoher und geringerer Pixeldichte unterscheiden.
+\newline
+Beispielsweise indem wir den PixelRatio mit der zurückgelegten Stecke in Pixeln verrechnen.
+\begin{lstlisting}
+movement = screenDistance / window.devicePixelRatio;
+\end{lstlisting}
+Somit werden Geräte mit einem PixelRatio von 1 nicht benachteiligt. Außerdem hat dies zur Folge das Spieler auf einem Gerät mit einem hohen PixelRatio ihre Schläger nicht unnötig schnell bewegen wenn sie zum Beispiel nur kurze Bewegungen erreichen wollen.
+\newline 
+Ein Problem bleibt jedoch, der PixelRatio ist nicht sehr genau. Um ein Gefühl für die Auswirkungen zu bekommen müssen wir mehrere Testgeräte für die Steuerung verwenden.
+\subsection{Flüssige Bewegung}
+Um eine flüssige Bewegung zu garantieren sollten wir uns auf einige Eigenschaften der Steuerung festlegen.
+\paragraph{Anforderung: Bildschirmposition != Schlägerposition}}
+\mbox{}\\
+Die Schläger sollen in Abhängigkeit einer Bewegung, also einer Positionsänderung auf dem Bildschirm bewegt werden. Das bedeutet für uns das wir die Information der Controller nicht als Absolute Positionen sehen sondern eher die Änderung während einer Geste betrachten.
+\newline
+Hierfür sei folgendes Festgelegt:
+\begin{itemize}
+	\item 
+	      \textbf{Beginn der Geste:} Eine Geste beginnt mit dem Berühren des Touchfeldes. Die Startposition wird ermittelt und in einer Variable gespeichert.
+	\item
+	      \textbf{Während der Geste:} Während der Finger sich auf dem Touchfeld bewegt wird die neue Position des Fingers ausgewertet. Die neue Position wird von der alten Position abgezogen wodurch sich eine Differenz ergibt. Diese wird dann mit dem PixelRatio verrechnet und an das Spiel (DisplayPeer) geschickt.
+	      \newline
+	      Der ganze Prozess sollte alle 40ms neu gestartet werden.
+	\item
+	      \textbf{Ende einer Geste: } Eine Geste endet sobald das Touchfeld nicht mehr berührt wird. Die aktuelle Änderung der position wird auf 0 gesetzt.
+\end{itemize}
+Wenn der Controller nicht mehr berührt wird so darf sich der Schläger nicht weiter bewegen. Der Controller braucht in diesem Zustand dem Spiel keine Infos übermitteln.
+\newline
+Moderne Mobiltelefone haben wesentlich höhere Auflösungen als unser Spielfeld groß sein wird. Aus diesem Grund sollte die Bewegung auf einem Maximumwert begrenzt werden.
+\newline 
+Maximal sollte sich ein Schläger über die gesamte Spielfläche in einem Zyklus bewegen können. Es ist denkbar das wir den Wert später nach unten korrigieren müssen um ein gutes Spielgefühl schaffen zu können.
