@@ -1,1 +1,41 @@
 \chapter{JavaScript}
+\section{Auswahl einer Physics Engine}
+Die Darstellung auf dem Anzeigegerät ist über den DOM nicht möglich, da die Bewegung des Balls und der Schläger zu schnell werden. Zudem wird auch die Physik auf dem Anzeigegerät berechnet. Hierfür ist eine Kollisionserkennung erforderlich.
+
+\subsection{Anforderungen}
+\begin{itemize}
+\item \textbf{JavaScript Game Engine} \newline
+Da wir im Backend einen NodeJS Server stehen haben und im Frontend ebenfalls JavaScript nutzen, ergibt es sich von selbst, dass wir eine JavaScript Game Engine brauchen.
+\item \textbf{Unterstützung von 2D Graphics} \newline
+Wir wollen unser Spiel in 2D umsetzen, insofern ist 3D-Unterstützung nicht notwendig.
+\item \textbf{Physik} \newline
+Nicht jede Game Engine unterstützt auch Physik, in unserem Spiel sind allerdings physikalische Gegebenheiten zu beachten wie zB der richtige Ein- und Austrittswinkel des Balls. Da der thematische Schwerpunkt unseres Projektes auf den browserspezifischen Gegebenheiten liegt, wollen wir uns nicht mit umfangreicher Implementierung der Physik beschäftigen.
+\item \textbf{Kollisionserkennung} \newline
+Ebensowenig unterstützt jede Physics Engine auch Kollisionserkennung. Diese ist allerdings ein zentraler Punkt des Spiels, sowohl die Kollisionen des Balls mit den Schlägern, als auch mit dem Spielfeldrand und später ggf. weiteren Bällen.
+\item \textbf{Opensource} \newline
+Wir sind alle arme Studenten und wollen bzw können daher nicht Geld für unser Uniprojekt ausgeben. Hinzu kommt, dass man bei Opensource-Projekten den Sourcecode einsehen kann, was in vielen Situationen hilfreich ist.
+\item \textbf{Performance} \newline
+Auch wenn wir nur ein sehr kleines Spiel bauen, so soll es doch so gut wie möglich in Echtzeit reagieren können, da Verzögerungen sofort auffallen. Die Physics Engine muss somit auch schnell die jeweiligen Positionen der Spielobjekte berechnen und darstellen können.
+\item \textbf{Dokumentation} \newline
+Eine vorhandene und idealerweise auch gute Dokumentation lässt die Lernkurve zu Beginn steiler sein und ist auch bei später ggf. auftretenden Problemen wünschenswert.
+\item \textbf{Community} \newline
+Wir wollen eine Engine aussuchen, die auch wirklich genutzt wird, und bei der es idealerweise auch einen entsprechenden Support aus der Community gibt. Dies ist ebenfalls nützlich im Hinblick auf zukünftige Schwierigkeiten.
+\end{itemize}
+
+\subsection{Verglichene Engines}
+Die meisten Engines mussten nur kurz überflogen werden, da sie mindestens eine der Anforderungen nicht erfüllt haben. Es gab natürlich noch weitere, allerdings schien bei denen keine große Community dahinter zu stehen, was uns in vergangenen Projekten schon auf die Füße gefallen ist.
+\begin{itemize}
+\item \textbf{Construct 2} \newline
+Construct 2 ist zwar vermeintlich kostenlos, dabei steht allerdings nur eine Demo zur Verfügung. Zusätzlich gefällt die Handhabung nicht.
+\item \textbf{ImpactJS} \newline
+Kostet 99 USD und ist somit direkt raus.
+\item \textbf{EaselJS} \newline
+Ist zwar kostenlos, bietet aber weder Physik- noch Kollisionsunterstützung an.
+\item \textbf{pixi.js} \newline
+Ist zwar kostenlos, bietet aber weder Physik- noch Kollisionsunterstützung an.
+\item \textbf{Phaser} \newline
+Erfüllt alle Anforderungen und hat zusätzlich zu der guten Dokumentation noch viele brauchbare Beispiele, an denen man sich orientieren kann. Hinzu kommt, dass sogar 3 verschiedene Physiksysteme unterstützt werden. Dabei ist Arcade Physics eine sehr leichtgewichtige Variante, die auch auf ressourcenarmen Geräten läuft und für unser Spiel vollkommen ausreichend ist.
+\end{itemize}
+
+\subsection{Entscheidung}
+Nach Rücksprache mit den Teammitgliedern ist die Auswahl entsprechend obigen Kriterien auf Phaser gefallen.
