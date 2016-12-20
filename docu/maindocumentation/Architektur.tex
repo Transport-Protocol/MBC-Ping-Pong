@@ -372,39 +372,67 @@ Im fachlichen Ablauf (Abbildung \ref{Prototyp fachlicher Ablauf - Sequenzdiagram
 \FloatBarrier
 
 \section{Release 1.0}
-\subsection{MookUps}
+	\subsection{MookUps} \label{mookups}
+		Die Mookups (\ref{Mookup - Initial} - \ref{Mookup - GameEnded}) zeigen die Zustände des Spiels und die einzelnen Komponenten (in den MookUps durch grüne Namen gekennzeichnet) werden beschrieben. Im Abschnitt \ref{states} wird gezeigt, wie die einzelnen States in einander Überführt werden.
+		\subsubsection{Beschreibung der Komponenten}
+		\begin{itemize}
+			\item \textbf{Spieler 1:} Spieler, der den Schläger auf der linken Spielfeldseite steuert.
+			\item \textbf{Spieler 2:} Spieler, der den Schläger auf der rechten Spielfeldseite steuert.
+			\item \textbf{Spielfeld:} Bereich, in dem das Spiel durch Phaser dargestellt wird.
+			\item \textbf{Wand 1:} Wand hinter dem Schläger 1. Wird diese getroffen, erhält Spieler 2 einen Punkt.
+			\item \textbf{Wand 2:} Wand hinter dem Schläger 2. Wird diese getroffen, erhält Spieler 1 einen Punkt.
+			\item \textbf{Wand 3:} Seitenwände, die lediglich zur Spielfeldbegrenzung dienen.
+			\item \textbf{Schläger 1:} Schläger der durch Spieler 1 gesteuert wird.
+			\item \textbf{Schläger 2:} Schläger der durch Spieler 2 gesteuert wird.
+			\item \textbf{Punkte:} Anzeige des aktuellen Spielstandes, im Format <Treffer auf Wand2> : <Treffer auf Wand 1>.
+			\item \textbf{JoinGamePanel:} Hier werden alle Informationen angezeigt, die benötigt werden, um einem Spiel beizutreten.
+			\begin{itemize}
+				\item \textbf{QR-Code:} URL 1 als QR-Code
+				\item \textbf{URL 1:} URL, um dem Spiel beizutreten.
+			\end{itemize}
+			\item \textbf{Timer:} Restzeit bis zum Eintreten eines Events.
+		\end{itemize}
+		\begin{figure}[!htb]
+			\centering
+			\includegraphics[width=0.65\textwidth]{architecture/Mookup - Initial.png}
+			\caption{Mookup - Initial}
+			\label{Mookup - Initial}
+		\end{figure}
+		
+		\begin{figure}[!htb]
+			\centering
+			\includegraphics[width=0.65\textwidth]{architecture/Mookup - FirstPlayerConnected.png}
+			\caption{Mookup - FirstPlayerConnected}
+			\label{Mookup - FirstPlayerConnected}
+		\end{figure}
+		
+		\begin{figure}[!htb]
+			\centering
+			\includegraphics[width=0.65\textwidth]{architecture/Mookup - SecondPlayerConnected.png}
+			\caption{Mookup - SecondPlayerConnected}
+			\label{Mookup - SecondPlayerConnected}
+		\end{figure}
+		
+		\begin{figure}[!htb]
+			\centering
+			\includegraphics[width=0.65\textwidth]{architecture/Mookup - GameRunning.png}
+			\caption{Mookup - GameRunning}
+			\label{Mookup - GameRunning}
+		\end{figure}
+		
+		\begin{figure}[!htb]
+			\centering
+			\includegraphics[width=0.65\textwidth]{architecture/Mookup - GameEnded.png}
+			\caption{Mookup - GameEnded}
+			\label{Mookup - GameEnded}
+		\end{figure}
 
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.65\textwidth]{architecture/Mookup - Initial.png}
-	\caption{Mookup - Initial}
-	\label{Mookup - Initial}
-\end{figure}
-
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.65\textwidth]{architecture/Mookup - FirstPlayerConnected.png}
-	\caption{Mookup - FirstPlayerConnected}
-	\label{Mookup - FirstPlayerConnected}
-\end{figure}
-
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.65\textwidth]{architecture/Mookup - SecondPlayerConnected.png}
-	\caption{Mookup - SecondPlayerConnected}
-	\label{Mookup - SecondPlayerConnected}
-\end{figure}
-
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.65\textwidth]{architecture/Mookup - GameStarted.png}
-	\caption{Mookup - GameStarted}
-	\label{Mookup - GameStarted}
-\end{figure}
-
-\begin{figure}[!htb]
-	\centering
-	\includegraphics[width=0.65\textwidth]{architecture/Mookup - GameEnded.png}
-	\caption{Mookup - GameEnded}
-	\label{Mookup - GameEnded}
-\end{figure}
+	\FloatBarrier
+	\subsection{States} \label{states}
+		Hier wird gezeigt, wie die States ineinander über gehen. Zu den grünen Zuständen gibt es Mookups in \ref{mookups}.
+		\begin{figure}[!htb]
+			\centering
+			\includegraphics[width=0.9\textwidth]{architecture/StateMachineRelease1.0.png}
+			\caption{Statemachine Release 1.0}
+			\label{Statemachine Release 1.0}
+		\end{figure}
