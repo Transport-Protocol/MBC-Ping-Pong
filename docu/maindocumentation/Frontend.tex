@@ -178,7 +178,7 @@ Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die
 	      \textbf{http://www.infobyip.com/detectmonitordpi.php} Eine Website zur Ermittlung der DPI. Es wird ein Quadrat per CSS auf eine bestimmte Größe, zum Beispiel 1 Zoll, formatiert und dann die Größe in Pixeln ausgelesen. Auf diese Weise lässt sich ein DPI wert berechnen.
 	      \newline
 	      Tests:
-	      \begin{enumerate}
+	      %\begin{enumerate}
 	      	\begin{tabular}{ccc}
 	      		                     & Erwarteter Wert & Ermittelter Wert           \\
 	      		PC Monitor 1         &                 &                            \\
@@ -193,8 +193,8 @@ Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die
 	      		Pixeldichte          & 132 DPI         & \colorbox{red!30}{96 DPI}  \\
 	      		Größe des Feldes   & 8 cm            & \colorbox{red!30}{5.7 cm}  \\
 	      	\end{tabular}
-	      \end{enumerate}
-	      Getestet wurde jeweils mit Firefox & Chrome, der PC Monitor wurde auch noch mit dem Edge Browser getestet. Die Ergebnisse waren allesamt für das Gerät identisch.
+	      %\end{enumerate}
+	      Getestet wurde jeweils mit Firefox \& Chrome, der PC Monitor wurde auch noch mit dem Edge Browser getestet. Die Ergebnisse waren allesamt für das Gerät identisch.
 	      \newline
 	      \textbf{Ergebnis:} Die DPI wurden nicht korrekt erkannt. Die Werte weichen auf dem Mobiltelefon um bis zu \underline{77.5\%} ab.
 \end{itemize}
@@ -267,7 +267,7 @@ Mit CSS3 lassen sich verschiedene Fälle für verschiedene Auflösungen definier
 @media (min-resolution: 200dpcm) { /* Mindestens 200 Punkte pro cm */ }
 @media (max-resolution: 300dpi) { /* Maximal 300 Punkte pro Zoll */ }
 	\end{lstlisting}
-	\caption{Quelle: https://wiki.selfhtml.org/wiki/CSS/Media_Queries}
+	\caption{Quelle: https:\/\/wiki.selfhtml.org\/wiki\/CSS\/Media\_Queries}
 	\label{figx}
 \end{figure}
 \newline
@@ -298,7 +298,7 @@ Somit werden Geräte mit einem PixelRatio von 1 nicht benachteiligt. Außerdem h
 Ein Problem bleibt jedoch, der PixelRatio ist nicht sehr genau. Um ein Gefühl für die Auswirkungen zu bekommen müssen wir mehrere Testgeräte für die Steuerung verwenden.
 \subsection{Flüssige Bewegung}
 Um eine flüssige Bewegung zu garantieren sollten wir uns auf einige Eigenschaften der Steuerung festlegen.
-\paragraph{Anforderung: Bildschirmposition != Schlägerposition}}
+\paragraph{Anforderung: Bildschirmposition != Schlägerposition}
 \mbox{}\\
 Die Schläger sollen in Abhängigkeit einer Bewegung, also einer Positionsänderung auf dem Bildschirm bewegt werden. Das bedeutet für uns das wir die Information der Controller nicht als Absolute Positionen sehen sondern eher die Änderung während einer Geste betrachten.
 \newline
