@@ -17,12 +17,19 @@ Ideen zu Spielen mit mehr als 2 Spielern.
 	\item Punkt bei Ballverlust erhält der letzte Spieler. Spiel merkt sich letzte 2 Ballkontakte sodass der Abschläger erkannt werden kann.
 	\item Spieler & Ball färben. Man könnte die Schläger Färben und die Bälle bei Ballkontakt der eigenen Farbe zuweisen. So erhalten die Spieler einen Visuellen Indikator wer Punkte bekommen kann.
 \end{itemize}
+\newpage
 \paragraph{Schläger}
-\mbox{}\\
-\subparagraph{Bewegung des Schlägers} Bewegung kann Relativ oder Absulut erfolgen. Bei absultuter Bewegung wird der Schläger sehr stark springen und möglicherweise das Spiel zu einfach werden.
-\subparagraph{Geschwindigkeit} Man sollte die Geschwindigkeit des Schläger begrenzen sodass das Spiel  schwieriger wird.
-\subparagraph{Begrenzung} Der Schläger braucht 2 Begrenzungen damit er das Spielfeld nicht verlässt.
-\subparagraph{Input der Controller} Der Input sollte so einfach wie möglich gestaltet werden. Am besten nur die Richtung und die Positionsänderung übertragen.
+\begin{itemize}
+\item
+\textbf{Bewegung des Schlägers} Bewegung kann Relativ oder Absolut erfolgen. Bei absoluter Bewegung wird der Schläger sehr stark springen und möglicherweise das Spiel zu einfach werden.
+\item
+\textbf{Geschwindigkeit} Man sollte die Geschwindigkeit des Schläger begrenzen sodass das Spiel  schwieriger wird.
+\item
+\textbf{Begrenzung} Der Schläger braucht 2 Begrenzungen damit er das Spielfeld nicht verlässt.
+\item
+\textbf{Input der Controller} Der Input sollte so einfach wie möglich gestaltet werden. Am besten nur die Richtung und die Positionsänderung übertragen.
+\end{itemize}
+\newline
 \subsection{Spielfelder}
 \paragraph{Original Pong}
 \mbox{}\\
@@ -37,6 +44,7 @@ Im Orinalen Pong betrugen die Abmaße der Komponenten folgende werte:
 	\item
 	      Schläger Geschwindigkeit 4px pro Intervall
 \end{itemize}
+\newpage
 \paragraph{2 Spieler Normal}
 \mbox{}\\
 \begin{figure}[ht]
@@ -82,6 +90,38 @@ Als weitere Idee kam mir ein Vier-Spieler Feld bei dem sich in einem Quadrat je 
 Mehr als 4 Spieler sind meiner Meinung nach nicht notwendig. Wenn man bedenkt das sich die Spieler vor einem Bildschirm im Flur sammeln.
 \newline
 Denkbar ist allerdings das man das Konzept für 3 und 4 Spieler für weitere Spieler weiterführt.
+\newpage
+\subsection{Power-Ups}
+Kurze Ideensammlung zu möglichen Verstärkungen.
+\begin{itemize}
+	\item
+	      \textbf{Magnet:} Ball wird vom Schläger angezogen. Der Spieler erhält dann die Möglichkeit den Ball zu führen und gezielt abzustoßen.
+	\item
+	      \textbf{Größerer / Kleinerer Ball:} Ball-Modifikator, denkbar auch eine pulsierende Variante wobei sich der Ball durchgehend in der Größe verändert.
+	\item
+	      \textbf{Multi-Ball:} Ball wir mehrfach dupliziert. Die verschiedenen Bälle fliegen vom Startpunkt aus in alle Richtungen und zählen alle als normaler Ball. Bei Ballverlust tauchen diese nicht erneut auf.
+	\item
+	      \textbf{Steuerung Invertieren:} Steuerung des Gegners wird invertiert.
+	\item
+	      \textbf{Geschwindigkeitsmodifikation des Schlägers:} Eigener Schläger wird schneller oder gegnerischer wird langsamer.
+\end{itemize}
+\subsection{Statistiken}
+Auflistung an Daten welche für eine Statistik relevant wären.
+\begin{itemize}
+	\item
+	      Spieldauer
+	\item
+	      Ballkontakte je Spieler
+	\item
+	      Zurückgelegte Distanz des Balles
+	\item
+	      Zurückgelegte Distanz je Spieler
+	\item
+	      Genauigkeit der Schläger
+	      \newline
+	      (Ballkontakte / Durchgelassene Bälle)
+\end{itemize}
+\newpage
 \section{Auswahl einer Physics-Engine}
 
 \begin{quote}
