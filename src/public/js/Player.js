@@ -1,5 +1,5 @@
 
-var Player = function (game, x, y, key, frame){
+var Player = function (game, x, y, maxHeight, key, frame){
   Phaser.Sprite.call(this, game, x, y, key, frame);
   var _buffer = [];
 
@@ -10,8 +10,7 @@ var Player = function (game, x, y, key, frame){
   this.update = function(){
     while(_buffer.length > 0){
       var pos = _buffer.shift();
-      this.x = pos.x;
-      this.y = pos.y;
+      this.y = Math.max(Math.min(pos.y,maxHeight),0);
     }
   }
 }

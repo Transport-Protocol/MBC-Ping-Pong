@@ -6,7 +6,7 @@ var gameProperties = {
     height: 320,
     playerIdCount: 0,
     players: new Map(),
-    freeSprites:[0,1,2,3,4,5]
+    freeSprites:[0,1]
 };
 
 
@@ -25,13 +25,14 @@ mainState.prototype = {
 };
 
 var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.CANVAS, gameProperties.name, mainState);
-/*game.state.add('main', mainState);
-game.state.start('main');*/
+
 
 
 function addPlayerToGame(){
+  var xval = 32-9;
+  if(gameProperties.playerIdCount == 1) {xval = gameProperties.width-32}
   if(gameProperties.freeSprites.length > 0){
-    var player = new Player(game, 0, 0, 'paddle', gameProperties.freeSprites.shift());
+    var player = new Player(game, xval, 0, gameProperties.height - 100, 'paddle', gameProperties.freeSprites.shift());
     var playerId = gameProperties.playerIdCount++;
     gameProperties.players.set(playerId, player);
     game.add.existing(player);
@@ -64,27 +65,3 @@ function addPositionToPlayerBuffer(playerId, x, y){
 module.exports.removePlayerFromGame = removePlayerFromGame;
 module.exports.addPlayerToGame = addPlayerToGame;
 module.exports.addPositionToPlayerBuffer = addPositionToPlayerBuffer;
-
-/*
-function addNewPlayer() {
-    var newId = gameProperties.playerCount++;
-    if (newId > 5) {
-        console.log("ERR Player limit exceed")
-        return;
-    }
-    var player = {
-        id: newId,
-        x: 80 * newId,
-        y: game.world.centerY,
-        sprite: undefined
-    };
-    console.log(player);
-    gameProperties.aryPlayers.push(player);
-    assignPlayerSprite(player);
-
-}
-
-function assignPlayerSprite(player) {
-    player.sprite = game.add.sprite(player.x, player.y, 'paddle');
-    player.sprite.frame = player.id;
-}*/
