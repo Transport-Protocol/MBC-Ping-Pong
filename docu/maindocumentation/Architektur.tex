@@ -384,7 +384,7 @@ Im fachlichen Ablauf (Abbildung \ref{Prototyp fachlicher Ablauf - Sequenzdiagram
 			\item \textbf{Wand 3:} Seitenwände, die lediglich zur Spielfeldbegrenzung dienen.
 			\item \textbf{Schläger 1:} Schläger der durch Spieler 1 gesteuert wird. Er kann sofort nach der Erstellung durch Spieler 1 bewegt werden.
 			\item \textbf{Schläger 2:} Schläger der durch Spieler 2 gesteuert wird. Er kann sofort nach der Erstellung durch Spieler 2 bewegt werden.
-			\item \textbf{Ball:} Der Ball bewegt sich über das Spielfeld, und muss mit den Schlägern davon abgehalten werden, die Wand hinter den Schlägern zu treffen. Trifft der Ball Wand 1 oder 2, wird er in die Ausgangsposition gesetzt und erhält seine Ausgangsgeschwindigkeit, sowie eine zufällig Richtung. Trifft er Wand 3 oder einen Schläger, prallt er von diesem ab und wird beschleunigt.
+			\item \textbf{Ball:} Der Ball bewegt sich über das Spielfeld, und muss mit den Schlägern davon abgehalten werden, die Wand hinter den Schlägern zu treffen. Trifft der Ball Wand 1 oder 2, wird er in die Ausgangsposition gesetzt und erhällt seine Ausgangsgeschwindigkeit, sowie eine zufällig Richtung. Trifft er Wand 3 oder einen Schläger, prallt er von diesem ab und wird beschleunigt.
 			\item \textbf{Punkte:} Anzeige des aktuellen Spielstandes, im Format <Treffer auf Wand2> : <Treffer auf Wand 1>.
 			\item \textbf{JoinGamePanel:} Hier werden alle Informationen angezeigt, die benötigt werden, um einem Spiel beizutreten.
 			\begin{itemize}
@@ -436,4 +436,18 @@ Im fachlichen Ablauf (Abbildung \ref{Prototyp fachlicher Ablauf - Sequenzdiagram
 			\includegraphics[width=0.9\textwidth]{architecture/StateMachineRelease1.0.png}
 			\caption{Statemachine Release 1.0}
 			\label{Statemachine Release 1.0}
+		\end{figure}
+	\FloatBarrier	
+	\subsection{Klassendiagramm} \label{states}
+		\begin{figure}[!htb]
+			\centering
+			\includegraphics[width=0.9\textwidth]{architecture/Release1.0ClassDiagramControlPeer.png}
+			\caption{ControlPeer ClassDiagram Release 1.0}
+			\label{ControlPeer ClassDiagram Release 1.0}
+		\end{figure}
+		\begin{figure}[!htb]
+			\centering
+			\includegraphics[width=0.9\textwidth]{architecture/Release1.0ClassDiagramDisplayPeer.png}
+			\caption{DisplayPeer ClassDiagram Release 1.0}
+			\label{DisplayPeer ClassDiagram Release 1.0}
 		\end{figure}
