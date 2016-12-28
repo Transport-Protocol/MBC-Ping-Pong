@@ -441,3 +441,39 @@ Wenn der Controller nicht mehr berührt wird so darf sich der Schläger nicht we
 Moderne Mobiltelefone haben wesentlich höhere Auflösungen als unser Spielfeld groß sein wird. Aus diesem Grund sollte die Bewegung auf einem Maximumwert begrenzt werden.
 \newline 
 Maximal sollte sich ein Schläger über die gesamte Spielfläche in einem Zyklus bewegen können. Es ist denkbar das wir den Wert später nach unten korrigieren müssen um ein gutes Spielgefühl schaffen zu können.
+\newpage
+\section{Erstellung des Technischen Demonstrators}
+Für die Präsentation des Projektstandes war unsere Zielsetzung alle Technischen Hürden überwunden zu haben und einen Funktionsfähigen Prototypen zeigen zu können.
+\newline
+Dieser Prototyp sollte vor allem den Technischen Durchstich erreicht haben, konkret waren das folgende Anforderungen:
+\begin{itemize}
+	\item
+	      Initialisieren der Lobby durch den Server
+	\item
+	      Kommunikation der Peers via WebRTC
+	\item
+	      Einlesen von User Eingaben am ControlPeer
+	\item
+	      Anzeige der Schläger in Abhängigkeit der Usereingaben am DisplayPeer
+\end{itemize}
+\subsection{Realisierung des ControllPeers}
+Meine Aufgabe war es die Darstellung auf dem DisplayPeer, nach den gegebenen Anforderungen, zu realisieren.
+
+Es sollten nur die Schläger angezeigt und bewegt werden können. Damit jeder Schläger von den anderen Unterscheidbar bleibt hab ich mich dafür entschieden verschiedene Schläger-Sprites in einem Spritesheet zu speichern zu jedem Spieler eine Sprite ID mit zu geben.
+Das hat den Vorteil das die Sprites in einer einzigen Datei lagern und leicht getauscht werden können.
+\newline
+Laden des Spritesheets (Argumente:Name, Pfad, Weite, Höhe, Anzahl):
+\begin{lstlisting}
+game.load.spritesheet('paddle', 'assets/testPaddles.png', 9, 100, 6);
+\end{lstlisting}
+Die Spieler erhalten ihren Sprite in Abhängigkeit zu ihrer ID:
+\begin{lstlisting}
+function assignPlayerSprite(player) {
+player.sprite = game.add.sprite(player.x, player.y, 'paddle');
+player.sprite.frame = player.id; }
+\end{lstlisting}
+Die Methode wurde in einer Methode verbaut welche einen neuen Spieler erzeugt. Dabei wurde auch geprüft ob die maximale Anzahl an Spielern überschritten wurde.
+\newline
+Das Spielerobjekt selber bekam eine Funktion um die neuen Eingaben zu seinem Buffer hinzuzufügen sowie eine Update Methode welche vom Spiel aufgerufen wurde um die Position zu aktualisieren.
+\newline
+In der Update Methode wurden über alle Positionen im Buffer iteriert. Das hat den Hintergrund das später nur Positionsänderungen übertragen werden und dabei alle berücksichtigt werden sollen.
