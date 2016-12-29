@@ -1,6 +1,10 @@
 var Wall = function (game, sprite, from, to) {
     Phaser.Sprite.call(this, game, from.x, from.y, sprite);
 
+    game.physics.enable(this, Phaser.Physics.ARCADE);
+    this.immovable = true;
+    this.body.moves = false;
+
     this.anchor.setTo(0, 0.5);
     // Stretch Sprite to Endpoint
     this.angle = -Phaser.Math.angleBetweenY(from.x, from.y, to.x, to.y) * 180 / Math.PI + 90;

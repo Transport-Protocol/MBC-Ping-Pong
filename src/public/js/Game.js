@@ -30,14 +30,16 @@ mainState.prototype = {
     create: function () {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.walls = wallBuilder.buildField(game, 'wall');
-        this.walls.enableBody = true;
-        this.walls.physicsBodyType = Phaser.Physics.ARCADE;
 
         this.ball = game.add.sprite(400, 200, 'ball');
         game.physics.enable(this.ball, Phaser.Physics.ARCADE);
         this.ball.body.velocity.setTo(200, 200);
         this.ball.body.bounce.set(1);
+
+
+        this.walls = wallBuilder.buildField(game, 'wall', this.ball);
+        game.physics.enable(this, Phaser.Physics.ARCADE);
+        game.physics.arcade.collide(this.ball, this.walls);
 
         console.log(this.walls);
     },
@@ -49,7 +51,7 @@ mainState.prototype = {
     },
     ballHitWall: function (_b, _w) {
         console.log("YAAAAS")
-        _b.body.velocity.x = 2;
+        //_b.body.velocity.x = 2;
     },
     ballAny: function (a, b) {
         return true
