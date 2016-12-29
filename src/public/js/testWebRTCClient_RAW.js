@@ -4,13 +4,12 @@
 *   Run: "browserify [PATH]/testWebRTCCLient_RAW.js -o [PATH]/testWebRTCClient_Bundle.js"
 */
 
-var P2P = require('socket.io-p2p');
 var io = require('socket.io-client');
+var sigclient = require('./../../own_modules/WebRTC-COMM.js').Client;
 var iosocket = io.connect();
-var opts = {autoUpgrade: false, peerOpts: {numClients: 10}};
-var p2psocket = new P2P(iosocket, opts, null);
 
 var connected = false;
+var connobj;
 
 var btn_connect = document.getElementById('connect');
 var btn_sendping = document.getElementById('sendping');
@@ -22,21 +21,7 @@ iosocket.on('connect', function(){
     console.log("Socket is connected.");
 });
 
-// Called automatically when connection over p2psock ready
-// @TODO Was never called, misinterpretation?
-p2psocket.on('ready', function(){
-    console.log("P2P Socket ready.");
-});
 
-p2psocket.on('userping', function(data){
-    console.log("Received a Ping.");
-});
-
-p2psocket.on('upgradewebrtc', function(data){
-    if(p2psocket.usePeerConnection == true) return;
-    console.log("Now upgrading.");
-    p2psocket.upgrade();
-});
 
 // Add Event Listeners for buttons
 btn_connect.addEventListener('click', connecttomonitor);
@@ -48,19 +33,12 @@ btn_toggletec.addEventListener('click', toggletec);
 // Monitor should create room and player should join
 function connecttomonitor(){
     console.log("Connect pressed.");
-    var roomname = fld_room.value;
-    p2psocket.emit("joinroom", {roomname: roomname});
+    
+    connobj = new sigclient(iosocket, {}, "testroom", null);
 }
 
 // Simple ping
 function sendping(){
     console.log("Send Ping pressed.");
-    p2psocket.emit("userping", {text: "HALLO"});
-}
-
-// Later for variable up-/downgrade of connection
-// WebSocket <-> WebRTC
-function toggletec(){
-    console.log("Toggle Technology pressed.");
-    p2psocket.emit("toggletec");
+    connobj.sendMessage("nothing", "hallo");
 }
