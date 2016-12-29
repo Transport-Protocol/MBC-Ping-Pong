@@ -37,7 +37,7 @@ mainState.prototype = {
         this.ball.body.bounce.set(1);
 
 
-        this.walls = wallBuilder.buildField(game, 'wall', this.ball);
+        this.walls = wallBuilder.buildField(game, 'wall');
         game.physics.enable(this, Phaser.Physics.ARCADE);
         game.physics.arcade.collide(this.ball, this.walls);
 
