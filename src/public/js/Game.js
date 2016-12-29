@@ -38,7 +38,6 @@ mainState.prototype = {
 
 
         this.walls = wallBuilder.buildField(game, 'wall');
-        game.physics.enable(this, Phaser.Physics.ARCADE);
         game.physics.arcade.collide(this.ball, this.walls);
 
         console.log(this.walls);
