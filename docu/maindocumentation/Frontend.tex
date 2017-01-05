@@ -537,3 +537,16 @@ Drehung der Sprites: Vorher fand die Drehung am Sprite selber statt, dort war de
 \item
 Bewegung des Schlägers: Die Schläger wurden sonst per x &y Koordinaten gesetzt, P2 nimmt diese aber nicht an
 \end{itemize}
+\subsubsection{Problem Tunneling}
+Wenn der Ball sich zu schnell bewegt kann es vorkommen das er sich durch Objekte durch bewegt. Genannt wird dieses Problem tunneling.
+Behandeln kann man das Problem nur sehr schwer da die Engine selber keine Überprüfung auf Tunneling vornimmt.
+\newline
+\textbf{Die Engine prüft nur ob an der nächsten Position eine Kollision vorliegt, nicht zwischen den Positionen}
+\paragraph{Behandlung: Dicke Wände}
+Es ist möglich das Tunneling zu reduzieren indem man die Wanddicke erhöht. Dadurch kommt es eher zu einer Kollision wenn der Ball sonst aus dem Spielfeld fliegt.
+\newline
+Am besten werden die Wände nur in ihren Kollisionsboxen aber nicht in der wirklichen Größe verändert.
+\paragraph{Behandlung: Begrenzung der Geschwindigkeit}
+Eine weitere Möglichkeit wäre es die Geschwindigkeit zu begrenzen. Allerdings kann dies sehr stark den Spaß am Spiel nehmen.
+\paragraph{Lösung?}
+Probieren beider Behandlungsmöglichkeiten

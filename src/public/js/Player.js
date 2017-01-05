@@ -1,10 +1,10 @@
-var Game = require('./Game.js')
+
 
 var Player = function (game, x, y, maxHeight, key, frame){
   Phaser.Sprite.call(this, game, x, y, key, frame);
 
   // Set Physic
-  game.physics.p2.enable(this, gameProperties.debug);
+  game.physics.p2.enable(this, true);
   this.body.static = true;
 
 
@@ -17,7 +17,8 @@ var Player = function (game, x, y, maxHeight, key, frame){
   this.update = function(){
     while(_buffer.length > 0){
       var pos = _buffer.shift();
-      this.y = Math.max(Math.min(pos.y,maxHeight),0);
+      //FIXME
+      this.body.y = Math.max(Math.min(pos.y,maxHeight),0);
     }
   }
 }
