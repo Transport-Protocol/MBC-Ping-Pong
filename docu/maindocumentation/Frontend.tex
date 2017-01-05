@@ -483,7 +483,7 @@ In der Update Methode wurden über alle Positionen im Buffer iteriert. Das hat d
 	\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/22}{DisplayPeer - Schläger \#22}
 	\newline
 	\textit{Der Schläger ist ein Elementares Element des Spieles. in #11 wurde ein Konzept entwickelt, in welchem
-festgelegt wurde, welche Daten an den Schläger übermittelt werden.}
+	festgelegt wurde, welche Daten an den Schläger übermittelt werden.}
 \end{quote}
 \begin{quote}
 	\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/26}{DisplayPeer - InitialState \#26}
@@ -495,21 +495,21 @@ Die beiden Issues beschrieben Anforderungen an das Spielfeld für ein 2 Spieler 
 Bei der Erstellung des Spielfeldes fiel auf das die Kollision mit den Wänden nicht funktioniert. Grund hierfür ist die eingesetzte Physic Engine "Phaser.Arcade".
 In Phaser hat man die Wahl zwischen verschiedenen Engines.
 \begin{itemize}
-\item
-Arcade
-\item
-Box2D
-\item
-Ninja Physics
-\item
-P2 Physics
+	\item
+	      Arcade
+	\item
+	      Box2D
+	\item
+	      Ninja Physics
+	\item
+	      P2 Physics
 \end{itemize}
 Wir hatten uns für die Arcade Engine entschieden weil sie am ehesten für unseren Zweck zu passen schien.
 \paragraph{Problem 1}
 Das erste Problem war das wir keine Kollision zu gedrehten Wänden abfragen konnten. Die Wände wurden schlichtweg nicht erkannt.
-Dieses Problem ließ sich theoretisch lösen indem man die BoundinBox mit dreht, oder sie nach dem drehen updated.
+Dieses Problem ließ sich theoretisch lösen indem man die BoundingBox mit dreht, oder sie nach dem drehen updated.
 \paragraph{Problem 2}
-Das 2. Problem war das die Arcade Engine nur Rechteckige und nicht gedrehte Bounding Boxen unterstützt. Das bedeutet das wir für unser 2 Spieler Feld, wo wir nur um 90° gedrehte Wände verwenden, keine weiteren Probleme haben. Allerdings würde mit dieser Engine keinerlei schräge Wand erkennbar sein und damit wäre der 3 - Spieler Modus gestorben.
+Das zweite Problem war das die Arcade Engine nur Rechteckige und nicht gedrehte Bounding Boxen unterstützt. Das bedeutet das wir für unser 2 Spieler Feld, wo wir nur um 90° gedrehte Wände verwenden, keine weiteren Probleme haben. Allerdings würde mit dieser Engine keinerlei schräge Wand erkennbar sein und damit wäre der 3 - Spieler Modus gestorben.
 \newline
 \textbf{Resultat: Eine neue Physic Engine muss her}
 \subsection{Umstellung auf die P2 Physics}
@@ -519,34 +519,39 @@ Die Umstellung ging im Grunde recht einfach, allerdings behandelt die Engine seh
 \newline
 Viele Funktionen die unter Arcade direkt auf dem Sprite ausgeführt wurden werden in P2 auf den Physikalischen Body ausgeführt. Dazu zählen unter anderem:
 \begin{itemize}
-\item
-BoundingBox des Balls: Vorher wurde der Ball erkannt, bei P2 muss der Body definiert werden mit 
-\begin{listing}
-this.ball.body.setCircle(16);
-\end{listing}
-\item
-Drehung: Vorher konnten Objete per "obj.angle" gedreht werden, daraus wurde "obj.body.angle"
-\item
-Beschleunigung: In Arcade musste eine "obj.velocity" auf beiden Achsen angegeben werden, daraus wurde ein "obj.body.thrust()" aufruf
-\item
-Bounding Box der Wände: Diese wurde zuerst falsch erkannt da der Sprite gestreckt wird.
-Lösung war es erst die transformation des Sprites durchzuführen udn im Anschluss den Physikalischen Body zu erstellen.
-Ferner mussten die Bodies in statische Bodies umgewandelt werden da sie sich sonst im Raum bewegen würden.
-\item
-Drehung der Sprites: Vorher fand die Drehung am Sprite selber statt, dort war der Ankerpunk auf (0,0) definiert. Beim Body ist der Ankerpunkt standartmäßig der Mittelpunkt des Sprites, also musste die Platzierung des Sprites neu überdacht werden.
-\item
-Bewegung des Schlägers: Die Schläger wurden sonst per x &y Koordinaten gesetzt, P2 nimmt diese aber nicht an
+	\item
+	      BoundingBox des Balls: Vorher wurde der Ball erkannt, bei P2 muss der Body definiert werden mit 
+	      \begin{listing}
+	      	this.ball.body.setCircle(16);
+	      \end{listing}
+	\item
+	      Drehung: Vorher konnten Objete per "obj.angle" gedreht werden, daraus wurde "obj.body.angle"
+	\item
+	      Beschleunigung: In Arcade musste eine "obj.velocity" auf beiden Achsen angegeben werden, daraus wurde ein "obj.body.thrust()" aufruf
+	\item
+	      Bounding Box der Wände: Diese wurde zuerst falsch erkannt da der Sprite gestreckt wird.
+	      Lösung war es erst die transformation des Sprites durchzuführen udn im Anschluss den Physikalischen Body zu erstellen.
+	      Ferner mussten die Bodies in statische Bodies umgewandelt werden da sie sich sonst im Raum bewegen würden.
+	\item
+	      Drehung der Sprites: Vorher fand die Drehung am Sprite selber statt, dort war der Ankerpunk auf (0,0) definiert. Beim Body ist der Ankerpunkt standartmäßig der Mittelpunkt des Sprites, also musste die Platzierung des Sprites neu überdacht werden.
+	\item
+	      Bewegung des Schlägers: Die Schläger wurden sonst per x &y Koordinaten gesetzt, P2 nimmt diese aber nicht an
 \end{itemize}
 \subsubsection{Problem Tunneling}
 Wenn der Ball sich zu schnell bewegt kann es vorkommen das er sich durch Objekte durch bewegt. Genannt wird dieses Problem tunneling.
 Behandeln kann man das Problem nur sehr schwer da die Engine selber keine Überprüfung auf Tunneling vornimmt.
 \newline
 \textbf{Die Engine prüft nur ob an der nächsten Position eine Kollision vorliegt, nicht zwischen den Positionen}
-\paragraph{Behandlung: Dicke Wände}
+\paragraph{Behandlung: Dicke Wände}\\
+\mbox{}\\
 Es ist möglich das Tunneling zu reduzieren indem man die Wanddicke erhöht. Dadurch kommt es eher zu einer Kollision wenn der Ball sonst aus dem Spielfeld fliegt.
 \newline
 Am besten werden die Wände nur in ihren Kollisionsboxen aber nicht in der wirklichen Größe verändert.
 \paragraph{Behandlung: Begrenzung der Geschwindigkeit}
+\mbox{}\\
 Eine weitere Möglichkeit wäre es die Geschwindigkeit zu begrenzen. Allerdings kann dies sehr stark den Spaß am Spiel nehmen.
 \paragraph{Lösung?}
+\mbox{}\\
 Probieren beider Behandlungsmöglichkeiten
+\newline
+\textbf{Erster Eindruck} Dem ersten Eindruck nach wurde das Problem behoben indem die Wände und Schläger dickere Kollisions Boxen bekamen, unklar ist ob die Todeszonen richtig erkannt werden.
