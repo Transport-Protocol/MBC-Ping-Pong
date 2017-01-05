@@ -1,6 +1,13 @@
+var Game = require('./Game.js')
 
 var Player = function (game, x, y, maxHeight, key, frame){
   Phaser.Sprite.call(this, game, x, y, key, frame);
+
+  // Set Physic
+  game.physics.p2.enable(this, gameProperties.debug);
+  this.body.static = true;
+
+
   var _buffer = [];
 
   this.addPositionToBuffer = function(x, y){

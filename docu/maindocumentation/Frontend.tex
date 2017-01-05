@@ -477,3 +477,63 @@ Die Methode wurde in einer Methode verbaut welche einen neuen Spieler erzeugt. D
 Das Spielerobjekt selber bekam eine Funktion um die neuen Eingaben zu seinem Buffer hinzuzufügen sowie eine Update Methode welche vom Spiel aufgerufen wurde um die Position zu aktualisieren.
 \newline
 In der Update Methode wurden über alle Positionen im Buffer iteriert. Das hat den Hintergrund das später nur Positionsänderungen übertragen werden und dabei alle berücksichtigt werden sollen.
+
+\section{Erstellung des 2 Spieler Feldes}
+\begin{quote}
+	\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/22}{DisplayPeer - Schläger \#22}
+	\newline
+	\textit{Der Schläger ist ein Elementares Element des Spieles. in #11 wurde ein Konzept entwickelt, in welchem
+festgelegt wurde, welche Daten an den Schläger übermittelt werden.}
+\end{quote}
+\begin{quote}
+	\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/26}{DisplayPeer - InitialState \#26}
+	\newline
+	\textit{Der Initiale Zustand wird dargestellt, wenn die Seite geladen wird.}
+\end{quote}
+Die beiden Issues beschrieben Anforderungen an das Spielfeld für ein 2 Spieler Feld.
+\subsection{Problem: Physic Engine} 
+Bei der Erstellung des Spielfeldes fiel auf das die Kollision mit den Wänden nicht funktioniert. Grund hierfür ist die eingesetzte Physic Engine "Phaser.Arcade".
+In Phaser hat man die Wahl zwischen verschiedenen Engines.
+\begin{itemize}
+\item
+Arcade
+\item
+Box2D
+\item
+Ninja Physics
+\item
+P2 Physics
+\end{itemize}
+Wir hatten uns für die Arcade Engine entschieden weil sie am ehesten für unseren Zweck zu passen schien.
+\paragraph{Problem 1}
+Das erste Problem war das wir keine Kollision zu gedrehten Wänden abfragen konnten. Die Wände wurden schlichtweg nicht erkannt.
+Dieses Problem ließ sich theoretisch lösen indem man die BoundinBox mit dreht, oder sie nach dem drehen updated.
+\paragraph{Problem 2}
+Das 2. Problem war das die Arcade Engine nur Rechteckige und nicht gedrehte Bounding Boxen unterstützt. Das bedeutet das wir für unser 2 Spieler Feld, wo wir nur um 90° gedrehte Wände verwenden, keine weiteren Probleme haben. Allerdings würde mit dieser Engine keinerlei schräge Wand erkennbar sein und damit wäre der 3 - Spieler Modus gestorben.
+\newline
+\textbf{Resultat: Eine neue Physic Engine muss her}
+\subsection{Umstellung auf die P2 Physics}
+Ziemlich schnell bin ich auf die P2 Engine gestoßen, da viele Nutzer Ähnliche Probleme mit der Arcade Engine hatten.
+\newline
+Die Umstellung ging im Grunde recht einfach, allerdings behandelt die Engine sehr vieles anders als die Arcade Engine.
+\newline
+Viele Funktionen die unter Arcade direkt auf dem Sprite ausgeführt wurden werden in P2 auf den Physikalischen Body ausgeführt. Dazu zählen unter anderem:
+\begin{itemize}
+\item
+BoundingBox des Balls: Vorher wurde der Ball erkannt, bei P2 muss der Body definiert werden mit 
+\begin{listing}
+this.ball.body.setCircle(16);
+\end{listing}
+\item
+Drehung: Vorher konnten Objete per "obj.angle" gedreht werden, daraus wurde "obj.body.angle"
+\item
+Beschleunigung: In Arcade musste eine "obj.velocity" auf beiden Achsen angegeben werden, daraus wurde ein "obj.body.thrust()" aufruf
+\item
+Bounding Box der Wände: Diese wurde zuerst falsch erkannt da der Sprite gestreckt wird.
+Lösung war es erst die transformation des Sprites durchzuführen udn im Anschluss den Physikalischen Body zu erstellen.
+Ferner mussten die Bodies in statische Bodies umgewandelt werden da sie sich sonst im Raum bewegen würden.
+\item
+Drehung der Sprites: Vorher fand die Drehung am Sprite selber statt, dort war der Ankerpunk auf (0,0) definiert. Beim Body ist der Ankerpunkt standartmäßig der Mittelpunkt des Sprites, also musste die Platzierung des Sprites neu überdacht werden.
+\item
+Bewegung des Schlägers: Die Schläger wurden sonst per x &y Koordinaten gesetzt, P2 nimmt diese aber nicht an
+\end{itemize}
