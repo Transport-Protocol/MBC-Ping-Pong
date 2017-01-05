@@ -80,11 +80,13 @@ var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.C
 
 function addPlayerToGame() {
   var xval = 32 - 9;
+  var from = 0;
   if (gameProperties.playerIdCount == 1) {
-    xval = gameProperties.width - 32
+    xval = gameProperties.width - 32;
+    from = 640;
   }
   if (gameProperties.freeSprites.length > 0) {
-    var player = new Player(game, xval, 200, gameProperties.height - 100, 'paddle', gameProperties.freeSprites.shift());
+    var player = new Player(game, xval, 200, from, gameProperties.height - 100, 'paddle', gameProperties.freeSprites.shift());
     var playerId = gameProperties.playerIdCount++;
     gameProperties.players.set(playerId, player);
     game.add.existing(player);
