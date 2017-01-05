@@ -11,7 +11,7 @@ var gameProperties = {
   playerIdCount: 0,
   players: new Map(),
   freeSprites: [0, 1],
-  debug: false
+  debug: true
 };
 
 
@@ -28,13 +28,11 @@ mainState.prototype = {
 
   create: function () {
 
-    //this.initPhysics();
-    game.physics.startSystem(Phaser.Physics.P2JS);
-    game.physics.p2.restitution = 1;
-    game.physics.p2.applyDamping = false;
+    this.initPhysics();
+
     //
     //this.ball = new Ball(game,400,200);
-    ////this.ball.start();
+    //this.ball.start();
     //this.ball.body.thrust(2000)
     this.ball = game.add.sprite(400, 200, 'ball');
     game.physics.p2.enable(this.ball, true);
