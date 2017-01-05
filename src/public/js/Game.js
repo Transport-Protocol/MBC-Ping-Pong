@@ -31,14 +31,14 @@ mainState.prototype = {
     this.initPhysics();
 
     //
-    //this.ball = new Ball(game,400,200);
-    //this.ball.start();
-    //this.ball.body.thrust(2000)
-    this.ball = game.add.sprite(400, 200, 'ball');
+    this.ball = new Ball(game,400,200);
+    game.add.existing(this.ball);
+    this.ball.body.thrust(2000)
+    /*this.ball = game.add.sprite(400, 200, 'ball');
     game.physics.p2.enable(this.ball, true);
     this.ball.body.setCircle(16);
     this.ball.body.angle = 80;
-    this.ball.body.thrust(20000);
+    this.ball.body.thrust(20000);*/
 
 
     this.walls = wallBuilder.buildField(game, 'wall');
