@@ -306,32 +306,100 @@ function Server(iosocket, config) {
         console.log(self.iosocket.id + " => " + JSON.stringify(req));  
        
         if( req.type === "hereandready" ) {
-            newPeer(req.room);
+            newPeer(req.room, req.mode);
         }
     
-        rooms[req.room].users.forEach(function(user) {
-            // console.log("" + user.id + " : " + self.iosocket.id);
-            if( user.id != self.iosocket.id ) {
-                
-                // Redirect Signal
-                console.log("Send to: " + user.id);
-                user.emit('signalling_message', {
-                              type: req.type,
-                              message: req.message
-                          }
-                );
-            }
-        });
+        if( req.hasOwnProperty('to') ) {
+            
+            // 'to' defines a direct target
+            var from = self.iosocket.id;
+            var to = req.to;
+            var room = req.room;
+            var type = req.type;
+            var message = req.message;
+            
+            // @TODO replace direct Array indexing by Object-Named indexing for direct user access
+            rooms[room].users.forEach(function(user) {
+                if( user.id === to ) {
+                    
+                    // Send Signalling Message to single Peer
+                    user.emit('signalling_message', {
+                        from: from,
+                        to: to,
+                        message: message
+                    });
+                    
+                    break;
+                }
+            });
+        } else {
+    
+            // Singalling Message will be broadcastet.
+            // Currently no direct use?!
+            // @TODO implement delayed connect between all Peers in Room.
+            // -> Wait for room to be full?!
+            rooms[req.room].users.forEach(function(user) {
+                if( user.id != self.iosocket.id ) {
+                    
+                    // Redirect Signal to Peer
+                    console.log("Send to: " + user.id);
+                    user.emit('signalling_message', {
+                        from: self.iosocket.id,
+                        type: req.type,
+                        message: req.message
+                    });
+                }
+            });
+        }
     });
   
-    function newPeer(room){
+    function newPeer(room, mode){
+        if( rooms.hasOwnProperty(roomname) ) {
+            
+            // Room exists, check if Single-Peer
+            if( mode == 'single' ) {
+                
+                // All OK, connect to Room
+                joinRoom(room);
+            } else {
+                
+                // Multiple Multi-Peers currently not supported in one room
+                // @TODO ERROR
+            }
+        } else {
+            
+            // Room doesnt exist
+            if( mode == 'single' ) {
+                
+                // Singe-Peers can't create Rooms
+                // @TODO ERROR
+            } else {
+                
+                // All OK, create Room
+                createRoom(room);
+                joinRoom(room);
+            }
+        }
+    };
+    
+    function createRoom(roomname) {
         
-        // @TODO check for multiple same peers
-        console.log("User joined room: " + room);
+        console.log("New Room created: " + roomname);
+        
+        rooms[roomname] = {
+            users: [],
+            userCount: 0,
+            state: 'idle'
+        };
+    };
+    
+    function joinRoom(room) {
+        
+        console.log("[" + self.iosocket.id + "] joined Room " + room);
         
         self.iosocket.join(room);
         rooms[room].users.push(self.iosocket);
-    };
+    }
 }
 
 Server.prototype.sendStatus = function(room) {
