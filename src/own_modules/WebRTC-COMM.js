@@ -76,14 +76,24 @@ function Client(iosocket, config, room, signallingCallback) {
         // Start Setting up connection after at least one other Peer 
         // is connected to the Server.
         // @IMPORTANT We receive only Signallin messages from OTHER Peers
-        newConnection();
+        // newConnection();
     
         if( data.type === 'hereandready' ) {
             
             // New User Connected to game <init>
             // @TODO handle multiple users in Multi mode
             console.log("New User connected.");
+            
+            var newUserID = data.from;
+            
+            newConnection(newUserID);
         } else {
+            
+            if( self.mode === 'single' && self.connectioncount == 0) {
+                
+                // First Signal, need setup
+                newConnection(data.from);
+            }
             
             // Connection Controlling Signal
             var message = JSON.parse(data.message);
@@ -91,11 +101,11 @@ function Client(iosocket, config, room, signallingCallback) {
             if( message.sdp ) {
                 
                 // SDP
-                gotSDP(message);
+                gotSDP(message, from);
             } else if( message.candidate){
                 
                 // ICE CANDIDATE
-                addCandidate(message);
+                addCandidate(message, from);
             } else {
                 
                 // ERROR: Unknown Singal
@@ -106,10 +116,13 @@ function Client(iosocket, config, room, signallingCallback) {
       });
     
     // Send initial Signal to Server
+    // If Mode id Multi, this signal will be received by no one
+    // @TODO refactor this!
+    // If Mode is Single, the signal will be redirected to the Multi-Peer
     self.iosocket.emit('signal', {"type":"hereandready", "mode":self.mode, "room":"testroom"});
   
     // @IMPORTANT @TODO refactor this. Chaotic Callback Hell...
-    function gotSDP(message) {
+    function gotSDP(message, peerid) {
         console.log("Got SDP Message.");
       
         if( self.mode === 'single' ) {
@@ -133,11 +146,64 @@ function Client(iosocket, config, room, signallingCallback) {
                                         
                                         // Emit Answer
                                         self.iosocket.emit('signal', {
-                                                               "type":"SDP", 
-                                                               "message": JSON.stringify({
-                                                                              'sdp': connobj.connection.localDescription 
-                                                                          }), 
-                                                               "room":"testroom"});
+                                            "type":"SDP", 
+                                            "to":peerid,
+                                            "message": JSON.stringify({
+                                              'sdp': connobj.connection.localDescription 
+                                            }), 
+                                            "room":"testroom"});
+                                    }, 
+                                    function(errormsg) {
+                                        
+                                        // @TODO replace Error Handling
+                                        console.log("" + errormsg);
+                                    }
+                                );
+                            }, 
+                            function(errormsg) {
+                                
+                                // @TODO replace Error Handling
+                                console.log("" + errormsg);
+                            }
+                        );
+                    }
+                }
+            );
+        } else {
+            
+            // Mode is Multi
+            if( !self.rtcPeerConnections.hasOwnProperty(peerid) ) {
+                
+                // No Connectino initiated
+                // @TODO Error
+                return;
+            }
+            
+            // Get right connection based on peerid
+            var connobj = self.rtcPeerConnections[peerid];
+            
+            // Set Remote Description
+            connobj.connection.setRemoteDescription(
+                // Add SDP information from Remote to init new SessionDescription
+                new RTCSessionDescription(message.sdp), function() {
+                    // Answer to any offer in this Session
+                    if( connobj.connection.remoteDescription.type == 'offer' ) {
+                        
+                        // Create Answer to offer
+                        connobj.connection.createAnswer(
+                            function(desc) {
+                                connobj.connection.setLocalDescription(desc, 
+                                    function() {
+                                        console.log("Sending local description");
+                                        
+                                        // Emit Answer
+                                        self.iosocket.emit('signal', {
+                                            "type":"SDP", 
+                                            "to":peerid,
+                                            "message": JSON.stringify({
+                                              'sdp': connobj.connection.localDescription 
+                                            }), 
+                                            "room":"testroom"});
                                     }, 
                                     function(errormsg) {
                                         
@@ -158,7 +224,7 @@ function Client(iosocket, config, room, signallingCallback) {
         }
     }
   
-    function addCandidate(message) {
+    function addCandidate(message, peerid) {
         console.log("Adding ICE-Candidate")
       
         if( self.mode === 'single' ) {
@@ -168,10 +234,24 @@ function Client(iosocket, config, room, signallingCallback) {
           
             // Add ICE Candidate from Signalling Message
             connobj.connection.addIceCandidate(new RTCIceCandidate(message.candidate));
+        } else {
+            
+            if( !self.rtcPeerConnections.hasOwnProperty(peerid) ) {
+                
+                // No Connectino initiated
+                // @TODO Error
+                return;
+            }
+            
+            // Get right connection based on peerid
+            var connobj = self.rtcPeerConnections[peerid];
+          
+            // Add ICE Candidate from Signalling Message
+            connobj.connection.addIceCandidate(new RTCIceCandidate(message.candidate));
         }
     }
   
-    function newConnection() {
+    function newConnection(peerid) {
         if( self.mode === 'single' && self.connectioncount == 0) {
             
             // @TODO replace by better checks
@@ -229,39 +309,117 @@ function Client(iosocket, config, room, signallingCallback) {
             
             
       
-      // Send ICE-Candidates to the Server
-      connobj.connection.onicecandidate = function(data) {
-        if( data.candidate ) {
-          iosocket.emit('signal', {"type":"ice candidate", "message": JSON.stringify({'candidate': data.candidate}), "room":"testroom"});
-          console.log("Candidate: " + data.candidate);
-        }
-      };
-      
-      // Negotiationneeded
-      connobj.connection.onnegotiationneeded = function() {
-          console.log("Negotiaton needed.");
-          connobj.connection.createOffer(
-            function(desc) {
-                connobj.connection.setLocalDescription(desc, function() {
-                    console.log("Sending local description");
-                    self.iosocket.emit('signal', {"type":"SDP", "message": JSON.stringify({'sdp': connobj.connection.localDescription }), "room":"testroom"});
-                }, function(errormsg) {
-                    console.log("" + errormsg);
+            // Send ICE-Candidates to the Server
+            connobj.connection.onicecandidate = function(data) {
+                if( data.candidate ) {
+                    iosocket.emit('signal', {"type":"ice candidate", "to":peerid "message": JSON.stringify({'candidate': data.candidate}), "room":"testroom"});
+                    console.log("Candidate: " + data.candidate);
                 }
+            };
+
+            // Negotiationneeded
+            connobj.connection.onnegotiationneeded = function() {
+                console.log("Negotiaton needed.");
+                connobj.connection.createOffer(
+                    function(desc) {
+                        connobj.connection.setLocalDescription(desc, function() {
+                            console.log("Sending local description");
+                            self.iosocket.emit('signal', {"type":"SDP", "to":peerid, "message": JSON.stringify({'sdp': connobj.connection.localDescription }), "room":"testroom"});
+                        }, function(errormsg) {
+                            console.log("" + errormsg);
+                        }
+                        );
+                    }, function(errormsg) {
+                        console.log("" + errormsg);
+                    }
                 );
-            }, function(errormsg) {
-                console.log("" + errormsg);
+            };
+        } else {
+            
+            if( self.rtcPeerConnections.hasOwnProperty(peerid) ) {
+                
+                // Connection to Peer already exists
+                return;
             }
-          );
-      };
-    } else {
-      // Mode is Multi
-      var rtcPeerConn = { "connection":null, "datachannel":null };
-      
-      rtcPeerConn.connection = new webkitRTCPeerConnection(rtcconfig, null);
-      rtcPeerConn.datachannel = rtcPeerConn.connection.createDataChannel('textMessages', dataChannelOptions);
+            
+            self.connectioncount++;
+
+            // Mode is MULTI
+            console.log("Mode is Multi");
+            
+            // Create empty Object
+            // @TODO replace by own connection Class
+            self.rtcPeerConnections[peerid] = { "connection":null, "datachannel":null };
+            var connobj = self.rtcPeerConnections[0];
+
+            // Create new RTCPeerConnection und Datachannel
+            connobj.connection = new webkitRTCPeerConnection(rtcconfig, null);
+            connobj.datachannel = connobj.connection.createDataChannel('textMessages', dataChannelOptions);
+            
+            // DataChannel open
+            connobj.datachannel.onopen = function() {
+                // DataChannel state changed
+        
+                if( connobj.datachannel.readyState === 'open' ) {
+                    
+                    // DataChannel now open
+                    connobj.datachannel.onmessage = function(message) {
+                    
+                        //Received new message <WebRTC>
+                        console.log("Datachannel: " + message.data);
+            
+                        if( self.messageCallback ) {
+                            // Callback for messages
+                            self.messageCallback(message.data);
+                        }
+                    };
+                }
+            };
+            
+            // DataChannel received
+            connobj.connection.ondatachannel = function(data) {
+                
+                connobj.datachannel = data.channel;
+        
+                connobj.datachannel.onmessage = function(message) {
+                    
+                    //Received new message <WebRTC>
+                    console.log("Datachannel: " + message.data);
+            
+                    if( self.messageCallback ) {
+                        // Callback for messages
+                        self.messageCallback(message.data);
+                    }
+                };
+            };
+            
+            // Send ICE-Candidates to the Server
+            connobj.connection.onicecandidate = function(data) {
+                if( data.candidate ) {
+                    iosocket.emit('signal', {"type":"ice candidate", "to":peerid, "message": JSON.stringify({'candidate': data.candidate}), "room":"testroom"});
+                    console.log("Candidate: " + data.candidate);
+                }
+            };
+            
+            // Negotiationneeded
+            connobj.connection.onnegotiationneeded = function() {
+                console.log("Negotiaton needed.");
+                connobj.connection.createOffer(
+                    function(desc) {
+                        connobj.connection.setLocalDescription(desc, function() {
+                            console.log("Sending local description");
+                            self.iosocket.emit('signal', {"type":"SDP", "to":peerid, "message": JSON.stringify({'sdp': connobj.connection.localDescription }), "room":"testroom"});
+                        }, function(errormsg) {
+                            console.log("" + errormsg);
+                        }
+                        );
+                    }, function(errormsg) {
+                        console.log("" + errormsg);
+                    }
+                );
+            };
+        }
     }
-  }
 }
 
 Client.prototype.setMessageCallback = function(newCallback) {
