@@ -23,7 +23,7 @@ function Client(iosocket, config, room, signallingCallback) {
 
     self.id = self.iosocket.id;
     self.status = 'init';
-    self.peers = {};
+    self.peers = [];
     self.connectioncount = 0;
 
     self.rtcPeerConnections = {};
@@ -71,7 +71,7 @@ function Client(iosocket, config, room, signallingCallback) {
   
   
     self.iosocket.on('signalling_message', function(data) {
-        console.log("new signal");
+        console.log("new signal => " + JSON.stringify(data));
         
         // Start Setting up connection after at least one other Peer 
         // is connected to the Server.
@@ -101,11 +101,11 @@ function Client(iosocket, config, room, signallingCallback) {
             if( message.sdp ) {
                 
                 // SDP
-                gotSDP(message, from);
+                gotSDP(message, data.from);
             } else if( message.candidate){
                 
                 // ICE CANDIDATE
-                addCandidate(message, from);
+                addCandidate(message, data.from);
             } else {
                 
                 // ERROR: Unknown Singal
@@ -312,7 +312,7 @@ function Client(iosocket, config, room, signallingCallback) {
             // Send ICE-Candidates to the Server
             connobj.connection.onicecandidate = function(data) {
                 if( data.candidate ) {
-                    iosocket.emit('signal', {"type":"ice candidate", "to":peerid "message": JSON.stringify({'candidate': data.candidate}), "room":"testroom"});
+                    iosocket.emit('signal', {"type":"ice candidate", "to":peerid, "message": JSON.stringify({'candidate': data.candidate}), "room":"testroom"});
                     console.log("Candidate: " + data.candidate);
                 }
             };
@@ -343,14 +343,15 @@ function Client(iosocket, config, room, signallingCallback) {
             }
             
             self.connectioncount++;
+            self.peers.push(peerid);
 
             // Mode is MULTI
             console.log("Mode is Multi");
             
             // Create empty Object
             // @TODO replace by own connection Class
-            self.rtcPeerConnections[peerid] = { "connection":null, "datachannel":null };
-            var connobj = self.rtcPeerConnections[0];
+            self.rtcPeerConnections[""+peerid] = { "connection":null, "datachannel":null };
+            var connobj = self.rtcPeerConnections[""+peerid];
 
             // Create new RTCPeerConnection und Datachannel
             connobj.connection = new webkitRTCPeerConnection(rtcconfig, null);
@@ -427,7 +428,15 @@ Client.prototype.setMessageCallback = function(newCallback) {
 }
 
 Client.prototype.sendMessage = function(msgType, data) {
-    this.rtcPeerConnections[0].datachannel.send("PING");
+    var self = this;
+    
+    if( this.mode === 'single' ) {
+        this.rtcPeerConnections[0].datachannel.send("PING");
+    } else {
+        this.peers.forEach(function(conn) {
+            self.rtcPeerConnections[""+conn].datachannel.send("PING");
+        });
+    }
 }
 
 Client.prototype.changeRoom = function(newroom) {
@@ -441,13 +450,7 @@ Client.prototype.setSignallingCallback = function(newCallback) {
 
 
 
-var rooms = {
-    'testroom': {
-        users: [],
-        userCount: 0,
-        state: 'idle'
-    }
-};
+var rooms = {};
 
 function Server(iosocket, config) {
     var self = this;
@@ -464,34 +467,38 @@ function Server(iosocket, config) {
         console.log(self.iosocket.id + " => " + JSON.stringify(req));  
        
         if( req.type === "hereandready" ) {
-            newPeer(req.room, req.mode);
+            if( !newPeer(req.room, req.mode) ) {
+                
+                // ERROR
+                return;
+            }
         }
     
         if( req.hasOwnProperty('to') ) {
             
-            // 'to' defines a direct target
-            var from = self.iosocket.id;
-            var to = req.to;
-            var room = req.room;
-            var type = req.type;
-            var message = req.message;
-            
             // @TODO replace direct Array indexing by Object-Named indexing for direct user access
-            rooms[room].users.forEach(function(user) {
-                if( user.id === to ) {
+            rooms[req.room].users.forEach(function(user) {
+                if( user.id === req.to ) {
                     
                     // Send Signalling Message to single Peer
                     user.emit('signalling_message', {
-                        from: from,
-                        to: to,
-                        message: message
+                        from: self.iosocket.id,
+                        type: req.type,
+                        message: req.message
                     });
-                    
-                    break;
                 }
             });
         } else {
     
+            if( self.iosocket.id !== rooms[req.room].users[0].id ) {
+                rooms[req.room].users[0].emit('signalling_message', {
+                    from: self.iosocket.id,
+                    type: req.type,
+                    message: req.message
+                });
+            }
+    
+            /*
             // Singalling Message will be broadcastet.
             // Currently no direct use?!
             // @TODO implement delayed connect between all Peers in Room.
@@ -508,14 +515,15 @@ function Server(iosocket, config) {
                     });
                 }
             });
+            */
         }
     });
   
     function newPeer(room, mode){
-        if( rooms.hasOwnProperty(roomname) ) {
+        if( rooms.hasOwnProperty(room) ) {
             
             // Room exists, check if Single-Peer
-            if( mode == 'single' ) {
+            if( mode === 'single' ) {
                 
                 // All OK, connect to Room
                 joinRoom(room);
@@ -523,14 +531,18 @@ function Server(iosocket, config) {
                 
                 // Multiple Multi-Peers currently not supported in one room
                 // @TODO ERROR
+                console.log("Multi-Peer tried to join room with another Multi-Peer");
+                return false;
             }
         } else {
             
             // Room doesnt exist
-            if( mode == 'single' ) {
+            if( mode === 'single' ) {
                 
                 // Singe-Peers can't create Rooms
                 // @TODO ERROR
+                console.log("Single-Peer tried to create Room.");
+                return false;
             } else {
                 
                 // All OK, create Room
@@ -538,6 +550,8 @@ function Server(iosocket, config) {
                 joinRoom(room);
             }
         }
+        
+        return true;
     };
     
     function createRoom(roomname) {
