@@ -19,8 +19,8 @@ function FingerPositionHandler(canvas, interval, callbackFunctions){
   var _player_start_y = 0;
   var _change_x = 0;
   var _change_y = 0;
-  var _lastSendTime = undefined;
-  var _lastSendDiff = 0;
+  // var _lastSendTime = undefined;
+  // var _lastSendDiff = 0;
   var _processMouseInformations = false;
 
   /**
@@ -50,7 +50,7 @@ function FingerPositionHandler(canvas, interval, callbackFunctions){
   }
 
   /**
-    * Wird aufgerufen, wenn die Mouse- oder Toucheingabe eine Bewegung feststellt
+    * Gets called when movement is noticed
     */
   function processInput(event){
     if(_processMouseInformations){
@@ -85,38 +85,20 @@ function FingerPositionHandler(canvas, interval, callbackFunctions){
   }
 
   /**
-    * Wird aufgerufen, wenn die Mouse- oder Toucheingabe endet
+    * Gets called when input ends
     */
   function processInputEnd(event){
     //document.getElementById("mouseInfo").innerHTML += "<br>processInputEnd"
-    _lastSendTime = undefined;
-    _lastSendDiff = 0;
+    // _lastSendTime = undefined;
+    // _lastSendDiff = 0;
     _processMouseInformations = false;
+    // set paddle coordinates therewith after input starts again, the movement is relative to last position
     _paddle_x += _change_x;
     _paddle_y += _change_y;
     // Prevent iPad from scrolling
     event.preventDefault();
   }
 
-  /**
-    * Bestimmt die Position des Canvas in dem Browser.
-    * Diese wird benötigt, da die Position im Mouseevent absolut ist.
-    */
-  function getOffset(obj) {
-    var offsetLeft = 0;
-    var offsetTop = 0;
-    do {
-      if (!isNaN(obj.offsetLeft)) {
-          offsetLeft += obj.offsetLeft;
-      }
-      if (!isNaN(obj.offsetTop)) {
-          offsetTop += obj.offsetTop;
-      }
-    } while(obj = obj.offsetParent );
-    return {left: offsetLeft, top: offsetTop};
-  }
-
-  var _offset = getOffset(_touchzone);
   /**
     * Register Listener
     */
@@ -128,5 +110,4 @@ function FingerPositionHandler(canvas, interval, callbackFunctions){
 
   _touchzone.addEventListener("touchend", processInputEnd, false);
   _touchzone.addEventListener("mouseup", processInputEnd, false);
-
 }
