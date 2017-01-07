@@ -1,13 +1,11 @@
-var Game = require('./../Game.js')
 
 var Ball = function (game, x, y) {
-  Phaser.Sprite.call(this, game, 200,200, 'ball');
+  Phaser.Sprite.call(this, game, x, y, 'ball');
 
 
-  game.physics.p2.enable(this, Game.gameProperties.debug);
+  game.physics.p2.enable(this, this.game.properties.debug);
   this.body.setCircle(16);
   this.body.angle = 80;
-  this.body.thrust(20000);
 
 
 }

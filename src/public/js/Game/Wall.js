@@ -1,21 +1,19 @@
-var Game = require('./../Game.js')
-
 var Wall = function (game, sprite, from, to) {
-  Phaser.Sprite.call(this, game, from.x + (Phaser.Math.difference(from.x, to.x) / 2), from.y + (Phaser.Math.difference(from.y, to.y) / 2), sprite);
-
-
-  //this.immovable = true;
-  //this.body.moves = false;
+  Phaser.Sprite.call(
+    this,
+    game,
+    from.x + Math.sign(to.x - from.x) * (Phaser.Math.difference(from.x, to.x) / 2),
+    from.y + Math.sign(to.y - from.y) *(Phaser.Math.difference(from.y, to.y) / 2),
+    sprite
+  );
 
   this.anchor.setTo(0, 0);
-  //// Stretch Sprite to Endpoint
-  //this.angle = -Phaser.Math.angleBetweenY(from.x, from.y, to.x, to.y) * 180 / Math.PI + 90;
-  this.width = Phaser.Math.distance(from.x, from.y, to.x, to.y);
+  this.height = Phaser.Math.distance(from.x, from.y, to.x, to.y);
 
-  game.physics.p2.enable(this, Game.gameProperties.debug);
+  game.physics.p2.enable(this, this.game.properties.debug);
   this.body.static = true;
 
-  this.body.angle = -Phaser.Math.angleBetweenY(from.x, from.y, to.x, to.y) * 180 / Math.PI + 90;
+  this.body.rotation = Phaser.Math.angleBetween(from.x, from.y, to.x, to.y) + 0.5 * Math.PI;
 }
 
 Wall.prototype = Object.create(Phaser.Sprite.prototype);
