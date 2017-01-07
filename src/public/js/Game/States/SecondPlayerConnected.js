@@ -6,18 +6,13 @@ var state = function(game){
   var self = this;
   self.game = game;
   abstractState.call(this, self.game);
-  this.init = function(wallBuilder){
-    self.wallBuilder = wallBuilder;
-  	console.log("FirstPlayerConnected");
+  this.init = function(){
+  	console.log("SecondPlayerConnected");
   };
   this.preload = function(){
 
   };
-  this.addPlayer = function(){
-    var player = new Player(self.game, self.wallBuilder.getPlayerInfoPack(1), 'paddle', 1);
-    this.game.state.start("SecondPlayerConnected", false, false);
-    return player;
-  }
+
 };
 
 state.prototype = Object.create(abstractState.prototype);
