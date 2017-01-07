@@ -15,7 +15,7 @@ var state = function(game){
     self.game.properties.ball = new Ball(self.game,self.game.world.width / 2 ,self.game.world.height / 2);
     self.game.add.existing(self.game.properties.ball);
     self.game.properties.walls = self.wallBuilder.buildField(self.game, 'wall');
-    var url = window.location.href.slice(0, -1 * "DisplayPeer.html".length) + "ControlPeer.html";
+    var url = window.location.href.slice(0, -1 * "DisplayPeer.html".length) + "ControlPeer.html#gameId=" + self.game.properties.gameId;
     document.getElementById('joinGamePanel').visibility = 'visible';
     var qr = new QRious({
       element: document.getElementById('qr-code'),
