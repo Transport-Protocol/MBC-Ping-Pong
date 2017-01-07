@@ -9,3 +9,4 @@ services:
     image: torbenhaug/mbc-ping-pong
     ports:
       - "8080:11002"
+    restart: always
