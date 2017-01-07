@@ -14,7 +14,7 @@ var state = function(game){
 
   };
   this.addPlayer = function(){
-    var player = new Player(self.game, self.wallBuilder.getWallPack(1), 'paddle', 1);
+    var player = new Player(self.game, self.wallBuilder.getPlayerInfoPack(1), 'paddle', 1);
     //this.game.state.start("FirstPlayerConnected", false, false, self.wallBuilder);
     return player;
   }
