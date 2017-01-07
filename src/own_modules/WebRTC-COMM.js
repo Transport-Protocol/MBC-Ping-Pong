@@ -498,8 +498,8 @@ function Client(iosocket, config, room, signallingCallback) {
                         console.log("Datachannel: " + message.data);
             
                         if( self.messageCallback ) {
-                            // Callback for messages
-                            self.messageCallback(message.data.type, message.data.from, message.data.message);
+                            var msg = JSON.parse(message.data);
+                        self.messageCallback(msg.type, msg.from, JSON.parse(msg.message));
                         }
                     };
                 }
@@ -517,7 +517,8 @@ function Client(iosocket, config, room, signallingCallback) {
             
                     if( self.messageCallback ) {
                         // Callback for messages
-                        self.messageCallback(message.data.type, message.data.from, message.data.message);
+                        var msg = JSON.parse(message.data);
+                        self.messageCallback(msg.type, msg.from, JSON.parse(msg.message));
                     }
                 };
             };

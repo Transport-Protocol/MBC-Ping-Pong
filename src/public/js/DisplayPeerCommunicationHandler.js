@@ -81,11 +81,29 @@ function gotNewConnection(peerid) {
 }
 
 function gotNewMessage(type, peerid, message) {
+    console.log("type: " + type);
+    console.log("from: " + peerid);
+    
     if( type === "changeposition" ) {
         
+        console.log("MSG: " + message);
+        
         // Received a position change
-        if( peerid in playerconn ) {
-            addPos(peerid, message.posX, message.posY);
+        if( playerconn.hasOwnProperty(peerid) ) {
+            
+            var id = playerconn[peerid];
+            
+            addPos(id, message.posX, message.posY);
+            
+            console.log("User ["+ peerid +"] changed Position.");
+        } else {
+            
+            // @TODO for testing purpose, states seem weird and undefined
+            gotNewConnection(peerid);
+            
+            var id = playerconn[peerid];
+            
+            addPos(id, message.posX, message.posY);
             
             console.log("User ["+ peerid +"] changed Position.");
         }
@@ -106,7 +124,7 @@ function gotDisconnectedPlayer(peerid){
 }
 
 function addPos(playerId, posX, posY){
-    if( playerId in playerconn ) return;
+    // if( playerId in playerconn ) return;
     
     // Call all registered methods with given parameters
     listener_addPosition.forEach(function(cb){
