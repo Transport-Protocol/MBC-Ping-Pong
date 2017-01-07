@@ -13,9 +13,8 @@
 *   Section: Prototyp
 */
 
-var P2P = require('socket.io-p2p');
 var io = require('socket.io-client');
-var Peer = require('simple-peer');
+var sigclient = require('./../../own_modules/WebRTC-COMM.js').Client;
 
 // Interface
 module.exports.init = init;
@@ -23,11 +22,11 @@ module.exports.addPositionToPlayerBufferListener = addPositionToPlayerBufferList
 module.exports.addPlayerToGameListener = addPlayerToGameListener;
 module.exports.removePlayerFromGameListener = removePlayerFromGameListener;
 
-var opts = { autoUpgrade: false, peerOpts: {trickle: false, numClients: 25} };
+var opts = { "mode":"multi", "maxpeers":999 };
 
 // Predefined vars used in init
 var ioSocket;
-var p2psocket;
+var client;
 
 // Statecheck replacers
 // @TODO replace with states
@@ -43,78 +42,23 @@ var listener_single_addPlayer;
 // Value: The player id the game has given.
 var playerconn = {};
 
-Peer.config = {
-    iceServers: [
-        {
-        urls: 'stun:stun.l.google.com:19302',
-        urls: 'stun:stun2.l.google.com:19302',
-        urls: 'stun:stun3.l.google.com:19302',
-        urls: 'stun:stun4.l.google.com:19302',
-        urls: 'stun:stunserver.org:3478'
-        }
-    ]
-};
 
 function init(){
     ioSocket = io.connect();
-    p2psocket = new P2P(ioSocket, opts, function(){
-        p2psocket.emit('peer-obj', "Hello");
-    });
+
 
     ioSocket.on('connect', function(){
         console.log("Now Connected to the Server.");
-        console.log(ioSocket);
-        console.log(p2psocket);
+
+        if( !isConnected ) {
+            client = new sigclient(ioSocket, opts, "testroom", null);
+            client.setNewConnectionCallback(gotNewConnection);
+            client.setDisconnectCallback(gotDisconnectedPlayer);
+            client.setMessageCallback(gotNewMessage);
+        }
+        
         isConnected = true;
-        p2psocket.emit("joinroom", {roomname: "testroom"});
     });
-
-    p2psocket.on('ready', function(){});
-
-    p2psocket.on('upgradewebrtc', function(){
-        if(p2psocket.usePeerConnection == true) return;
-        console.log("Now upgrading.");
-        p2psocket.upgrade();
-        console.log(p2psocket);
-    });
-
-    p2psocket.on('changeposition', function(data){
-        console.log("User ["+ data.playerId +"] changed Position.");
-        
-        if(data.playerId in playerconn) {
-            // Player exists
-            addPos(data);
-        }
-        else {
-            // Player doesn't exist
-            // @TODO react to new Players dynamically
-            var newId = addPlayer();
-            playerconn[data.playerId] = newId;
-            addPos(data);
-            
-            displayPlayers();
-        }
-    });
-
-    p2psocket.on('peer-error', function(data){
-        console.log(data);
-
-        gotDisconnectedPlayer();
-    });  
-
-    p2psocket.on('playerdisconnected', function(data){  
-        if(!data.peerId in playerconn) {
-            console.log("Unknown Player disconnected.");
-            return;
-        }
-        
-        var playerId = playerconn[data.peerId];
-        
-        console.log("User <"+playerId+"> ["+ data.peerId +"] disconnected");
-        
-        gotDisconnectedPlayer(data);
-        displayPlayers();
-    });    
 }
 
 function displayPlayers(){
@@ -126,9 +70,31 @@ function displayPlayers(){
     }
 }
 
-function gotDisconnectedPlayer(data){   
+function gotNewConnection(peerid) {
+    console.log("New Player connected [" + peerid + "]")
+    
+    var id = addPlayer();
+    
+    playerconn[peerid] = id;
+    
+    displayPlayers();
+}
+
+function gotNewMessage(type, peerid, message) {
+    if( type === "changeposition" ) {
+        
+        // Received a position change
+        if( peerid in playerconn ) {
+            addPos(peerid, message.posX, message.posY);
+            
+            console.log("User ["+ peerid +"] changed Position.");
+        }
+    }
+}
+
+function gotDisconnectedPlayer(peerid){   
     // Extract data from Object
-    var playerid = playerconn[data.peerId];
+    var playerid = playerconn[peerid];
     
     // Call all registered methods with given parameters
     listener_remPlayer.forEach(function(cb){
@@ -136,16 +102,11 @@ function gotDisconnectedPlayer(data){
     });
     
     // Delete Key of disconnected Player
-    delete playerconn[data.peerId];
+    delete playerconn[peerid];
 }
 
-function addPos(position){
-    if(!position.playerId in playerconn) return;
-    
-    // Extract data from Object
-    var playerId = playerconn[position.playerId];
-    var posX = position.X;
-    var posY = position.Y;
+function addPos(playerId, posX, posY){
+    if( playerId in playerconn ) return;
     
     // Call all registered methods with given parameters
     listener_addPosition.forEach(function(cb){
