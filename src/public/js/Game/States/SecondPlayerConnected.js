@@ -10,7 +10,7 @@ var state = function(game){
   	console.log("SecondPlayerConnected");
   };
   this.preload = function(){
-
+    document.getElementById('joinGamePanel').style.visibility = 'hidden';
   };
 
 };
