@@ -1,6 +1,7 @@
 module.exports.Client = Client;
 module.exports.Server = Server;
 module.exports.ServerRooms = rooms;
+module.exports.getID = getUUID;
 
 
 var rtcconfig = {
@@ -14,31 +15,49 @@ var dataChannelOptions = {
 	maxRetransmitTime: 1000
 };
 
-var conns;
-
 function Client(iosocket, config, room, signallingCallback) {
     
+    // @TODO try reproduce socket.io timing problems by removing this.
     sleep(100);
     
+    // Scope helper
     var self = this;
   
     self.iosocket = iosocket;
 
-    self.peerConnection = window.RTCPeerConnection 
-                  || window.mozRTCPeerConnection 
-                  || window.webkitRTCPeerConnection 
-                  || window.msRTCPeerConnection;
     
+    /*
+    * Overload RTCPeerConnection and RTCSessionDescription
+    * to support Browsers that have not prefixed this.
+    */
+    self.peerConnection = window.RTCPeerConnection || 
+                          window.mozRTCPeerConnection || 
+                          window.webkitRTCPeerConnection || 
+                          window.msRTCPeerConnection;
+
+    self.sessionDesc    = window.RTCSessionDescription || 
+                          window.mozRTCSessionDescription ||
+                          window.webkitRTCSessionDescription || 
+                          window.msRTCSessionDescription;
+
+    
+    
+    // Own ID
     self.id = self.iosocket.id;
-    self.status = 'init';
-    self.peers = [];
+    
+    // Number of connected Peers (WebRTC)
     self.connectioncount = 0;
 
+    // Object containing all connections
     self.rtcPeerConnections = {};
-    conns = self.rtcPeerConnections;
 
+    // Callback when reveiving a message on the DataChannel
     self.messageCallback = null;
+    
+    // Callback when a new Connection has been established
     self.newConnectionCallback = null;
+    
+    // Callback when a Peer has been disconnected
     self.disconnectCallback = null;
 
 
@@ -51,6 +70,7 @@ function Client(iosocket, config, room, signallingCallback) {
         self.maxpeers = 1;
     }
 
+    
     // Check Client Config <mode:maxpeers>
     if( self.mode === 'single' ) {
         
@@ -78,6 +98,7 @@ function Client(iosocket, config, room, signallingCallback) {
         console.log("ERROR: unknown error");
     }
 
+    // @TODO replace by Logging
     console.log("I AM: " + self.iosocket.id);
   
   
@@ -151,7 +172,7 @@ function Client(iosocket, config, room, signallingCallback) {
             // Set Remote Description
             connobj.connection.setRemoteDescription(
                 // Add SDP information from Remote to init new SessionDescription
-                new RTCSessionDescription(message.sdp), function() {
+                new self.sessionDesc(message.sdp), function() {
                     // Answer to any offer in this Session
                     if( connobj.connection.remoteDescription.type == 'offer' ) {
                         
@@ -312,18 +333,19 @@ function Client(iosocket, config, room, signallingCallback) {
             connobj.datachannel = connobj.connection.createDataChannel('textMessages', dataChannelOptions);
 
             // Check Connection Updates
+            // @TODO Deprecated?
             connobj.connection.onconnectionstatechange = function(data) {
                 console.log("Connection state changed.");
                 
                 switch( connobj.connection.connectionState ) {
                     case "connected": 
                         console.log("Successfully connected via WebRTC!");
-                        self.newConnectionCallback(peerid);
+                        peerconnected(peerid);
                         break;
                     
                     case "disconnected": 
                         console.log("Disconnected from other Peer!");
-                        self.disconnectCallback(peerid);
+                        peerdisconnected(peerid);
                         break;
                     
                     case "failed": 
@@ -333,17 +355,19 @@ function Client(iosocket, config, room, signallingCallback) {
             };
             
             connobj.connection.oniceconnectionstatechange = function(data) {
-                console.log("Connection state changed. <" + connobj.connection.iceconnectionstate + ">");
+                var state = connobj.connection.iceConnectionState;
                 
-                switch( connobj.connection.iceconnectionstate ) {
+                console.log("Connection state changed. <" + state + ">");
+
+                switch( state ) {
                     case "connected": 
                         console.log("Successfully connected via WebRTC!");
-                        self.newConnectionCallback(peerid);
+                        peerconnected(peerid);
                         break;
                     
                     case "disconnected": 
                         console.log("Disconnected from other Peer!");
-                        self.disconnectCallback(peerid);
+                        peerdisconnected(peerid);
                         break;
                     
                     case "failed": 
@@ -430,7 +454,6 @@ function Client(iosocket, config, room, signallingCallback) {
             }
             
             self.connectioncount++;
-            self.peers.push(peerid);
 
             // Mode is MULTI
             console.log("Mode is Multi");
@@ -445,18 +468,19 @@ function Client(iosocket, config, room, signallingCallback) {
             connobj.datachannel = connobj.connection.createDataChannel('textMessages', dataChannelOptions);
             
             // Check Connection Updates
-            connobj.connection.onconnectionstatechange = function(data) {
+            // @TODO Deprecated?
+            connobj.connection.onconnectionstatechange = function(data) {               
                 console.log("Connection state changed.");
                 
                 switch( connobj.connection.connectionState ) {
                     case "connected": 
                         console.log("Successfully connected via WebRTC!");
-                        self.newConnectionCallback(peerid);
+                        peerconnected(peerid);
                         break;
                     
                     case "disconnected": 
                         console.log("Disconnected from other Peer!");
-                        self.disconnectCallback(peerid);
+                        peerdisconnected(peerid);
                         break;
                     
                     case "failed": 
@@ -466,17 +490,19 @@ function Client(iosocket, config, room, signallingCallback) {
             };
             
             connobj.connection.oniceconnectionstatechange = function(data) {
-                console.log("Connection state changed. <" + connobj.connection.iceconnectionstate + ">");
+                var state = connobj.connection.iceConnectionState;
                 
-                switch( connobj.connection.iceconnectionstate ) {
+                console.log("Connection state changed. <" + state + ">");
+                
+                switch( state ) {
                     case "connected": 
                         console.log("Successfully connected via WebRTC!");
-                        self.newConnectionCallback(peerid);
+                        peerconnected(peerid);
                         break;
                     
                     case "disconnected": 
                         console.log("Disconnected from other Peer!");
-                        self.disconnectCallback(peerid);
+                        peerdisconnected(peerid);
                         break;
                     
                     case "failed": 
@@ -554,6 +580,22 @@ function Client(iosocket, config, room, signallingCallback) {
             };
         }
     }
+    
+    function peerconnected(peerid) {
+        // A new Peer has been successfully connected
+        
+        if( self.newConnectionCallback ) {
+            self.newConnectionCallback(peerid);
+        }
+    }
+    
+    function peerdisconnected(peerid) {
+        // A Peer connection has been disconnected
+        
+        if( self.disconnectCallback ) {
+            self.disconnectCallback(peerid);
+        }
+    }
 };
 
 Client.prototype.setMessageCallback = function(newCallback) {
@@ -594,14 +636,19 @@ Client.prototype.setSignallingCallback = function(newCallback) {
 var rooms = {};
 
 function Server(iosocket, config) {
+    // Scope helper
     var self = this;
   
     // Socket from Socket.io
     self.iosocket = iosocket;
     
+    // room
+    self.room = "";
+    
     self.iosocket.on('disconnected', function(data) {
         console.log("Lost Connection to a Socket...");
-        // @TODO handle disconnects
+        
+        leaveRoom();
     });
   
     self.iosocket.on('signal', function(req) {
@@ -694,6 +741,23 @@ function Server(iosocket, config) {
         
         self.iosocket.join(room);
         rooms[room].users.push(self.iosocket);
+        
+        self.room = room;
+    };
+    
+    function leaveRoom() {
+        if( self.room === "" ) return;
+        if( !rooms[self.room] ) return;
+        
+        var index = rooms[self.room].users.indexOf(self.iosocket.id);
+
+        if( index > -1 ) {
+            rooms[self.room].splice(index, 1);
+            
+            console.log("[" + self.socketio.id + "] has been removed from Room " + self.room);
+        } else {
+            // @TODO handle not user in room
+        }
     }
 }
 
@@ -710,4 +774,15 @@ function sleep(milliseconds) {
             break;
         }
     }
+}
+
+// http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+// user: broofa
+function getUUID() {
+    var id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+    
+    return id;
 }
