@@ -31,12 +31,21 @@ var state = function(game){
     this.game.state.start("SecondPlayerConnected", false, false);
     return player;
   };
-  //this.timeout = function(){
-    //this.game.state.start("InitializeNewGame", false, false);
-  //};
+  this.timeout = function(){
+    this.game.state.start("InitializeNewGame", true, false);
+  };
   this.render = function(){
     self.timerText.text = Math.round(self.timer.duration / 1000);
   };
+  this.removePlayer = function(playerId){
+    this.game.state.start("InitializeNewGame", true, false);
+  };
+  this.shutdown = function(){
+    self.circle.destroy();
+    self.timerText.destroy();
+    self.timer.stop();
+    self.timer.destroy();
+  }
 };
 
 state.prototype = Object.create(abstractState.prototype);
