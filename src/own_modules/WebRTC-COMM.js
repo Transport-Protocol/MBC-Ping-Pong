@@ -6,7 +6,7 @@ module.exports.getID = getUUID;
 
 var rtcconfig = {
 	'iceServers': [{
-		'url': 'stun:stun.l.google.com:19302'
+		'urls': 'stun:stun.l.google.com:19302'
 	}]
 };
 
@@ -170,9 +170,10 @@ function Client(iosocket, config, room, signallingCallback) {
             connobj.sdpdone = true;
             
             // Set Remote Description
-            connobj.connection.setRemoteDescription(
+            var promise = connobj.connection.setRemoteDescription(
                 // Add SDP information from Remote to init new SessionDescription
-                new self.sessionDesc(message.sdp), function() {
+                new self.sessionDesc(message.sdp), 
+                function() {
                     // Answer to any offer in this Session
                     if( connobj.connection.remoteDescription.type == 'offer' ) {
                         
@@ -207,7 +208,8 @@ function Client(iosocket, config, room, signallingCallback) {
                             }
                         );
                     }
-                }
+                },
+                function(){}
             );
         } else {
             
@@ -225,9 +227,10 @@ function Client(iosocket, config, room, signallingCallback) {
             connobj.sdpdone = true;
             
             // Set Remote Description
-            connobj.connection.setRemoteDescription(
+            var promise = connobj.connection.setRemoteDescription(
                 // Add SDP information from Remote to init new SessionDescription
-                new RTCSessionDescription(message.sdp), function() {
+                new RTCSessionDescription(message.sdp), 
+                function() {
                     // Answer to any offer in this Session
                     if( connobj.connection.remoteDescription.type == 'offer' ) {
                         
@@ -263,7 +266,8 @@ function Client(iosocket, config, room, signallingCallback) {
                             }
                         );
                     }
-                }
+                },
+                function(){}
             );
             
             /*
