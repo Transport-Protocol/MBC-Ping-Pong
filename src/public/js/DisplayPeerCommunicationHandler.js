@@ -15,6 +15,7 @@
 
 var io = require('socket.io-client');
 var sigclient = require('./../../own_modules/WebRTC-COMM.js').Client;
+var UUIDGEN = require('./../../own_modules/WebRTC-COMM.js').getID;
 
 // Interface
 module.exports.init = init;
@@ -45,6 +46,8 @@ var playerconn = {};
 
 function init(){
     ioSocket = io.connect();
+    
+    console.log("GAME ID: " + UUIDGEN());
 
 
     ioSocket.on('connect', function(){
@@ -59,6 +62,8 @@ function init(){
         
         isConnected = true;
     });
+    
+    return UUIDGEN();
 }
 
 function displayPlayers(){
