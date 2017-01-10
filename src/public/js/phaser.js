@@ -29878,16 +29878,6 @@ Phaser.StateManager.prototype = {
                 this.onShutDownCallback.call(this.callbackContext, this.game);
             }
 
-            this.game.tweens.removeAll();
-
-            this.game.camera.reset();
-
-            this.game.input.reset(true);
-
-            this.game.physics.clear();
-
-            this.game.time.removeAll();
-
             this.game.scale.reset(this._clearWorld);
 
             if (this.game.debug)
@@ -29896,8 +29886,18 @@ Phaser.StateManager.prototype = {
             }
 
             if (this._clearWorld)
-            {
-                this.game.world.shutdown();
+            {	
+		this.game.camera.reset();
+
+		this.game.input.reset(true);
+
+		this.game.time.removeAll();
+
+		this.game.tweens.removeAll();
+
+		this.game.physics.clear();
+                
+		this.game.world.shutdown();
 
                 if (this._clearCache)
                 {
