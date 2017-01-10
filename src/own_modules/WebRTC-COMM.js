@@ -119,6 +119,16 @@ function Client(iosocket, config, room, signallingCallback) {
             var newUserID = data.from;
             
             newConnection(newUserID);
+        } else if( data.type === 'peer_disconnect' && self.mode === 'multi' ) {
+            
+            // A Peer has been disconnected
+            var disconnectedPeerId = data.from;
+            peerDisconnected(disconnectedPeerId);
+        } else if( data.type === 'host_disconnect' && self.mode === 'single' ) {
+            
+            // Connection to host peer has been lost
+            var disconnectedPeerId = data.from;
+            hostDisconnected(disconnectedPeerId);
         } else {
             
             if( self.mode === 'single' && self.connectioncount == 0) {
@@ -157,6 +167,34 @@ function Client(iosocket, config, room, signallingCallback) {
     // @TODO refactor this!
     // If Mode is Single, the signal will be redirected to the Multi-Peer
     self.iosocket.emit('signal', {"type":"hereandready", "mode":self.mode, "room":"testroom"});
+  
+    function peerDisconnected(peerid) {
+        if( !self.rtcPeerConnections[peerid] ) return;
+        
+        var connobj = self.rtcPeerConnections[peerid];
+
+        connobj.connection.close();
+        
+        delete self.rtcPeerConnections[peerid];
+        
+        if( self.disconnectCallback ) {
+            self.disconnectCallback(peerid);
+        }
+    };
+    
+    function hostDisconnected(peerid) {
+        if( !self.rtcPeerConnections[0] ) return;
+        
+        var connobj = self.rtcPeerConnections[0];
+
+        connobj.connection.close();
+        
+        delete self.rtcPeerConnections[0];
+        
+        if( self.disconnectCallback ) {
+            self.disconnectCallback(peerid);
+        }
+    };
   
     // @IMPORTANT @TODO refactor this. Chaotic Callback Hell...
     function gotSDP(message, peerid) {
@@ -649,9 +687,13 @@ function Server(iosocket, config) {
     // room
     self.room = "";
     
-    self.iosocket.on('disconnected', function(data) {
+    // Mode
+    self.mode = "";
+    
+    self.iosocket.on('disconnect', function(data) {
         console.log("Lost Connection to a Socket...");
         
+        sendDisconnectSignal();
         leaveRoom();
     });
   
@@ -701,6 +743,7 @@ function Server(iosocket, config) {
                 
                 // All OK, connect to Room
                 joinRoom(room);
+                self.mode = 'single';
             } else {
                 
                 // Multiple Multi-Peers currently not supported in one room
@@ -722,6 +765,7 @@ function Server(iosocket, config) {
                 // All OK, create Room
                 createRoom(room);
                 joinRoom(room);
+                self.mode = 'multi';
             }
         }
         
@@ -753,14 +797,58 @@ function Server(iosocket, config) {
         if( self.room === "" ) return;
         if( !rooms[self.room] ) return;
         
-        var index = rooms[self.room].users.indexOf(self.iosocket.id);
+        var index = rooms[self.room].users.indexOf(self.iosocket);
 
-        if( index > -1 ) {
-            rooms[self.room].splice(index, 1);
+        if( index == 0 ) {
             
-            console.log("[" + self.socketio.id + "] has been removed from Room " + self.room);
+            // Host has disconnected from Room
+            // Delete Room
+            console.log("Deleted Room " + self.room + " because room Host disconnected.");
+            
+            rooms[self.room].users.forEach(function(user) {
+                if( user.id !== self.iosocket.id ) {
+                    
+                    // Let just others leave
+                    // Self left already because of disconnect
+                    user.leave(self.room);
+                }
+            });
+            
+            delete rooms[self.room];  
+        } else if( index > -1 ) {
+            
+            // Remove Socket from room
+            console.log("[" + self.iosocket.id + "] has been removed from Room " + self.room);
+            rooms[self.room].users.splice(index, 1);
         } else {
+            
             // @TODO handle not user in room
+            console.log("User index in room is < -1.");
+        }
+    };
+    
+    function sendDisconnectSignal() {
+        if( self.room === "" ) return;
+        if( !rooms[self.room] ) return;
+        
+        if( self.mode === 'single' ) {
+            
+            // Emit Disconnect Signal to room host
+            rooms[self.room].users[0].emit('signalling_message', {
+                from: self.iosocket.id,
+                type: 'peer_disconnect'
+            });
+        } else if( self.mode === 'multi' ) {
+            
+            // Emit Disconnect Signal to all
+            rooms[self.room].users.forEach(function(user) {
+                user.emit('signalling_message', {
+                    from: self.iosocket.id,
+                    type: 'host_disconnect'
+                });
+            });
+        } else {
+            // @TODO Handle unknwon Mode
         }
     }
 }
