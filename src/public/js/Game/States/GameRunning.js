@@ -11,6 +11,7 @@ var state = function(game){
   	console.log("GameRunning");
   };
   this.preload = function(){
+    self.game.properties.ball.start();
 
   };
 };
