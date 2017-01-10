@@ -47,14 +47,16 @@ var playerconn = {};
 function init(){
     ioSocket = io.connect();
     
-    console.log("GAME ID: " + UUIDGEN());
+    var gameid = UUIDGEN();
+    
+    console.log("GAME ID: " + gameid);
 
 
     ioSocket.on('connect', function(){
         console.log("Now Connected to the Server.");
 
         if( !isConnected ) {
-            client = new sigclient(ioSocket, opts, "testroom", null);
+            client = new sigclient(ioSocket, opts, gameid, null);
             client.setNewConnectionCallback(gotNewConnection);
             client.setDisconnectCallback(gotDisconnectedPlayer);
             client.setMessageCallback(gotNewMessage);
@@ -63,7 +65,7 @@ function init(){
         isConnected = true;
     });
     
-    return UUIDGEN();
+    return gameid;
 }
 
 function displayPlayers(){

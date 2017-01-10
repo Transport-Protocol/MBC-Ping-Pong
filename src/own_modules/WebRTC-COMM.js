@@ -7,10 +7,10 @@ module.exports.getID = getUUID;
 var rtcconfig = {
 	'iceServers': [
         //{ 'urls': 'stun:stun.l.google.com:19302' },
-        { 'urls': 'stun:stun1.l.google.com:19305' },
-        { 'urls': 'stun:stun2.l.google.com:19305' },
-        { 'urls': 'stun:stun3.l.google.com:19305' },
-        { 'urls': 'stun:stun4.l.google.com:19305' },
+        //{ 'urls': 'stun:stun1.l.google.com:19305' },
+        //{ 'urls': 'stun:stun2.l.google.com:19305' },
+        //{ 'urls': 'stun:stun3.l.google.com:19305' },
+        //{ 'urls': 'stun:stun4.l.google.com:19305' },
         { 'urls': 'stun:stun.schlung.de' }
     ]
 };
@@ -30,6 +30,7 @@ function Client(iosocket, config, room, signallingCallback) {
   
     self.iosocket = iosocket;
 
+    self.room = room;
     
     /*
     * Overload RTCPeerConnection and RTCSessionDescription
@@ -171,7 +172,7 @@ function Client(iosocket, config, room, signallingCallback) {
     // If Mode id Multi, this signal will be received by no one
     // @TODO refactor this!
     // If Mode is Single, the signal will be redirected to the Multi-Peer
-    self.iosocket.emit('signal', {"type":"hereandready", "mode":self.mode, "room":"testroom"});
+    self.iosocket.emit('signal', {"type":"hereandready", "mode":self.mode, "room":room});
   
     function peerDisconnected(peerid) {
         if( !self.rtcPeerConnections[peerid] ) return;
@@ -471,7 +472,7 @@ function Client(iosocket, config, room, signallingCallback) {
                 } else {
                     var desc = connobj.connection.localDescription;
                     
-                    self.iosocket.emit('signal', {"type":"SDP", "to":peerid, "message": JSON.stringify({'sdp': desc }), "room":"testroom"});
+                    self.iosocket.emit('signal', {"type":"SDP", "to":peerid, "message": JSON.stringify({'sdp': desc }), "room":self.room});
                 }
             };
 
@@ -482,7 +483,7 @@ function Client(iosocket, config, room, signallingCallback) {
                     function(desc) {
                         connobj.connection.setLocalDescription(desc, function() {
                             console.log("Sending local description");
-                            self.iosocket.emit('signal', {"type":"SDP", "to":peerid, "message": JSON.stringify({'sdp': connobj.connection.localDescription }), "room":"testroom"});
+                            self.iosocket.emit('signal', {"type":"SDP", "to":peerid, "message": JSON.stringify({'sdp': connobj.connection.localDescription }), "room":self.room});
                         }, function(errormsg) {
                             console.log("" + errormsg);
                         }
@@ -604,7 +605,7 @@ function Client(iosocket, config, room, signallingCallback) {
                 } else {
                     var desc = connobj.connection.localDescription;
                     
-                    self.iosocket.emit('signal', {"type":"SDP", "to":peerid, "message": JSON.stringify({'sdp': desc }), "room":"testroom"});
+                    self.iosocket.emit('signal', {"type":"SDP", "to":peerid, "message": JSON.stringify({'sdp': desc }), "room":self.room});
                 }
             };
             
