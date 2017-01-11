@@ -14,10 +14,12 @@ var state = function(game){
   this.preload = function(){
     document.getElementById('joinGamePanel').style.visibility = 'hidden';
 
+    //ToDo: Convert to Object, use Anchor
     self.circle = game.add.sprite(game.width/2 - 25,game.height/2 - 100,'timerBackground');
 
     var timerTextStyle = { font: "bold 32px Arial", fill: "#FF0000", boundsAlignH: "center", boundsAlignV: "middle" };
     self.timerText = game.add.text(0, 0, "" + TIME_UNTIL_GAME_STARTS_IN_SECONDS, timerTextStyle);
+    //ToDo: Convert to Object, use Anchor
     self.timerText.setTextBounds(self.circle.x, self.circle.y, self.circle.width, self.circle.height);
   };
   this.create = function(){

@@ -2,12 +2,13 @@ var Player = function (game, wallPack, ball, key, frame) {
   var _ball = ball;
   var _wallPack = wallPack;
   var _game = game;
+  var _frame = frame;
   var points = 10;
   var maxPoints = points;
   var xDiff = Math.round(20 * Math.sin(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
   var yDiff = Math.round(20 * Math.cos(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
   console.log(xDiff + " : " + yDiff);
-  Phaser.Sprite.call(this, game, wallPack.pointWall.body.x + xDiff, wallPack.pointWall.body.y + yDiff, key, frame);
+  Phaser.Sprite.call(this, game, wallPack.pointWall.body.x + xDiff, wallPack.pointWall.body.y + yDiff, key, _frame);
 
   // Set Physic
   game.physics.p2.enable(this, this.game.properties.debug);
@@ -62,6 +63,27 @@ var Player = function (game, wallPack, ball, key, frame) {
     }
   };
 
+  this.getPoints = function () {
+    return maxPoints - points;
+  };
+  this.getPlayerName = function () {
+    switch (_frame) {
+      case 0:
+        return "left";
+        break;
+      case 1:
+        return "rechts";
+        break;
+      case 2:
+        return "oben";
+        break;
+      case 3:
+        return "unten";
+        break;
+      default:
+        return "undefined";
+    }
+  }
 }
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);

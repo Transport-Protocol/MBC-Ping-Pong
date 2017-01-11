@@ -21,14 +21,14 @@ var gameProperties = {
 var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.CANVAS, gameProperties.name);
 game.properties = gameProperties;
 
-game.state.add('load', load);
+game.state.add('Load', load);
 game.state.add('InitializeNewGame', initializeNewGame);
 game.state.add('Initial', initial);
 game.state.add('FirstPlayerConnected', firstPlayerConnected);
 game.state.add('SecondPlayerConnected', secondPlayerConnected);
 game.state.add('GameRunning', gameRunning);
 game.state.add('GameEnded', gameEnded);
-game.state.start('load')
+game.state.start('Load');
 
 function addPlayerToGame() {
 
