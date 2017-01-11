@@ -16,7 +16,7 @@ var Wall = function (game, sprite, from, to) {
   this.body.kinematic = true;
 
   // Vergrößere die BoundinBox um tunneling zu minimieren
-  this.body.setRectangle(64, this.height, 32, 0, this.body.rotation);
+  this.body.setRectangle(64, this.height, -32, 0, this.body.rotation);
 }
 
 Wall.prototype = Object.create(Phaser.Sprite.prototype);
