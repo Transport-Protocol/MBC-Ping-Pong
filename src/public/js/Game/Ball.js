@@ -4,6 +4,8 @@ var Ball = function (game, x, y) {
   Phaser.Sprite.call(this, game, x, y, 'ball');
   var initialSpeed = 300;
   var speedUpValue = 20;
+  var initialX = x;
+  var initialY = y;
 
   var generateRandomDirection = function(){
     var plusOrMinus = Math.random() < 0.5 ? -1 : 1;

@@ -66,7 +66,7 @@ function invisibleWall(game, n1) {
   var y = n1.from.y + Phaser.Math.difference(n1.from.y, n1.to.y) / 2;
   var wall = game.add.sprite(x, y);
 
-  game.physics.p2.enable(wall, true);
+  game.physics.p2.enable(wall, game.properties.debug);
   wall.body.static = true;
   wall.body.setRectangle(Phaser.Math.difference(n1.from.x, n1.to.x), Phaser.Math.difference(n1.from.y, n1.to.y));
   return wall;

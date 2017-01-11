@@ -1,5 +1,6 @@
 var Player = function (game, wallPack, ball, key, frame) {
-  var _ball = ball
+  var _ball = ball;
+  var points = 10;
   var xDiff = Math.round(20 * Math.sin(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
   var yDiff = Math.round(20 * Math.cos(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
   console.log(xDiff + " : " + yDiff);
@@ -13,9 +14,14 @@ var Player = function (game, wallPack, ball, key, frame) {
   this.collideWithBall = function(playerBody, ballBody){
     _ball.speedUp();
   };
-
   this.body.createBodyCallback(ball, this.collideWithBall, this);
 
+  this.collideWithPointwall = function(playerBody, wallBody) {
+    points--;
+    console.log("Hit PointWall, Points: " + points);
+    _ball.reset();
+  }
+  wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
 
   //Todo Fix Positioning, then fix boundingbox
   /*
