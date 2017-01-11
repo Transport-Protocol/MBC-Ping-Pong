@@ -10,10 +10,13 @@ var Ball = function (game, x, y) {
 
   var generateRandomDirection = function(){
     var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-    return plusOrMinus * ((Math.random() * (0.6 * Math.PI)) + (0.2 * Math.PI))
+    //return plusOrMinus * ((Math.random() * (0.6 * Math.PI)) + (0.2 * Math.PI))
+    return 0.5 * Math.PI;
   }
   game.physics.p2.enable(this, this.game.properties.debug);
   self.body.setCircle(16);
+  self.body.data.ccdSpeedThreshold = 38.75;
+	self.body.data.ccdIterations = 10;
 
   this.start = function(){
     self.body.rotation = generateRandomDirection();
