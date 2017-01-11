@@ -14,7 +14,7 @@ var playerInfoPack = [];
 var buildField = function (game, wallSprite) {
   //create Score fpr Player 0
   var style0 = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
-  var scorePlayer0 = game.add.text(0, 0, "00", style0);
+  var scorePlayer0 = game.add.text(0, 0, "0", style0);
   scorePlayer0.setTextBounds(0, 0, (game.width / 2) - 20, 64)
 
   //Create seperator
@@ -23,7 +23,7 @@ var buildField = function (game, wallSprite) {
   seperator.setTextBounds((game.width / 2) - 20, 0, 40, 64)
 
   var style1 = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "left", boundsAlignV: "middle" };
-  var scorePlayer1 = game.add.text(0, 0, "00", style1);
+  var scorePlayer1 = game.add.text(0, 0, "0", style1);
   scorePlayer1.setTextBounds((game.width / 2) + 20, 0, (game.width / 2) - 20, 64)
   var walls = game.add.group();
 
