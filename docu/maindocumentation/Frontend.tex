@@ -440,3 +440,117 @@ Wenn der Controller nicht mehr berührt wird so darf sich der Schläger nicht we
 Moderne Mobiltelefone haben wesentlich höhere Auflösungen als unser Spielfeld groß sein wird. Aus diesem Grund sollte die Bewegung auf einem Maximumwert begrenzt werden.
 \newline 
 Maximal sollte sich ein Schläger über die gesamte Spielfläche in einem Zyklus bewegen können. Es ist denkbar das wir den Wert später nach unten korrigieren müssen um ein gutes Spielgefühl schaffen zu können.
+\newpage
+\section{Erstellung des Technischen Demonstrators}
+Für die Präsentation des Projektstandes war unsere Zielsetzung alle Technischen Hürden überwunden zu haben und einen Funktionsfähigen Prototypen zeigen zu können.
+\newline
+Dieser Prototyp sollte vor allem den Technischen Durchstich erreicht haben, konkret waren das folgende Anforderungen:
+\begin{itemize}
+	\item
+	      Initialisieren der Lobby durch den Server
+	\item
+	      Kommunikation der Peers via WebRTC
+	\item
+	      Einlesen von User Eingaben am ControlPeer
+	\item
+	      Anzeige der Schläger in Abhängigkeit der Usereingaben am DisplayPeer
+\end{itemize}
+\subsection{Realisierung des ControllPeers}
+Meine Aufgabe war es die Darstellung auf dem DisplayPeer, nach den gegebenen Anforderungen, zu realisieren.
+
+Es sollten nur die Schläger angezeigt und bewegt werden können. Damit jeder Schläger von den anderen Unterscheidbar bleibt hab ich mich dafür entschieden verschiedene Schläger-Sprites in einem Spritesheet zu speichern zu jedem Spieler eine Sprite ID mit zu geben.
+Das hat den Vorteil das die Sprites in einer einzigen Datei lagern und leicht getauscht werden können.
+\newline
+Laden des Spritesheets (Argumente:Name, Pfad, Weite, Höhe, Anzahl):
+\begin{lstlisting}
+game.load.spritesheet('paddle', 'assets/testPaddles.png', 9, 100, 6);
+\end{lstlisting}
+Die Spieler erhalten ihren Sprite in Abhängigkeit zu ihrer ID:
+\begin{lstlisting}
+function assignPlayerSprite(player) {
+player.sprite = game.add.sprite(player.x, player.y, 'paddle');
+player.sprite.frame = player.id; }
+\end{lstlisting}
+Die Methode wurde in einer Methode verbaut welche einen neuen Spieler erzeugt. Dabei wurde auch geprüft ob die maximale Anzahl an Spielern überschritten wurde.
+\newline
+Das Spielerobjekt selber bekam eine Funktion um die neuen Eingaben zu seinem Buffer hinzuzufügen sowie eine Update Methode welche vom Spiel aufgerufen wurde um die Position zu aktualisieren.
+\newline
+In der Update Methode wurden über alle Positionen im Buffer iteriert. Das hat den Hintergrund das später nur Positionsänderungen übertragen werden und dabei alle berücksichtigt werden sollen.
+
+\section{Erstellung des 2 Spieler Feldes}
+\begin{quote}
+	\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/22}{DisplayPeer - Schläger \#22}
+	\newline
+	\textit{Der Schläger ist ein Elementares Element des Spieles. in #11 wurde ein Konzept entwickelt, in welchem
+	festgelegt wurde, welche Daten an den Schläger übermittelt werden.}
+\end{quote}
+\begin{quote}
+	\href{https://github.com/Transport-Protocol/MBC-Ping-Pong/issues/26}{DisplayPeer - InitialState \#26}
+	\newline
+	\textit{Der Initiale Zustand wird dargestellt, wenn die Seite geladen wird.}
+\end{quote}
+Die beiden Issues beschrieben Anforderungen an das Spielfeld für ein 2 Spieler Feld.
+\subsection{Problem: Physic Engine} 
+Bei der Erstellung des Spielfeldes fiel auf das die Kollision mit den Wänden nicht funktioniert. Grund hierfür ist die eingesetzte Physic Engine "Phaser.Arcade".
+In Phaser hat man die Wahl zwischen verschiedenen Engines.
+\begin{itemize}
+	\item
+	      Arcade
+	\item
+	      Box2D
+	\item
+	      Ninja Physics
+	\item
+	      P2 Physics
+\end{itemize}
+Wir hatten uns für die Arcade Engine entschieden weil sie am ehesten für unseren Zweck zu passen schien.
+\paragraph{Problem 1}
+Das erste Problem war das wir keine Kollision zu gedrehten Wänden abfragen konnten. Die Wände wurden schlichtweg nicht erkannt.
+Dieses Problem ließ sich theoretisch lösen indem man die BoundingBox mit dreht, oder sie nach dem drehen updated.
+\paragraph{Problem 2}
+Das zweite Problem war das die Arcade Engine nur Rechteckige und nicht gedrehte Bounding Boxen unterstützt. Das bedeutet das wir für unser 2 Spieler Feld, wo wir nur um 90° gedrehte Wände verwenden, keine weiteren Probleme haben. Allerdings würde mit dieser Engine keinerlei schräge Wand erkennbar sein und damit wäre der 3 - Spieler Modus gestorben.
+\newline
+\textbf{Resultat: Eine neue Physic Engine muss her}
+\subsection{Umstellung auf die P2 Physics}
+Ziemlich schnell bin ich auf die P2 Engine gestoßen, da viele Nutzer Ähnliche Probleme mit der Arcade Engine hatten.
+\newline
+Die Umstellung ging im Grunde recht einfach, allerdings behandelt die Engine sehr vieles anders als die Arcade Engine.
+\newline
+Viele Funktionen die unter Arcade direkt auf dem Sprite ausgeführt wurden werden in P2 auf den Physikalischen Body ausgeführt. Dazu zählen unter anderem:
+\begin{itemize}
+	\item
+	      BoundingBox des Balls: Vorher wurde der Ball erkannt, bei P2 muss der Body definiert werden mit 
+	      \begin{listing}
+	      	this.ball.body.setCircle(16);
+	      \end{listing}
+	\item
+	      Drehung: Vorher konnten Objete per "obj.angle" gedreht werden, daraus wurde "obj.body.angle"
+	\item
+	      Beschleunigung: In Arcade musste eine "obj.velocity" auf beiden Achsen angegeben werden, daraus wurde ein "obj.body.thrust()" aufruf
+	\item
+	      Bounding Box der Wände: Diese wurde zuerst falsch erkannt da der Sprite gestreckt wird.
+	      Lösung war es erst die transformation des Sprites durchzuführen udn im Anschluss den Physikalischen Body zu erstellen.
+	      Ferner mussten die Bodies in statische Bodies umgewandelt werden da sie sich sonst im Raum bewegen würden.
+	\item
+	      Drehung der Sprites: Vorher fand die Drehung am Sprite selber statt, dort war der Ankerpunk auf (0,0) definiert. Beim Body ist der Ankerpunkt standartmäßig der Mittelpunkt des Sprites, also musste die Platzierung des Sprites neu überdacht werden.
+	\item
+	      Bewegung des Schlägers: Die Schläger wurden sonst per x &y Koordinaten gesetzt, P2 nimmt diese aber nicht an
+\end{itemize}
+\subsubsection{Problem Tunneling}
+Wenn der Ball sich zu schnell bewegt kann es vorkommen das er sich durch Objekte durch bewegt. Genannt wird dieses Problem tunneling.
+Behandeln kann man das Problem nur sehr schwer da die Engine selber keine Überprüfung auf Tunneling vornimmt.
+\newline
+\textbf{Die Engine prüft nur ob an der nächsten Position eine Kollision vorliegt, nicht zwischen den Positionen}
+\paragraph{Behandlung: Dicke Wände}\\
+\mbox{}\\
+Es ist möglich das Tunneling zu reduzieren indem man die Wanddicke erhöht. Dadurch kommt es eher zu einer Kollision wenn der Ball sonst aus dem Spielfeld fliegt.
+\newline
+Am besten werden die Wände nur in ihren Kollisionsboxen aber nicht in der wirklichen Größe verändert.
+\paragraph{Behandlung: Begrenzung der Geschwindigkeit}
+\mbox{}\\
+Eine weitere Möglichkeit wäre es die Geschwindigkeit zu begrenzen. Allerdings kann dies sehr stark den Spaß am Spiel nehmen.
+\paragraph{Lösung?}
+\mbox{}\\
+Probieren beider Behandlungsmöglichkeiten
+\newline
+\textbf{Erster Eindruck} Dem ersten Eindruck nach wurde das Problem behoben indem die Wände und Schläger dickere Kollisions Boxen bekamen, unklar ist ob die Todeszonen richtig erkannt werden.

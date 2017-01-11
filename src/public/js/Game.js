@@ -1,61 +1,52 @@
-var Player = require('./Player.js');
+var Player = require('./Game/Player.js');
+var load = require('./Game/States/load.js');
+var initializeNewGame = require('./Game/States/InitializeNewGame.js');
+var initial = require('./Game/States/initial.js');
+var firstPlayerConnected = require('./Game/States/FirstPlayerConnected.js');
+var secondPlayerConnected = require('./Game/States/SecondPlayerConnected.js');
 
 var gameProperties = {
-    name: 'engineTest',
-    width: 640,
-    height: 320,
-    playerIdCount: 0,
-    players: new Map(),
-    freeSprites:[0,1,2,3,4,5]
+  name: 'engineTest',
+  width: 640,
+  height: 480,
+  playerIdCount: 0,
+  players: new Map(),
+  debug: true,
+  gameId: undefined,
+  ball: undefined
 };
 
+var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.CANVAS, gameProperties.name);
+game.properties = gameProperties;
 
+game.state.add('load', load);
+game.state.add('InitializeNewGame', initializeNewGame);
+game.state.add('Initial', initial);
+game.state.add('FirstPlayerConnected', firstPlayerConnected);
+game.state.add('SecondPlayerConnected', secondPlayerConnected);
+game.state.start('load')
 
+function addPlayerToGame() {
 
-var mainState = function(game) {};
-mainState.prototype = {
-    preload: function() {
-        // New spritesheet, width:9, height:100, count:6 (frames)
-        game.load.spritesheet('paddle', 'assets/testPaddles.png', 9, 100, 6);
-    },
-
-    create: function() {},
-
-    update: function() {},
-};
-
-var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.CANVAS, gameProperties.name, mainState);
-/*game.state.add('main', mainState);
-game.state.start('main');*/
-
-
-function addPlayerToGame(){
-  if(gameProperties.freeSprites.length > 0){
-    var player = new Player(game, 0, 0, 'paddle', gameProperties.freeSprites.shift());
+  var player = game.state.states[game.state.current].addPlayer();
+  if (player) {
     var playerId = gameProperties.playerIdCount++;
     gameProperties.players.set(playerId, player);
     game.add.existing(player);
     return playerId;
-  }else {
+  } else {
     return undefined;
   }
 }
 
-function removePlayerFromGame(playerId){
-  player = gameProperties.players.get(playerId);
-  if(player){
-    gameProperties.players.delete(playerId)
-    gameProperties.freeSprites.push(player.frame);
-    player.destroy();
-  } else {
-    console.error("Cannot find Player with Id: " + playerId);
-  }
+function removePlayerFromGame(playerId) {
+  game.state.states[game.state.current].removePlayer(playerId);
 }
 
-function addPositionToPlayerBuffer(playerId, x, y){
+function addPositionToPlayerBuffer(playerId, x, y) {
   player = gameProperties.players.get(playerId);
-  if(player){
-    player.addPositionToBuffer(x,y);
+  if (player) {
+    player.addPositionToBuffer(x, y);
   } else {
     console.error("Cannot find Player with Id: " + playerId);
   }
@@ -64,27 +55,4 @@ function addPositionToPlayerBuffer(playerId, x, y){
 module.exports.removePlayerFromGame = removePlayerFromGame;
 module.exports.addPlayerToGame = addPlayerToGame;
 module.exports.addPositionToPlayerBuffer = addPositionToPlayerBuffer;
-
-/*
-function addNewPlayer() {
-    var newId = gameProperties.playerCount++;
-    if (newId > 5) {
-        console.log("ERR Player limit exceed")
-        return;
-    }
-    var player = {
-        id: newId,
-        x: 80 * newId,
-        y: game.world.centerY,
-        sprite: undefined
-    };
-    console.log(player);
-    gameProperties.aryPlayers.push(player);
-    assignPlayerSprite(player);
-
-}
-
-function assignPlayerSprite(player) {
-    player.sprite = game.add.sprite(player.x, player.y, 'paddle');
-    player.sprite.frame = player.id;
-}*/
+module.exports.gameProperties = gameProperties;
