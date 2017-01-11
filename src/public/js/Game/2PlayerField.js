@@ -6,11 +6,7 @@ var fieldNodes = {
   upperWall: {from: {x: 0, y: 64}, to: {x: 640, y: 64}},
   rightWall: {from: {x: 640, y: 64}, to: {x: 640, y: 440}},
   lowerWall: {from: {x: 640, y: 440}, to: {x: 0, y: 440}},
-  leftWall: {from: {x: 0, y: 440}, to: {x: 0, y: 64}},
-
-
-  upperEnd: {from: {x: 0, y: 0}, to: {x: 640, y: 64}},
-  lowerEnd: {from: {x: 0, y: 440}, to: {x: 640, y: 480}}
+  leftWall: {from: {x: 0, y: 440}, to: {x: 0, y: 64}}
 };
 
 var playerInfoPack = [];
@@ -45,10 +41,6 @@ var buildField = function (game, wallSprite) {
     {"upperWall" : upperWall, "lowerWall": lowerWall, "pointWall": leftWall, "opponentScoreText": scorePlayer1},
     {"upperWall" : upperWall, "lowerWall": lowerWall, "pointWall": rightWall, "opponentScoreText": scorePlayer0}
   ];
-
-  // Unsichtbare Begrenzung, gegen Tunneling
-  walls.add(invisibleWall(game, fieldNodes.upperEnd));
-  walls.add(invisibleWall(game, fieldNodes.lowerEnd));
   return walls;
 };
 
@@ -58,17 +50,6 @@ function getPlayerInfoPack(playerNumber){
 
 function createWall(game, sprite, positions) {
   var wall = new Wall(game, sprite, positions.from, positions.to);
-  return wall;
-}
-
-function invisibleWall(game, n1) {
-  var x = n1.from.x + Phaser.Math.difference(n1.from.x, n1.to.x) / 2;
-  var y = n1.from.y + Phaser.Math.difference(n1.from.y, n1.to.y) / 2;
-  var wall = game.add.sprite(x, y);
-
-  game.physics.p2.enable(wall, game.properties.debug);
-  wall.body.static = true;
-  wall.body.setRectangle(Phaser.Math.difference(n1.from.x, n1.to.x), Phaser.Math.difference(n1.from.y, n1.to.y));
   return wall;
 }
 
