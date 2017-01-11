@@ -4,7 +4,7 @@
 *
 *   For further information:
 *
-*   Sequence including this Entity: 
+*   Sequence including this Entity:
 *   https://raw.githubusercontent.com/Transport-Protocol/MBC-Ping-Pong
 *   /master/docu/maindocumentation/architecture/prototypSequenceDiagram.png
 *
@@ -46,9 +46,9 @@ var playerconn = {};
 
 function init(){
     ioSocket = io.connect();
-    
+
     var gameid = UUIDGEN();
-    
+
     console.log("GAME ID: " + gameid);
 
 
@@ -61,10 +61,10 @@ function init(){
             client.setDisconnectCallback(gotDisconnectedPlayer);
             client.setMessageCallback(gotNewMessage);
         }
-        
+
         isConnected = true;
     });
-    
+
     return gameid;
 }
 
@@ -79,60 +79,61 @@ function displayPlayers(){
 
 function gotNewConnection(peerid) {
     console.log("New Player connected [" + peerid + "]")
-    
+
     var id = addPlayer();
-    
+
     playerconn[peerid] = id;
-    
+
     displayPlayers();
 }
 
 function gotNewMessage(type, peerid, message) {
     console.log("type: " + type);
     console.log("from: " + peerid);
-    
+
     if( type === "changeposition" ) {
-        
+
         console.log("MSG: " + message);
-        
+        var positions = JSON.parse(message);
+
         // Received a position change
         if( playerconn.hasOwnProperty(peerid) ) {
-            
+
             var id = playerconn[peerid];
-            
-            addPos(id, message.posX, message.posY);
-            
+
+            addPos(id, positions.posX, positions.posY);
+
             console.log("User ["+ peerid +"] changed Position.");
         } else {
-            
+
             // @TODO for testing purpose, states seem weird and undefined
             gotNewConnection(peerid);
-            
+
             var id = playerconn[peerid];
-            
+
             addPos(id, message.posX, message.posY);
-            
+
             console.log("User ["+ peerid +"] changed Position.");
         }
     }
 }
 
-function gotDisconnectedPlayer(peerid){   
+function gotDisconnectedPlayer(peerid){
     // Extract data from Object
     var playerid = playerconn[peerid];
-    
+
     // Call all registered methods with given parameters
     listener_remPlayer.forEach(function(cb){
         cb(playerid);
     });
-    
+
     // Delete Key of disconnected Player
     delete playerconn[peerid];
 }
 
 function addPos(playerId, posX, posY){
     // if( playerId in playerconn ) return;
-    
+
     // Call all registered methods with given parameters
     listener_addPosition.forEach(function(cb){
         cb(playerId, posX, posY);
