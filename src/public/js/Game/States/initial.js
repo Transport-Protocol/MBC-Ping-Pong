@@ -16,7 +16,7 @@ var state = function(game){
     self.game.add.existing(self.game.properties.ball);
     self.game.properties.walls = self.wallBuilder.buildField(self.game, 'wall');
     var url = window.location.href.slice(0, -1 * "DisplayPeer.html".length) + "ControlPeer.html#gameId=" + self.game.properties.gameId;
-    document.getElementById('joinGamePanel').visibility = 'visible';
+    document.getElementById('joinGamePanel').style.visibility = 'visible';
     var qr = new QRious({
       element: document.getElementById('qr-code'),
       value: url
