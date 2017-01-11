@@ -6,6 +6,7 @@ var Ball = function (game, x, y) {
   var speedUpValue = 20;
   var initialX = x;
   var initialY = y;
+  var RESET_DELAY_IN_SECONDS = 1.5;
 
   var generateRandomDirection = function(){
     var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
@@ -27,7 +28,10 @@ var Ball = function (game, x, y) {
   this.reset = function(){
     self.body.x = initialX;
     self.body.y = initialY;
-    this.start();
+    self.body.velocity.x = 0;
+    self.body.velocity.y = 0;
+
+    self.game.time.events.add(Phaser.Timer.SECOND * RESET_DELAY_IN_SECONDS, this.start, this);
   };
   this.speedUp = function(){
 
