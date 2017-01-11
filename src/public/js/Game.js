@@ -36,7 +36,7 @@ var gameProperties = {
   height: 480,
   playerIdCount: 0,
   players: new Map(),
-  debug: true,
+  debug: false,
   gameId: undefined,
   ball: undefined
 };
