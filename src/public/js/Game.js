@@ -1,11 +1,11 @@
 var Player = require('./Game/Player.js');
-var load = require('./Game/States/load.js');
+var load = require('./Game/States/Load.js');
 var initializeNewGame = require('./Game/States/InitializeNewGame.js');
-var initial = require('./Game/States/initial.js');
+var initial = require('./Game/States/Initial.js');
 var firstPlayerConnected = require('./Game/States/FirstPlayerConnected.js');
 var secondPlayerConnected = require('./Game/States/SecondPlayerConnected.js');
 var gameRunning = require('./Game/States/GameRunning.js');
-var gameEnded = require('./Game/States/gameEnded.js');
+var gameEnded = require('./Game/States/GameEnded.js');
 
 var gameProperties = {
   name: 'engineTest',

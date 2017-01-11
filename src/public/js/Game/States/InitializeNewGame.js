@@ -1,5 +1,5 @@
 var commHandler = require('./../../DisplayPeerCommunicationHandler.js');
-var abstractState = require('./abstractState.js');
+var abstractState = require('./AbstractState.js');
 var wallBuilder2Player = require('./../2PlayerField.js');
 
 var state = function(game){

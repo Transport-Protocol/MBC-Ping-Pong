@@ -1,4 +1,4 @@
-var abstractState = require('./abstractState.js');
+var abstractState = require('./AbstractState.js');
 var state = function(game){
   abstractState.call(this, game);
   this.init = function(){
