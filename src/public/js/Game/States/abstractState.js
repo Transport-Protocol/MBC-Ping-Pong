@@ -6,6 +6,9 @@ var state = function(game){
   this.removePlayer = function(playerId){
     console.log("removePlayer is not allowed in currrent state: " + this.game.state.current)
   };
+  this.timeout = function(playerId){
+    console.log("timeout is not allowed in currrent state: " + this.game.state.current)
+  };
 
 };
 

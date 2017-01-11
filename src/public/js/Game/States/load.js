@@ -8,6 +8,7 @@ var state = function(game){
     this.game.load.spritesheet('paddle', 'assets/testPaddles.png', 9, 100, 6);
     this.game.load.image('wall', 'assets/wall.png');
     this.game.load.image('ball', 'assets/testBall.png');
+    this.game.load.image('timerBackground', 'assets/timerBackground.png');
   };
   this.create = function() {
     this.initPhysics();
