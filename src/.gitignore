@@ -1,3 +1,4 @@
 node_modules/*
 *_Bundle.js
 *_bundle.js
+npm-debug.log
