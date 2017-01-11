@@ -2,8 +2,9 @@
 var Ball = function (game, x, y) {
   var self = this;
   Phaser.Sprite.call(this, game, x, y, 'ball');
-  var initialX = x;
-  var initialY = y;
+  var initialSpeed = 300;
+  var speedUpValue = 20;
+  var thrustDirection = 1;
 
   var generateRandomDirection = function(){
     var plusOrMinus = Math.random() < 0.5 ? -1 : 1;
@@ -14,16 +15,30 @@ var Ball = function (game, x, y) {
 
   this.start = function(){
     self.body.rotation = generateRandomDirection();
-    self.body.thrust(10000);
+    self.body.velocity.x = 300 * Math.sin(self.body.rotation);
+    self.body.velocity.y = 300 * Math.cos(self.body.rotation);
+    console.log("collide " + self.body.velocity.x + " : " + self.body.velocity.y + " : " );
+
   };
   this.stop = function(){
-    self.body.thrust(0);
+    self.body.velocity.x = 0;
+    self.body.velocity.y = 0;
   };
   this.reset = function(){
     self.body.x = initialX;
     self.body.y = initialY;
     this.start();
   };
+  this.speedUp = function(){
+
+    var absoluteSpeed = Math.abs(self.body.velocity.x) + Math.abs(self.body.velocity.y)
+
+    var xSpeedUp = (self.body.velocity.x / absoluteSpeed) * speedUpValue;
+    var ySpeedUp = (self.body.velocity.y / absoluteSpeed) * speedUpValue;
+    self.body.velocity.x = self.body.velocity.x + xSpeedUp;
+    self.body.velocity.y = self.body.velocity.y + ySpeedUp;
+    console.log("collide! velocity.x:" + self.body.velocity.x + ",self.body.velocity.y : " + self.body.velocity.y + ", xSpeedUp: " + xSpeedUp + ", ySpeedUp: " + ySpeedUp);
+  }
 
 }
 

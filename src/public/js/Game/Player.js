@@ -1,4 +1,5 @@
-var Player = function (game, wallPack, key, frame) {
+var Player = function (game, wallPack, ball, key, frame) {
+  var _ball = ball
   var xDiff = Math.round(20 * Math.sin(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
   var yDiff = Math.round(20 * Math.cos(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
   console.log(xDiff + " : " + yDiff);
@@ -6,8 +7,14 @@ var Player = function (game, wallPack, key, frame) {
 
   // Set Physic
   game.physics.p2.enable(this, this.game.properties.debug);
-  this.body.static = true;
   this.body.rotation = wallPack.pointWall.body.rotation
+  this.body.kinematic = true;
+
+  this.collideWithBall = function(playerBody, ballBody){
+    _ball.speedUp();
+  };
+
+  this.body.createBodyCallback(ball, this.collideWithBall, this);
 
 
   //Todo Fix Positioning, then fix boundingbox
@@ -26,6 +33,7 @@ var Player = function (game, wallPack, key, frame) {
   }
 
   this.update = function () {
+
     while (_buffer.length > 0) {
       var pos = _buffer.shift();
       //@TODO: diagonal movement is impossible

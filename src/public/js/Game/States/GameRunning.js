@@ -1,7 +1,4 @@
 var abstractState = require('./abstractState.js');
-var Ball = require('./../Ball.js');
-var Player = require('./../Player.js');
-var QRious = require('qrious')
 
 var state = function(game){
   var self = this;
@@ -11,8 +8,10 @@ var state = function(game){
   	console.log("GameRunning");
   };
   this.preload = function(){
-    self.game.properties.ball.start();
 
+  };
+  this.create = function() {
+    self.game.properties.ball.start();
   };
 };
 

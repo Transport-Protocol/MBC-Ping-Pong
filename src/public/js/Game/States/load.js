@@ -16,8 +16,9 @@ var state = function(game){
   };
   this.initPhysics = function () {
     this.game.physics.startSystem(Phaser.Physics.P2JS);
-    this.game.physics.p2.restitution = 1;
+    this.game.physics.p2.restitution = 1.0017;
     this.game.physics.p2.applyDamping = false;
+    this.game.physics.p2.setImpactEvents(true);
   };
 };
 

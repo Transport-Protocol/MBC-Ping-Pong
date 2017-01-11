@@ -11,9 +11,9 @@ var Wall = function (game, sprite, from, to) {
   this.height = Phaser.Math.distance(from.x, from.y, to.x, to.y);
 
   game.physics.p2.enable(this, this.game.properties.debug);
-  this.body.static = true;
 
   this.body.rotation = Phaser.Math.angleBetween(from.x, from.y, to.x, to.y) + 0.5 * Math.PI;
+  this.body.kinematic = true;
 }
 
 Wall.prototype = Object.create(Phaser.Sprite.prototype);
