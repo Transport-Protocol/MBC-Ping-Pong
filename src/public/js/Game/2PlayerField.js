@@ -42,8 +42,8 @@ var buildField = function (game, wallSprite) {
   walls.add(leftWall);
 
   playerInfoPack = [
-    {"upperWall" : upperWall, "lowerWall": lowerWall, "pointWall": leftWall},
-    {"upperWall" : upperWall, "lowerWall": lowerWall, "pointWall": rightWall}
+    {"upperWall" : upperWall, "lowerWall": lowerWall, "pointWall": leftWall, "opponentScoreText": scorePlayer1},
+    {"upperWall" : upperWall, "lowerWall": lowerWall, "pointWall": rightWall, "opponentScoreText": scorePlayer0}
   ];
 
   // Unsichtbare Begrenzung, gegen Tunneling

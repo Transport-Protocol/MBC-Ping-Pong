@@ -1,6 +1,8 @@
 var Player = function (game, wallPack, ball, key, frame) {
   var _ball = ball;
+  var _wallPack = wallPack;
   var points = 10;
+  var maxPoints = points;
   var xDiff = Math.round(20 * Math.sin(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
   var yDiff = Math.round(20 * Math.cos(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
   console.log(xDiff + " : " + yDiff);
@@ -19,6 +21,7 @@ var Player = function (game, wallPack, ball, key, frame) {
   this.collideWithPointwall = function(playerBody, wallBody) {
     points--;
     console.log("Hit PointWall, Points: " + points);
+    _wallPack.opponentScoreText.text = "" + (maxPoints - points);
     _ball.reset();
   }
   wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
