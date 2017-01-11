@@ -5,6 +5,7 @@ var initial = require('./Game/States/initial.js');
 var firstPlayerConnected = require('./Game/States/FirstPlayerConnected.js');
 var secondPlayerConnected = require('./Game/States/SecondPlayerConnected.js');
 var gameRunning = require('./Game/States/GameRunning.js');
+var gameEnded = require('./Game/States/gameEnded.js');
 
 var gameProperties = {
   name: 'engineTest',
@@ -26,6 +27,7 @@ game.state.add('Initial', initial);
 game.state.add('FirstPlayerConnected', firstPlayerConnected);
 game.state.add('SecondPlayerConnected', secondPlayerConnected);
 game.state.add('GameRunning', gameRunning);
+game.state.add('GameEnded', gameEnded);
 game.state.start('load')
 
 function addPlayerToGame() {

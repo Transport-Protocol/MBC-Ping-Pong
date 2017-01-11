@@ -2,7 +2,7 @@ var abstractState = require('./abstractState.js');
 var state = function(game){
   abstractState.call(this, game);
   this.init = function(){
-  	console.log("load");
+  	console.log("GameEnded");
   };
   this.preload = function () {
 

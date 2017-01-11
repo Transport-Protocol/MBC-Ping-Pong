@@ -13,6 +13,9 @@ var state = function(game){
   this.create = function() {
     self.game.properties.ball.start();
   };
+  this.shutdown = function(){
+    self.game.properties.ball.stop();
+  }
 };
 
 state.prototype = Object.create(abstractState.prototype);
