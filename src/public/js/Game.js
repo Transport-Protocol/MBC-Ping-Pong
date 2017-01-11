@@ -41,7 +41,7 @@ var gameProperties = {
   ball: undefined
 };
 
-var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.CANVAS, gameProperties.name);
+var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.AUTO, gameProperties.name);
 game.properties = gameProperties;
 
 game.state.add('load', load);
