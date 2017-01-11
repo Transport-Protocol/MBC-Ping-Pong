@@ -31,7 +31,7 @@ var Player = function (game, wallPack, ball, key, frame) {
   wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
 
   //Todo Fix Positioning, then fix boundingbox
-  this.body.setRectangle(32, this.height, -16, 0, this.body.rotation);
+  this.body.setRectangle(32, this.height, -16, 0);
   /*
   if (x < from) {
     this.body.setRectangle(Phaser.Math.difference(x, from), 100, from - (x + 16));
