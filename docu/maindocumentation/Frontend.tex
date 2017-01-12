@@ -549,8 +549,33 @@ Am besten werden die Wände nur in ihren Kollisionsboxen aber nicht in der wirkl
 \paragraph{Behandlung: Begrenzung der Geschwindigkeit}
 \mbox{}\\
 Eine weitere Möglichkeit wäre es die Geschwindigkeit zu begrenzen. Allerdings kann dies sehr stark den Spaß am Spiel nehmen.
-\paragraph{Lösung?}
+\paragraph{Behandlung: Nutzung der P2 Funktion \"CCD\" }
 \mbox{}\\
-Probieren beider Behandlungsmöglichkeiten
+CCD steht für \"Continuous Collision Detection\". 
 \newline
-\textbf{Erster Eindruck} Dem ersten Eindruck nach wurde das Problem behoben indem die Wände und Schläger dickere Kollisions Boxen bekamen, unklar ist ob die Todeszonen richtig erkannt werden.
+CCD ist ein recht komplexes Thema, da man versuchen will die Kollisionserkennung sowohl effektiv als auch effizient zu gestalten.
+\newline
+Kollisionen entstehen nicht immer nur am alten und neuen Standpunkt eines Objektes sondern zwischen den Punkten könnten auch Kollisionen stattfinden. Sehr einfache Algorithmen prüfen diese nicht.
+\newline
+CCD ist eine Technik um eben diese Zwischenkollisionen ebenfalls effizient zu erkennen. Dabei werden grundsätzlich Zwischenschritte erstellt und geprüft.
+\newline
+Für die Physic Engine P2 wurde ccd mit eingebaut, ist allerdings standardmäßig deaktiviert.
+Zum aktivieren muss der \"ccdSpeedThreshold\" auf einen Wert >=0 gesetzt werden.
+\newline
+Es gibt 2 einstellbare Variablen
+\begin{itemize}
+\item
+\textbf{ccdSpeedThreshold} Gibt die Geschwindigkeit an ab der die Funktion genutzt wird. Bei Angabe eines sehr geringen Wertes kann es zu Performance Problemen kommen da die ccd Berechnungen recht aufwändig sind und erst ab einer gewissen Geschwindigkeit Sinn machen.
+\item
+\textbf{ccdIterations} Hiermit lässt sich die Genauigkeit definieren, also die Anzahl der Durchgänge. Eine hohe Zahl erzielt bessere Ergebnisse ist allerdings auch aufwändiger.
+\end{itemize}
+\paragraph{Lösung}
+\mbox{}\\
+Es wurden die verschiedenen Lösungen probiert und folgende Resultate beobachtet:
+\newline
+\textbf{Vergrößern der Hitboxen} Dem ersten Eindruck nach wurde das Problem behoben indem die Wände und Schläger dickere Kollisions-Boxen bekamen, unklar ist ob die Todeszonen richtig erkannt werden.
+\newline
+\textbf{Aktivierung von ccd} Das aktivieren von ccd schien für einige Geschwindigkeiten das Problem zu beheben. Allerdings nicht bei sehr hohen Geschwindigkeiten.
+\newline
+\newline
+\textbf{Endergebnis: } Die Vergrößerung der Hitboxen erwies sich als gute Lösung da dadurch die CPU nicht unnötig belastet wird. Zusätzlich könnte man noch ccd aktivieren um sicher zu gehen das die Wände der Levelbegrenzung sicher erkannt werden.
