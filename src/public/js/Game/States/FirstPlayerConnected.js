@@ -16,7 +16,7 @@ var state = function (game) {
 
   this.preload = function () {
     // Don't pause game if the form looses focus
-    this.stage.diableVisibilityChange = true;
+    this.game.stage.disableVisibilityChange = true;
 
     self.circle = game.add.sprite(game.width / 2 - 25, game.height / 2 - 100, 'timerBackground');
 

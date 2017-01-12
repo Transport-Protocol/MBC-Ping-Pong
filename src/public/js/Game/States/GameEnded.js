@@ -16,6 +16,9 @@ var state = function (game) {
   };
 
   this.preload = function () {
+    // Don't pause game if the form looses focus
+    this.game.stage.disableVisibilityChange = true;
+
     //ToDo: Convert to Object, use Anchor
     self.circle = game.add.sprite(game.width / 2 - 25, game.height / 2, 'timerBackground');
 
@@ -54,7 +57,7 @@ var state = function (game) {
   };
 
   this.printWinner = function () {
-    var cmax = 0;
+    var cmax = 99;
     var cwinner = undefined;
 
 
@@ -68,7 +71,8 @@ var state = function (game) {
 
     function checkPlayer(entry) {
       console.log("Playerscore " + entry.getPoints() + " - " + cmax);
-      if (entry.getPoints() > cmax) {
+      // Todo: Player Points might need to be reworked
+      if (entry.getPoints() < cmax) {
         cmax = entry.getPoints();
         cwinner = entry.getPlayerName();
         console.log("New Winner " + cwinner);

@@ -15,7 +15,7 @@ var state = function (game) {
 
   this.preload = function () {
     // Don't pause game if the form looses focus
-    this.stage.diableVisibilityChange = true;
+    this.game.stage.disableVisibilityChange = true;
 
     self.game.properties.ball = new Ball(self.game, self.game.world.width / 2, self.game.world.height / 2);
     self.game.add.existing(self.game.properties.ball);

@@ -11,7 +11,7 @@ var state = function (game) {
 
   this.preload = function () {
     // Don't pause game if the form looses focus
-    this.stage.diableVisibilityChange = true;
+    this.game.stage.disableVisibilityChange = true;
   };
 
   this.create = function () {

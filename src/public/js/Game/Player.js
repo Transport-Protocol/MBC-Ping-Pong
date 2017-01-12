@@ -16,8 +16,7 @@ var Player = function (game, wallPack, ball, key, frame) {
   this.body.kinematic = true;
   this.body.setRectangle(32, this.height, -16, 0);
 
-  this.body.createBodyCallback(ball, this.collideWithBall, this);
-  wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
+
 
 
   var _buffer = [];
@@ -25,6 +24,8 @@ var Player = function (game, wallPack, ball, key, frame) {
   this.collideWithBall = function (playerBody, ballBody) {
     _ball.speedUp();
   };
+
+  this.body.createBodyCallback(ball, this.collideWithBall, this);
 
   this.collideWithPointwall = function (wallBody, ballBody) {
     points--;
@@ -36,6 +37,8 @@ var Player = function (game, wallPack, ball, key, frame) {
       _ball.reset();
     }
   };
+
+  wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
 
   this.addPositionToBuffer = function (x, y) {
     _buffer.push({"x": x, "y": y});
