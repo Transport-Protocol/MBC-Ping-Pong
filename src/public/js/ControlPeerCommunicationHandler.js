@@ -32,11 +32,11 @@ var isPeer2Peer = false;
 var isConnected = false;
 
 // @TODO check for name collision 'init'
-function init(){
-    initCommunication();
+function init(gameid){
+    initCommunication(gameid);
 }
 
-function initCommunication(){
+function initCommunication(gameid){
     
     iosocket = io.connect();
     
@@ -44,7 +44,7 @@ function initCommunication(){
         console.log("Now Connected to the Server.");
         
         if( !isConnected ) {
-            client = new sigClient(iosocket, opts, "testroom", null);
+            client = new sigClient(iosocket, opts, gameid, null);
         }
         
         isConnected = true;
