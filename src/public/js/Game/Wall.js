@@ -15,9 +15,9 @@ var Wall = function (game, sprite, from, to) {
   this.body.rotation = Phaser.Math.angleBetween(from.x, from.y, to.x, to.y) + 0.5 * Math.PI;
   this.body.kinematic = true;
 
-  // Vergrößere die BoundinBox um tunneling zu minimieren
+  // Vergrößere die BoundingBox um tunneling zu minimieren
   this.body.setRectangle(64, this.height, -32, 0);
-}
+};
 
 Wall.prototype = Object.create(Phaser.Sprite.prototype);
 Wall.prototype.constructor = Wall;
