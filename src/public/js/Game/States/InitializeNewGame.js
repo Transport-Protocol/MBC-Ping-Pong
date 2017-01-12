@@ -9,7 +9,10 @@ var state = function(game){
   };
   this.preload = function(){
     this.cleanup();
-    this.game.properties.gameId = commHandler.init();
+    //@TODO: GameId should be regenerated each game. The if(!this.game.properties.gameId) is just a hotfix, to avoid a bug.
+    if(!this.game.properties.gameId){
+      this.game.properties.gameId = commHandler.init();
+    }
   };
   this.create = function(){
     this.game.state.start("Initial", false, false, wallBuilder2Player);
