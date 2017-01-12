@@ -7,18 +7,41 @@ var secondPlayerConnected = require('./Game/States/SecondPlayerConnected.js');
 var gameRunning = require('./Game/States/GameRunning.js');
 var gameEnded = require('./Game/States/GameEnded.js');
 
+Phaser.StateManager.prototype.clearCurrentState = function () {
+  if (this.current){
+    if (this.onShutDownCallback) {
+      this.onShutDownCallback.call(this.callbackContext, this.game);
+    }
+    this.game.scale.reset(this._clearWorld);
+    if (this.game.debug){
+      this.game.debug.reset();
+    }
+    if (this._clearWorld){
+      this.game.camera.reset();
+      this.game.input.reset(true);
+      this.game.time.removeAll();
+      this.game.tweens.removeAll();
+      this.game.physics.clear();
+      this.game.world.shutdown();
+      if (this._clearCache){
+        this.game.cache.destroy();
+      }
+    }
+  }
+};
+
 var gameProperties = {
   name: 'engineTest',
   width: 640,
   height: 480,
   playerIdCount: 0,
   players: new Map(),
-  debug: true,
+  debug: false,
   gameId: undefined,
   ball: undefined
 };
 
-var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.CANVAS, gameProperties.name);
+var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.AUTO, gameProperties.name);
 game.properties = gameProperties;
 
 game.state.add('Load', load);

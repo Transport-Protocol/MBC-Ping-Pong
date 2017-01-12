@@ -15,7 +15,10 @@ var state = function(game){
   };
   this.shutdown = function(){
     self.game.properties.ball.stop();
-  }
+  };
+  this.removePlayer = function(){
+    self.game.state.start("GameEnded", false, false);
+  };
 };
 
 state.prototype = Object.create(abstractState.prototype);

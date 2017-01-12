@@ -24,9 +24,10 @@ var Player = function (game, wallPack, ball, key, frame) {
     points--;
     console.log("Hit PointWall, Points: " + points);
     _wallPack.opponentScoreText.text = "" + (maxPoints - points);
-    _ball.reset();
     if (points <= 0) {
       _game.state.start("GameEnded", false, false);
+    }else{
+      _ball.reset();
     }
   }
   wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
