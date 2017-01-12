@@ -24,7 +24,7 @@ var state = function(game){
     document.getElementById('joinGameUrl').innerHTML = "<a href=\"" + url + "\">" + url + "</a>"
   };
   this.addPlayer = function(){
-    var player = new Player(self.game, self.wallBuilder.getPlayerInfoPack(0), 'paddle', 0);
+    var player = new Player(self.game, self.wallBuilder.getPlayerInfoPack(0),self.game.properties.ball, 'paddle', 0);
     self.game.state.start("FirstPlayerConnected", false, false, self.wallBuilder);
     return player;
   }

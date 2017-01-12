@@ -5,6 +5,30 @@ var initial = require('./Game/States/initial.js');
 var firstPlayerConnected = require('./Game/States/FirstPlayerConnected.js');
 var secondPlayerConnected = require('./Game/States/SecondPlayerConnected.js');
 var gameRunning = require('./Game/States/GameRunning.js');
+var gameEnded = require('./Game/States/gameEnded.js');
+
+Phaser.StateManager.prototype.clearCurrentState = function () {
+  if (this.current){
+    if (this.onShutDownCallback) {
+      this.onShutDownCallback.call(this.callbackContext, this.game);
+    }
+    this.game.scale.reset(this._clearWorld);
+    if (this.game.debug){
+      this.game.debug.reset();
+    }
+    if (this._clearWorld){
+      this.game.camera.reset();
+      this.game.input.reset(true);
+      this.game.time.removeAll();
+      this.game.tweens.removeAll();
+      this.game.physics.clear();
+      this.game.world.shutdown();
+      if (this._clearCache){
+        this.game.cache.destroy();
+      }
+    }
+  }
+};
 
 var gameProperties = {
   name: 'engineTest',
@@ -17,7 +41,7 @@ var gameProperties = {
   ball: undefined
 };
 
-var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.CANVAS, gameProperties.name);
+var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.AUTO, gameProperties.name);
 game.properties = gameProperties;
 
 game.state.add('load', load);
@@ -26,6 +50,7 @@ game.state.add('Initial', initial);
 game.state.add('FirstPlayerConnected', firstPlayerConnected);
 game.state.add('SecondPlayerConnected', secondPlayerConnected);
 game.state.add('GameRunning', gameRunning);
+game.state.add('GameEnded', gameEnded);
 game.state.start('load')
 
 function addPlayerToGame() {
