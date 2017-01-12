@@ -1,7 +1,7 @@
 var abstractState = require('./AbstractState.js');
 var Ball = require('./../Ball.js');
 var Player = require('./../Player.js');
-//var QRious = require('qrious')
+var QRious = require('qrious');
 
 var state = function (game) {
   var self = this;
@@ -22,10 +22,10 @@ var state = function (game) {
     self.game.properties.walls = self.wallBuilder.buildField(self.game, 'wall');
     var url = window.location.href.slice(0, -1 * "DisplayPeer.html".length) + "ControlPeer.html#gameId=" + self.game.properties.gameId;
     document.getElementById('joinGamePanel').style.visibility = 'visible';
-    //var qr = new QRious({
-    //  element: document.getElementById('qr-code'),
-    //  value: url
-    //});
+    var qr = new QRious({
+      element: document.getElementById('qr-code'),
+      value: url
+    });
     document.getElementById('joinGameUrl').innerHTML = "<a href=\"" + url + "\">" + url + "</a>"
   };
 
