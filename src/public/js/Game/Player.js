@@ -67,16 +67,16 @@ var Player = function (game, wallPack, ball, key, frame) {
   this.getPlayerName = function () {
     switch (_frame) {
       case 0:
-        return "left";
+        return "Links";
         break;
       case 1:
-        return "rechts";
+        return "Rechts";
         break;
       case 2:
-        return "oben";
+        return "Oben";
         break;
       case 3:
-        return "unten";
+        return "Unten";
         break;
       default:
         return "undefined";

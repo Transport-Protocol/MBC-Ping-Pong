@@ -29,6 +29,8 @@ var state = function (game) {
   };
 
   this.create = function () {
+    self.game.properties.ball.destroy();
+
     this.printWinner();
     self.timer = game.time.create();
     self.timerEvent = self.timer.add(Phaser.Timer.SECOND * TIME_UNTIL_RESTART_IN_SECONDS,
