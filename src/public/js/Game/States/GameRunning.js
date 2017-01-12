@@ -1,22 +1,28 @@
 var abstractState = require('./abstractState.js');
 
-var state = function(game){
+var state = function (game) {
   var self = this;
   self.game = game;
   abstractState.call(this, self.game);
-  this.init = function(){
-  	console.log("GameRunning");
-  };
-  this.preload = function(){
 
+  this.init = function () {
+    console.log("GameRunning");
   };
-  this.create = function() {
+
+  this.preload = function () {
+    // Don't pause game if the form looses focus
+    this.stage.diableVisibilityChange = true;
+  };
+
+  this.create = function () {
     self.game.properties.ball.start();
   };
-  this.shutdown = function(){
+
+  this.shutdown = function () {
     self.game.properties.ball.stop();
   };
-  this.removePlayer = function(){
+
+  this.removePlayer = function () {
     self.game.state.start("GameEnded", false, false);
   };
 };

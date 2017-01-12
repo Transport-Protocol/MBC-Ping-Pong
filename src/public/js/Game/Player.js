@@ -12,13 +12,19 @@ var Player = function (game, wallPack, ball, key, frame) {
 
   // Set Physic
   game.physics.p2.enable(this, this.game.properties.debug);
-  this.body.rotation = wallPack.pointWall.body.rotation
+  this.body.rotation = wallPack.pointWall.body.rotation;
   this.body.kinematic = true;
+  this.body.setRectangle(32, this.height, -16, 0);
+
+  this.body.createBodyCallback(ball, this.collideWithBall, this);
+  wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
+
+
+  var _buffer = [];
 
   this.collideWithBall = function (playerBody, ballBody) {
     _ball.speedUp();
   };
-  this.body.createBodyCallback(ball, this.collideWithBall, this);
 
   this.collideWithPointwall = function (wallBody, ballBody) {
     points--;
@@ -26,23 +32,10 @@ var Player = function (game, wallPack, ball, key, frame) {
     _wallPack.opponentScoreText.text = "" + (maxPoints - points);
     if (points <= 0) {
       _game.state.start("GameEnded", false, false);
-    }else{
+    } else {
       _ball.reset();
     }
-  }
-  wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
-
-  //Todo Fix Positioning, then fix boundingbox
-  this.body.setRectangle(32, this.height, -16, 0);
-  /*
-   if (x < from) {
-   this.body.setRectangle(Phaser.Math.difference(x, from), 100, from - (x + 16));
-   } else {
-   this.body.setRectangle(Phaser.Math.difference(x, from), 100, from - x + 16);
-   }*/
-
-
-  var _buffer = [];
+  };
 
   this.addPositionToBuffer = function (x, y) {
     _buffer.push({"x": x, "y": y});
@@ -60,13 +53,14 @@ var Player = function (game, wallPack, ball, key, frame) {
       } else {
         this.body.y = pos.y;
       }
-      //this.body.y = Math.m      ax(Math.min(wallPack.lowerWall.body.y, pos.y - this.height/2) + this.height, wallPack.upperWall.body.y);
+      //this.body.y = Math.max(Math.min(wallPack.lowerWall.body.y, pos.y - this.height/2) + this.height, wallPack.upperWall.body.y);
     }
   };
 
   this.getPoints = function () {
     return maxPoints - points;
   };
+
   this.getPlayerName = function () {
     switch (_frame) {
       case 0:
@@ -85,7 +79,7 @@ var Player = function (game, wallPack, ball, key, frame) {
         return "undefined";
     }
   }
-}
+};
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;

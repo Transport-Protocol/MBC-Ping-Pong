@@ -1,7 +1,9 @@
 var abstractState = require('./AbstractState.js');
 
 const TIME_UNTIL_RESTART_IN_SECONDS = 10;
+
 var state = function (game) {
+
   var self = this;
   self.game = game;
   abstractState.call(this, game);
@@ -12,6 +14,7 @@ var state = function (game) {
   this.init = function () {
     console.log("GameEnded");
   };
+
   this.preload = function () {
     //ToDo: Convert to Object, use Anchor
     self.circle = game.add.sprite(game.width / 2 - 25, game.height / 2, 'timerBackground');
@@ -21,6 +24,7 @@ var state = function (game) {
     //ToDo: Convert to Object, use Anchor
     self.timerText.setTextBounds(self.circle.x, self.circle.y, self.circle.width, self.circle.height);
   };
+
   this.create = function () {
     this.printWinner();
     self.timer = game.time.create();
@@ -31,18 +35,24 @@ var state = function (game) {
 
     self.timer.start();
   };
+
   this.timeout = function () {
+    // Back to initial state after timeout,
+    // 2nd parameter is true to reset all objects
     this.game.state.start("InitializeNewGame", true, false);
   };
+
   this.render = function () {
     self.timerText.text = Math.round(self.timer.duration / 1000);
   };
+
   this.shutdown = function () {
     self.circle.destroy();
     self.timerText.destroy();
     self.timer.stop();
     self.timer.destroy();
   };
+
   this.printWinner = function () {
     var cmax = 0;
     var cwinner = undefined;
