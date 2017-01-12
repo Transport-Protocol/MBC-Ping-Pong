@@ -6,6 +6,9 @@ var state = function (game) {
   self.game = game;
   abstractState.call(this, game);
 
+  var textStyleTimer = {font: "bold 32px Arial", fill: "#FF0000", boundsAlignH: "center", boundsAlignV: "middle"};
+  var textStyleWinner = {font: "bold 32px Arial", fill: "#FFFFFF", boundsAlignH: "center", boundsAlignV: "middle"};
+
   this.init = function () {
     console.log("GameEnded");
   };
@@ -13,8 +16,8 @@ var state = function (game) {
     //ToDo: Convert to Object, use Anchor
     self.circle = game.add.sprite(game.width / 2 - 25, game.height / 2, 'timerBackground');
 
-    var timerTextStyle = {font: "bold 32px Arial", fill: "#FF0000", boundsAlignH: "center", boundsAlignV: "middle"};
-    self.timerText = game.add.text(0, 0, "" + TIME_UNTIL_RESTART_IN_SECONDS, timerTextStyle);
+
+    self.timerText = game.add.text(0, 0, "" + TIME_UNTIL_RESTART_IN_SECONDS, textStyleTimer);
     //ToDo: Convert to Object, use Anchor
     self.timerText.setTextBounds(self.circle.x, self.circle.y, self.circle.width, self.circle.height);
   };
@@ -29,7 +32,7 @@ var state = function (game) {
     self.timer.start();
   };
   this.timeout = function () {
-    this.game.state.start("Initial", false, false);
+    this.game.state.start("InitializeNewGame", true, false);
   };
   this.render = function () {
     self.timerText.text = Math.round(self.timer.duration / 1000);
@@ -45,18 +48,24 @@ var state = function (game) {
     var cwinner = undefined;
 
 
-    game.gameProperties.players.forEach(checkPlayer);
-    var winner = cwinner == undefined ? "Unentschieden!" : "Spieler: " + cwinner + " hat gewonnen!";
+    self.game.properties.players.forEach(checkPlayer);
 
-    self.textWon = game.add.text(game.width / 2, game.height / 2 - 100, winner);
+    var winner = cwinner == undefined ? "Unentschieden!" : "Spieler: " + cwinner + " hat gewonnen!";
+    console.log("Text: " + winner);
+
+    self.textWon = game.add.text(game.width / 2, game.height / 2 - 100, winner, textStyleWinner);
+    self.textWon.anchor.setTo(0.5, 0.5);
 
     function checkPlayer(entry) {
-      if (entry.getPoints > cmax) {
+      console.log("Playerscore " + entry.getPoints() + " - " + cmax);
+      if (entry.getPoints() > cmax) {
         cmax = entry.getPoints();
         cwinner = entry.getPlayerName();
+        console.log("New Winner " + cwinner);
       } else if (entry.getPoints() == cmax) {
         cwinner = undefined;
       }
+      console.log("Winner is: " + cwinner);
     }
   };
 };
