@@ -16,8 +16,8 @@ var rtcconfig = {
 };
 
 var dataChannelOptions = {
-	ordered: false,
-	maxRetransmitTime: 1000
+	outOfOrderAllowed: true,
+    maxRetransmitNum: 0
 };
 
 function Client(iosocket, config, room, signallingCallback) {
@@ -45,6 +45,9 @@ function Client(iosocket, config, room, signallingCallback) {
                           window.mozRTCSessionDescription ||
                           window.webkitRTCSessionDescription ||
                           window.msRTCSessionDescription;
+
+    self.dataChannel   = window.RTCDataChannel ||
+                         window.DataChannel;
 
 
 
@@ -134,6 +137,25 @@ function Client(iosocket, config, room, signallingCallback) {
             // Connection to host peer has been lost
             var disconnectedPeerId = data.from;
             hostDisconnected(disconnectedPeerId);
+        } else if( data.type === 'candidate' ) {
+
+            // Received a ICE Candidate
+            var fromPeer = data.from;
+            var message = JSON.parse(data.message);
+            var connobj;
+
+            if( self.mode === 'single' ) {
+
+                if( !self.rtcPeerConnections[0] ) {
+                    newPeerToPeerConnection(fromPeer);
+                }
+
+                connobj = self.rtcPeerConnections[0];
+            } else if( self.mode === 'multi' ) {
+                connobj = self.rtcPeerConnections[fromPeer];
+            }
+
+            handleIceCandidate(connobj, message);
         } else {
 
             // Connection Controlling Signal
@@ -194,7 +216,9 @@ function Client(iosocket, config, room, signallingCallback) {
 
                 // Mode is Single, we need to init a new Peer to Peer connection on our side
                 // Then send our Session info back to the Host
-                newPeerToPeerConnection(peerid);
+                if( !self.rtcPeerConnections[0] ) {
+                    newPeerToPeerConnection(peerid);
+                }
 
                 connobj = self.rtcPeerConnections[0];
 
@@ -215,6 +239,52 @@ function Client(iosocket, config, room, signallingCallback) {
         });
     }
 
+    function multi_initDataChannel(connobj) {
+        connobj.datachannel = connobj.connection.createDataChannel("gameUpdates", dataChannelOptions);
+
+        connobj.datachannel.onopen = function(eventdata) {
+            console.log("Datachannel now open");
+        };
+
+        connobj.datachannel.onclose = function(eventdata) {
+            console.log("Dartachannel now closed");
+        };
+
+        connobj.datachannel.onmessage = function(message) {
+            console.log("Datachannel: " + message.data);
+            var data = JSON.parse(message.data);
+            if( self.messageCallback ) {
+                self.messageCallback(data.type, data.from, data.message);
+            }
+        };
+    }
+
+    function single_initDataChannel(connobj) {
+        console.log("Waiting for DataChannel");
+
+        connobj.connection.ondatachannel = function(data) {
+            console.log("Received DataChannel");
+
+            connobj.datachannel = data.channel;
+
+            connobj.datachannel.onopen = function(eventdata) {
+                console.log("Datachannel now open");
+            };
+
+            connobj.datachannel.onclose = function(eventdata) {
+                console.log("Dartachannel now closed");
+            };
+
+            connobj.datachannel.onmessage = function(message) {
+                console.log("Datachannel: " + message.data);
+                var data = JSON.parse(message.data);
+                if( self.messageCallback ) {
+                    self.messageCallback(data.type, data.from, data.message);
+                }
+            };
+        };
+    }
+
     function single_ICECandidatesReady(connobj, sessioninfo) {
         console.log("Setting Remote Description");
         connobj.connection.setRemoteDescription(new self.sessionDesc(sessioninfo.sdp))
@@ -225,6 +295,9 @@ function Client(iosocket, config, room, signallingCallback) {
         .then(function(answer) {
             console.log("Setting Local Description");
             return connobj.connection.setLocalDescription(answer);
+        })
+        .then(function() {
+            gotAllICECandidates(connobj);
         })
         .catch(function(reason) {
             console.log("ERROR: " + reason);
@@ -237,6 +310,9 @@ function Client(iosocket, config, room, signallingCallback) {
         .then(function(offer) {
             console.log("Setting Local Description");
             return connobj.connection.setLocalDescription(offer);
+        })
+        .then(function() {
+            gotAllICECandidates(connobj);
         })
         .catch(function(reason) {
             console.log("ERROR: " + reason);
@@ -260,6 +336,19 @@ function Client(iosocket, config, room, signallingCallback) {
         self.iosocket.emit("signal", signalContent);
     }
 
+    function sendCandidate(connobj, candidate) {
+        sendSignal({
+            type: "candidate",
+            to: connobj.remotepeerid,
+            message: JSON.stringify(candidate),
+            room: self.room
+        });
+    }
+
+    function handleIceCandidate(connobj, candidate) {
+        connobj.connection.addIceCandidate(new RTCIceCandidate(candidate));
+    }
+
     function newPeerToPeerConnection(peerid) {
         if( self.mode === 'single' && self.connectioncount == 0 ) {
 
@@ -278,14 +367,16 @@ function Client(iosocket, config, room, signallingCallback) {
             var connobj = self.rtcPeerConnections[0];
 
             connobj.connection = new self.peerConnection(rtcconfig);
-            connobj.datachannel = connobj.connection.createDataChannel('textMessages', dataChannelOptions);
+
+            single_initDataChannel(connobj);
 
             connobj.connection.onicecandidate = function(data) {
                 if( data.candidate ) {
-                    console.log("Got ICE Candidate: " + data.candidate);
+                    console.log("Got ICE Candidate: " + JSON.stringify(data.candidate));
+                    sendCandidate(connobj, data.candidate);
                 } else {
                     // single_ICECandidatesReady();
-                    gotAllICECandidates(connobj);
+                    // gotAllICECandidates(connobj););
                 }
             };
         } else if( self.mode === "multi" ) {
@@ -304,14 +395,17 @@ function Client(iosocket, config, room, signallingCallback) {
             var connobj = self.rtcPeerConnections[peerid];
 
             connobj.connection = new self.peerConnection(rtcconfig);
-            connobj.datachannel = connobj.connection.createDataChannel('textMessages', dataChannelOptions);
+
+            multi_initDataChannel(connobj);
 
             connobj.connection.onicecandidate = function(data) {
                 if( data.candidate ) {
-                    console.log("Got ICE Candidate: " + data.candidate);
+                    console.log("Got ICE Candidate: " + JSON.stringify(data.candidate));
+                    sendCandidate(connobj, data.candidate);
                 } else {
-                    //multi_ICECandidatesReady(connobj);
-                    gotAllICECandidates(connobj);
+                    // multi_ICECandidatesReady(connobj);
+                    // gotAllICECandidates(connobj);
+
                 }
             };
         }
@@ -334,33 +428,12 @@ function Client(iosocket, config, room, signallingCallback) {
             connectionStateChange(connobj, state);
         };
 
-        connobj.datachannel.onopen = function() {
-            if( connobj.datachannel.readyState === 'open' ) {
-                connobj.datachannel.onmessage = function(message) {
-                    console.log("Datachannel: " + message.data);
-                    var data = JSON.parse(message.data);
-                    if( self.messageCallback ) {
-                        self.messageCallback(data.type, data.from, data.message);
-                    }
-                };
-            }
-        };
-
-        connobj.connection.ondatachannel = function(data) {
-            connobj.datachannel = data.channel;
-            connobj.datachannel.onmessage = function(message) {
-                console.log("Datachannel: " + message.data);
-                var data = JSON.parse(message.data);
-                if( self.messageCallback ) {
-                    self.messageCallback(data.type, data.from, data.message);
-                }
-            };
-        };
-
         if( self.mode === 'multi' ) {
             multi_ICECandidatesReady(connobj);
+            // gotAllICECandidates(connobj);
         } else {
             // single_ICECandidatesReady(connobj);
+            // gotAllICECandidates(connobj);
         }
 
     }
