@@ -16,6 +16,7 @@ var rtcconfig = {
 };
 
 var dataChannelOptions = {
+    ordered: false,
 	outOfOrderAllowed: true,
     maxRetransmitNum: 0
 };
