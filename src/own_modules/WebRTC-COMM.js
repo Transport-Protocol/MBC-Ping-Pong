@@ -72,11 +72,17 @@ function Client(iosocket, config, room, signallingCallback) {
 
     // Set Client Config
     if( config ) {
-        self.mode     = config.hasOwnProperty('mode') ? config.mode : 'single';
-        self.maxpeers = config.hasOwnProperty('maxpeers') ? config.mode : 1;
+        
+        // Config is defined
+        self.mode      = config.hasOwnProperty('mode') ? config.mode : 'single';
+        self.maxpeers  = config.hasOwnProperty('maxpeers') ? config.mode : 1;
+        self.usebackup = config.hasOwnProperty('usebackup') ? config.usebackup : true;
     } else {
-        self.mode = 'single';
-        self.maxpeers = 1;
+        
+        // No Config has been defined
+        self.mode      = 'single';
+        self.maxpeers  = 1;
+        self.usebackup = true;
     }
 
 
@@ -88,6 +94,7 @@ function Client(iosocket, config, room, signallingCallback) {
 
             // ERROR: maxpeers in single has to be 1
             console.log("ERROR: maxpeers in single has to be 1");
+            return;
         }
     } else if( self.mode === 'multi' ) {
 
@@ -96,15 +103,18 @@ function Client(iosocket, config, room, signallingCallback) {
 
             // ERROR: maxpeers in multi has to be bigger than 1
             console.log("ERROR: maxpeers in multi has to be bigger than 1");
+            return;
         }
     } else if( clientConfig.mode.indexOf(self.mode) === -1 ) {
 
         // ERROR: unknown mode specified
         console.log("ERROR: unknown mode specified");
+        return;
     } else {
 
         // ERROR: unknown error
         console.log("ERROR: unknown error");
+        return;
     }
 
     // @TODO replace by Logging
@@ -361,7 +371,8 @@ function Client(iosocket, config, room, signallingCallback) {
                 connection: null,
                 datachannel: null,
                 sdpdone: false,
-                remotepeerid: peerid
+                remotepeerid: peerid,
+                usewebsocket: false
             };
 
             var connobj = self.rtcPeerConnections[0];
@@ -389,7 +400,8 @@ function Client(iosocket, config, room, signallingCallback) {
                 connection: null,
                 datachannel: null,
                 sdpdone: false,
-                remotepeerid: peerid
+                remotepeerid: peerid,
+                usewebsocket: false
             };
 
             var connobj = self.rtcPeerConnections[peerid];
@@ -452,6 +464,19 @@ function Client(iosocket, config, room, signallingCallback) {
 
             case "failed":
                 console.log("Could not establish a WebRTC connection!");
+                
+                if( self.usebackup ) {
+                    
+                    // Set communication Mode to use WebSocket
+                    connobj.usewebsocket = true;
+                    
+                    console.log("Switching to WebSocket.");
+                } else {
+                    
+                    // No WebSocket backup allowed
+                    console.log("No WebSocket Backup allowed.");
+                }
+                
                 break;
         }
     }
@@ -489,10 +514,30 @@ Client.prototype.sendMessage = function(msgType, data) {
     var self = this;
 
     if( this.mode === 'single' ) {
-        this.rtcPeerConnections[0].datachannel.send(JSON.stringify( { "type":msgType, "from":self.id, "message":data } ));
+        
+        // Mode is Single.
+        if( self.rtcPeerConnections[0].usewebsocket ) {
+            
+            // Send WebSocket Message
+            self.iosocket.emit('backup', {"type":msgType, "from":self.id, "message":data, "room":self.room});
+        } else {
+            
+            // Send P2P Message
+            this.rtcPeerConnections[0].datachannel.send(JSON.stringify( { "type":msgType, "from":self.id, "message":data } ));
+        }
     } else {
         this.peers.forEach(function(conn) {
-            self.rtcPeerConnections[""+conn].datachannel.send(JSON.stringify( { "type":msgType, "from":self.id, "message":data } ));
+            var connobj = self.rtcPeerConnections[""+conn];
+            
+            if( connobj.usewebsocket ) {
+                
+                // Send WebSocket Message
+                self.iosocket.emit('backup', {"type":msgType, "from":self.id, "to":conn, "message":data, "room":self.room});
+            } else {
+                
+                // Send P2P Message
+                self.rtcPeerConnections[""+conn].datachannel.send(JSON.stringify( { "type":msgType, "from":self.id, "message":data } ));
+            }
         });
     }
 };
@@ -530,6 +575,36 @@ function Server(iosocket, config) {
         leaveRoom();
     });
 
+    self.iosocket.on('backup', function(req) {
+        console.log(self.iosocket.id + " => " + JSON.stringify(req));
+        
+        
+        if( req.hasOwnProperty('to') {
+            
+            rooms[req.room].users.forEach(function(user) {
+                if( user.id === req.to ) {
+                    
+                    // SendMessage to Single Peer
+                    user.emit('backup', {
+                        from: req.from,
+                        type: req.type,
+                        message: req.message
+                    });
+                }
+            });
+        } else {
+            
+            // Send Message to all Peers
+            rooms[req.room].users.forEach(function(user) {
+                user.emit('backup', {
+                    from: req.from,
+                    type: req.type,
+                    message: req.message
+                });
+            });
+        }
+    });
+    
     self.iosocket.on('signal', function(req) {
         console.log(self.iosocket.id + " => " + JSON.stringify(req));
 
