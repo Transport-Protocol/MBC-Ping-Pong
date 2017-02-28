@@ -1,15 +1,18 @@
 var abstractState = require('./AbstractState.js');
 var Ball = require('./../Ball.js');
 var Player = require('./../Player.js');
+var wallBuilder = require("./../Wallbuilder.js");
 
 const TIME_TO_CONNECT_SECOND_PLAYER_IN_SECONDS = 30;
 
 var state = function (game) {
   var self = this;
   self.game = game;
+  var playercount=0;
   abstractState.call(this, self.game);
 
-  this.init = function (wallBuilder) {
+  this.init = function (maxPlayers) {
+    self.maxplayers = maxPlayers;
     self.wallBuilder = wallBuilder;
     console.log("FirstPlayerConnected");
   };
@@ -36,7 +39,10 @@ var state = function (game) {
   this.addPlayer = function () {
     var player = new Player(self.game, self.wallBuilder.getPlayerInfoPack(1), self.game.properties.ball, 'paddle', 1);
     console.log("NAME: " + player.getPlayerName());
-    this.game.state.start("SecondPlayerConnected", false, false);
+    playercount++;
+    if(playercount == self.maxplayers) {
+      this.game.state.start("AllPlayersConnected", false, false);
+    }
     return player;
   };
 

@@ -132,26 +132,30 @@ Für die physikalisch korrekte Kollision des Balles mit der Spielwelt und den Sc
 
 \subsection{Matter.JS}
 Matter js ist eine sehr mächtige Engine. Sie unterstützt viele Formen und Physikalische Eigenschaften wie zum Beispiel Masse und wirkende Kräfte auf die jeweiligen Objekte. 
-Es besteht die Möglichkeit physikalische Objekte zusammen zusetzen und sogar diese Elastisch erscheinen zu lassen, so ist es beispielsweise möglich Stoff oder schwingende Seile zu erstellen.
+Es besteht die Möglichkeit physikalische Objekte zu verbinden um neue Formen zu erzeugen und sogar diese Elastisch erscheinen zu lassen, so ist es beispielsweise möglich Stoff oder schwingende Seile zu erstellen.
 Nach mehrstündiger Einarbeitung kam ich zu dem Schluss das diese Engine für unser Projekt nicht geeignet ist.
 Gründe hierfür sind:
 \begin{itemize}
 	\item
-	      Zu Komplex:
+	      \textbf{Zu Komplex:}
 	      Die Einrichtung des Spielfeldes erwies sich als überaus schwierig. Gute Anleitungen für einfache Szenarien fehlten, die verfügbaren Anleitungen sind zu grundlegend beschrieben.
 	      Ebenfalls half die Anleitung der Engine nicht bei der Verwendung der einzelnen Komponenten.
 	\item
+		\textbf{Ankerpunkt der Objekte:}	      
 	      Die Positionierung der Objekte bezog sich immer auf den Mittelpunkt des Objektes, man kann beispielsweise kein Rechteck von (x,y) nach (x1,y1) erstellen sondern muss den Mittelpunkt und die Abmaße des Objektes angeben.
 	\item
+	      \textbf{Physikalische Eigenschaften:}
 	      Physik nicht immer korrekt. Die Engine sollte den Ball richtig von einer Ebene abprallen lassen, diese Engine allerdings lies den Ball teilweise an Plattformen abrollen obwohl keine Schwerkraft vorhanden war. Ich schließe darauf das die Engine Reibungskräfte und vielleicht sogar Anziehungskräfte zwischen den Objekten herstellt. Für unser Projekt ist dies aber nicht zu gebrauchen.
 	\item
-	      Schwer zu debuggen. Während meiner Versuche bin ich immer wieder auf Probleme gestoßen. Einige der Debugausgaben ließen sich gut ableiten und waren hilfreich. 
+	      \textbf{Komplexes Debugging}
+	       Während meiner Versuche bin ich immer wieder auf Probleme gestoßen. Einige der Debugausgaben ließen sich gut ableiten und waren hilfreich. 
 	      Allerdings bin ich auch auf einige Probleme gestoßen welche nicht in den Debugausgaben behandelt wurde. Meine letzten Versuche endeten alle darin das der Browser gecrasht ist aufgrund eines Memory-leaks.
 \end{itemize}
+MatterJS ist eine sehr mächtige Engine, und für viele Einsatzgebiete bestimmt ideal geeignet. Allerdings halte ich die Engine aus den oben genannten Gründen für ungeeignet. Vor allem die Physik scheint für unsere Zwecke gänzlich ungeeignet da sie zu viel berücksichtigt.
 \subsection{Phaser.io}
 Phaser.io beschreibt sich selber als html5 Game Framework. Es wurde nach dem mobile-first Prinzip entwickelt und ist opensource.
 Die Entwicklung des gewünschten Prototypen erwies sich als sehr leicht, da es viele gute Beispiele gibt.
-Die Engine unterstützt von Haus aus eine Arcade-Physic, diese ist perfekt für unser Projekt. Sie beinhaltet Kollisions und Bewegungsfunktionen für den 2-Dimensionalen Raum
+Die Engine unterstützt von Haus aus eine Arcade-Physic, diese scheint perfekt für unser Projekt: Sie beinhaltet Kollisions und Bewegungsfunktionen für den 2-Dimensionalen Raum.
 \subsection{Erstellung eines Prototypen}
 In Phaser erstellt man ein Spiel über den Aufruf 'new Phaser.Game(...) die ersten Beiden Argumente geben die Dimensionen des Spielfeldes an, also die Weite und Höhe in Pixeln. 
 \newline
@@ -186,7 +190,7 @@ Zu den einzelnen Funktionen:
 	\item
 	      \textbf{preload:} Diese Funktion ist für das Vorladen von Assets gedacht. Beispielsweise Sprites oder Sounds werden hier vorgeladen damit während das Spiel läuft ohne Ladezeit zur Verfügung stehen.
 	\item
-	      \textbf{create:} Hier werden alle Objekte erstellt die mit dem Beginn des Spielzustandes vorhanden sein sollen. Hier kann man auch Starteigenschafen wie Geschwindigkeit, Schwerkraft oder Ausrichtung setzen.
+	      \textbf{create:} Hier werden alle Objekte erstellt die mit dem Beginn des Spielzustandes vorhanden sein sollen. Hier kann man auch Starteigenschafen wie Geschwindigkeit, Schwerkraft oder Richtung setzen.
 	\item
 	      \textbf{update:} Die update Funktion wird für die Berechnung jedes Frames aufgerufen. In dieser Funktion werden beispielsweise Kollisionen überprüft und darauf reagiert.
 \end{itemize}
@@ -266,7 +270,9 @@ Denkbar ist das Geräte mit einer geringen Pixeldichte gegenüber Spielern mit e
 Je nachdem wie die Steuerung implementiert wird die Pixeldichte eines Steuergerätes mehr oder weniger Einfluss auf das Spiel haben. Das birgt die Gefahr das Spieler mit einem Gerät mit einer geringen Pixeldichte gegenüber einem Spieler mit einem Gerät mit hoher Pixeldichte im Nachteil ist da er wesentlich stärkere Bewegungen auf der Touchfläche ausführen muss.
 Theoretisch kann dies dazu führen das Spieler auf einem Tablet mit niedriger Auflösung immer im Nachteil zu Hochauflösenden Smartphones sind.
 Laut der Android Spezifikation muss die Pixeldichte von Android Geräten mindestens 100 dpi betragen. Ferner sind in den Spezifikationen Pixeldichten bis zu 640dpi (xxxhdpi) definiert. Geräte mit 640dpi wären Geräten mit 100dpi um 640\% überlegen.
-\paragraph{} Angenommen die Schläger würden 1:1 um den Pixelabstand der Controller bewegt werden und das Spielfeld habe eine Höhe von 400 Pixeln.
+\paragraph
+\mbox{}\\
+Angenommen die Schläger würden 1:1 um den Pixelabstand der Controller bewegt werden und das Spielfeld habe eine Höhe von 400 Pixeln.
 Auf einem Gerät mit 100dpi müsste der Spieler über eine Stecke von 4 cm streichen müssen um den Schläger von einem Ende zum anderen zu bewegen. Auf einem Gerät mit 640dpi müsste der Spieler nur über eine Stecke von unter einem Zentimeter streichen.
 \subsection{Behandeln verschiedener Pixeldichten}
 \paragraph{Ermitteln von der DPI im Browser}
@@ -295,11 +301,21 @@ Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die
 	\end{tabular}
 \end{enumerate}
 \newpage
-\begin{itemize}
-	\item
-	      \textbf{http://www.infobyip.com/detectmonitordpi.php} Eine Website zur Ermittlung der DPI. Es wird ein Quadrat per CSS auf eine bestimmte Größe, zum Beispiel 1 Zoll, formatiert und dann die Größe in Pixeln ausgelesen. Auf diese Weise lässt sich ein DPI wert berechnen.
+\paragraph{Formatierung per CSS} 
+Mithilfe von CSS kann man die Größe von allen Elementen einer Webseite beeinflussen, das sogar in Physikalischen Größen wie Zentimeter oder Zoll. Meine Idee war also mithilfe dieser Funktion die DPI des Gerätes zu ermitteln.
+\newline
+Hierfür würde ich ein Object auf eine feste Größe formattieren und dann abfragen wie gr0ß das Object in Pixeln ist.
+\newline
+\newline
+Nach kurzer Recherche stieß ich auf die Webseite "http://www.infobyip.com/detectmonitordpi.php"
+\newline
+Die Webseite dient dazu die DPI des Gerätes zu bestimmen, genau auf den CSS Funktionen: Es wird ein Quadrat per CSS auf eine bestimmte Größe, zum Beispiel 1 Zoll, formatiert und dann die Größe in Pixeln ausgelesen. Auf diese Weise lässt sich ein DPI wert berechnen.
+\newline
+Ich testete die Messung mit den Testgeräten und hab zusätzlich die Größe des Quadrates gemessen um festzustellen wie genau diese Methode ist
+\newline
 	      \newline
 	      Tests:
+	      \newline
 	      %\begin{enumerate}
 	      \begin{tabular}{ccc}
 	      	                     & Erwarteter Wert & Ermittelter Wert           \\
@@ -316,10 +332,15 @@ Die gefundenen Beispiele werden dann mit verschiedenen Geräten getestet und die
 	      	Größe des Feldes     & 8 cm            & \colorbox{red!30}{5.7 cm}  \\
 	      \end{tabular}
 	      %\end{enumerate}
+	      \newline
+	      \newline
 	      Getestet wurde jeweils mit Firefox \& Chrome, der PC Monitor wurde auch noch mit dem Edge Browser getestet. Die Ergebnisse waren allesamt für das Gerät identisch.
 	      \newline
+	      \newline
 	      \textbf{Ergebnis:} Die DPI wurden nicht korrekt erkannt. Die Werte weichen auf dem Mobiltelefon um bis zu \underline{77.5\%} ab.
-\end{itemize}
+	      \newline
+	      Das Ausgegebene Quadrat entsprach nicht den erwarteten Größen.
+	      Scheinbar funktioniert diese Art der Feststellung nicht.
 \newpage
 \paragraph{Verwenden von 'window.devicePixelRatio'}
 \mbox{}\\
@@ -346,10 +367,10 @@ ctx.stroke();
 \begin{tabular}{ccc}
 	Gerät                  & DevicePixelRatio & Größe TestQuadrat   \\
 	PC Monitor 23.6"       & 1.0              & 2.7 cm              \\
-	Samsung Galaxy S4      & 3.0              & 1.9 cm              \\
 	Samsung Galaxy Tab A   & 1.0              & 1.5 cm              \\
 	Samsung Galaxy S3 Neo  & 2.0              & 1.3 cm              \\
 	Samsung Galaxy S5 mini & 2.0              & 1.1 cm              \\
+	Samsung Galaxy S4      & 3.0              & 1.9 cm              \\
 	Samsung Galaxy S7 edge & 4.0              & >4 cm               \\
 \end{tabular}
 \paragraph{Ergebnis:}
@@ -379,6 +400,8 @@ function getDPR() {
 }
 \end{lstlisting}
 Leider ergaben die Test mit dieser Funktion keine nennenswerte Ergebnisse weswegen ich auf eine Auflistung und Auswertung der Ergebnisse in diesem Falle verzichte.
+\newline
+Die ermittelten Werte entsprachen weitesgehend dem DevicePixelRatio.
 \paragraph{Verwendung der CSS3 MediaQuery Eigenschaften}
 \mbox{}\\
 Mit CSS3 lassen sich verschiedene Fälle für verschiedene Auflösungen definieren.
@@ -393,13 +416,26 @@ Mit CSS3 lassen sich verschiedene Fälle für verschiedene Auflösungen definier
 	\label{figx}
 \end{figure}
 \newline
-Hiermit ist es möglich für die verschiedenen Pixeldichten die Kontrollfelder anzupassen. Allerdings werden die Pixeldichten der Geräte nicht immer richtig erkannt. Es 
+Hiermit ist es möglich für die verschiedenen Pixeldichten die Kontrollfelder anzupassen. Also die Größe vorzugeben für verschiedene DPI.
+Allerdings werden die Pixeldichten der Geräte nicht immer richtig erkannt. Es treten dieselben Probleme auf wie bei beiden vorangegangenen Tests: Die Geräte behandeln die DPI zu ungenau. 
+\newline
+Testweise habe ich in geringen staffelungen Fälle für verscheidene Pixeldichten angegeben, allerdings wurde nur der PC richtig dargestellt. Für alle Mobiltelefone scheint eine DPI von circa 220 erkannt zu werden.
 \newpage
 \subsection{Ergebnis der Analyse}
-Es gibt leider keine Möglichkeit eine Webapp mit exakten physikalischen Größen zu gestalten.
-\paragraph{Gestaltung per CSS Einheiten} In CSS besteht die Möglichkeit Größen in CM oder Zoll zu definieren. Leider entsprechen die Werte auf Mobilen Endgeräten nicht den gewünschten Werten.
-\paragraph{Gestaltung mit Device Pixel Ratio} Die Gestaltung per DevicePixelRatio erscheint wesentlich genauer als die Gestaltung mit CSS Längenangaben allerdings ist auch diese Lösung sehr ungenau und lässt sich nicht einheitlich nutzen. 
-\paragraph{Gestaltung der Steuerung} Man könnte die Steuerung so definieren das ein Vorteil der Pixeldichte sich nicht zu sehr auf das Spiel auswirkt. Beispielsweise Kann man eine Maximalgeschwindigkeit der Schläger so definieren das sie auch auf Geräten mit geringer Pixeldichte leicht erreicht werden kann. Dadurch sind allerdings möglicherweise Geräte mit hoher Pixeldichte im Nachteil da man für kurze Bewegungen nur noch minimale Bewegungen auf dem Bildschirm durchführen dürfte.
+Es gibt leider keine Möglichkeit eine Webapp mit exakten physikalischen Größen zu gestalten oder gar die Pixeldichte zu erkennen.
+\paragraph{Zusammenfassung:}
+\begin{itemize}
+\item
+\textbf{Gestaltung per CSS Einheiten} In CSS besteht die Möglichkeit Größen in CM oder Zoll zu definieren. Leider entsprechen die Werte auf Mobilen Endgeräten nicht den gewünschten Werten.
+\item
+\textbf{Gestaltung mit dem Device Pixel Ratio} Die Gestaltung per DevicePixelRatio erscheint wesentlich genauer als die Gestaltung mit CSS Längenangaben allerdings ist auch diese Lösung sehr ungenau und lässt sich nicht einheitlich nutzen. 
+\item
+\textbf{Verschiedene CSS3 Fälle für verschiedene Pixeldichten}
+Mit den CSS3 Media Queries ist es zumindest ansatzweise Möglich die Pixeldichte der Geräte zu erkennen. Allerdings sich auch sie sehr ungenau und keinesfalls verlässlich.
+Die Erstellung von Einzelfällen für viele Pixeldichten ist unsinnig, außerdem scheint sie für Mobilgeräte gänzlich unbrauchbar zu sein.
+\end{itemize}
+
+\paragraph{Idee zur Umgehung der Unfairness} Man könnte die Steuerung so definieren das ein Vorteil der Pixeldichte sich nicht zu sehr auf das Spiel auswirkt. Beispielsweise Kann man eine Maximalgeschwindigkeit der Schläger so definieren das sie auch auf Geräten mit geringer Pixeldichte leicht erreicht werden kann. Dadurch sind allerdings möglicherweise Geräte mit hoher Pixeldichte im Nachteil da man für kurze Bewegungen nur noch minimale Bewegungen auf dem Bildschirm durchführen dürfte.
 \newline
 Denkbar wäre auch eine Steuerung mit fester Bewegungsgeschwindigkeit sodass nur noch die Richtung der Schläger durch die Controller geregelt wird. Diese Art Steuerung verspricht allerdings nicht viel Spaß oder Reaktionsmöglichkeiten der Spieler.
 \newline
@@ -407,9 +443,7 @@ Denkbar wäre auch eine Steuerung mit fester Bewegungsgeschwindigkeit sodass nur
 \textbf{Lösungsmöglichkeit:}
 \paragraph{Verrechnung der Information zur Pixeldichte} 
 \mbox{}\\
-Mit den CSS3 Media Queries ist es zumindest ansatzweise Möglich die Pixeldichte der Geräte zu erkennen. Allerdings sich auch sie sehr ungenau und keinesfalls verlässlich.
-\newline
-Zur fairen Gestaltung der Touchfelder sollten wir die Media Queries bzw den DevicePixelRatio verwenden um zwischen Geräten mit hoher und geringerer Pixeldichte unterscheiden.
+Zur fairen Gestaltung der Touchfelder sollten wir den DevicePixelRatio verwenden um zwischen Geräten mit hoher und geringerer Pixeldichte unterscheiden.
 \newline
 Beispielsweise indem wir den PixelRatio mit der zurückgelegten Stecke in Pixeln verrechnen.
 \begin{lstlisting}
@@ -579,3 +613,69 @@ Es wurden die verschiedenen Lösungen probiert und folgende Resultate beobachtet
 \newline
 \newline
 \textbf{Endergebnis: } Die Vergrößerung der Hitboxen erwies sich als gute Lösung da dadurch die CPU nicht unnötig belastet wird. Zusätzlich könnte man noch ccd aktivieren um sicher zu gehen das die Wände der Levelbegrenzung sicher erkannt werden.
+
+\section{Erstellung des 3 und 4 Spieler Modus}
+\subsection{Aufgaben}
+\begin{itemize}
+\item
+Anpassung der State Machine
+\item
+Anpassung des Wall-Builders
+\item
+Anpassung der Spieler Begrenzung
+\item
+Einbinden der Level-Auswahl
+\item
+Erstellung der Spieler-Arrays
+\item
+Anpassung im End-State: Siegerbestimmung
+\item
+Anzeige der Punkte je Spieler
+\item
+Erstellung von Wänden nach SpielerTod
+\item
+Bearbeiten der Spieler Steuerung
+\end{itemize}
+\subsection{Änderungen gegenüber des 2 Spielermodus}
+\subsection{Anpassung der State Machine}
+\subsection{Anpassung des WallBuilders}
+\subsection{Anpassung des Spieler Movements}
+Aktuell war der Bereich den der Spieler nutzen kann nur oben und unten Begrenzt. Mit der diagonalen Bewegung im 3 Spieler Modus muss die Positionsberechnung angepasst werden.
+\newline
+Im Wallbuilder werden den Spielern ab sofort Pfade mitgegeben auf denen sie sich bewegen dürfen. Hierbei muss beachtet werden das immer x&y Positionen beachtet werden. Da der Schläger ansonsten von dem Pfad losgelöst wird.
+\subsection{Einbinden der Levelauswahl}
+Die Levelauswahl habe ich in den Ersten State, den "InitialiseNewGame" State eingebunden in Form von Buttons für die 3 Spielmodi.
+Es wird die gewählte Spielerzahl an den nächsten State gegeben.
+\subsection{Siegerbestimmung}
+Die Siegerbestimmung 
+Der Wallbuilder muss dahingehend angepasst werden dass nicht nur ein 2 SPieler Feld sondern auch die beiden anderen Felder erstellt werden können.
+Hierzu habe ich für jedes Feld ein Object erstellt welches wie folgt aufgebaut ist:
+\begin{lstlisting}
+var field2Player = {
+  walls: [{from: {x: 0, y: 64}, to: {x: 640, y: 64}},
+    {from: {x: 640, y: 440}, to: {x: 0, y: 440}}],
+  scoreWalls: [{from: {x: 640, y: 64}, to: {x: 640, y: 440}},
+    {from: {x: 0, y: 440}, to: {x: 0, y: 64}}],
+  movingPaths: [{from: {x: 0, y: 64}, to: {x: 0, y: 440}},
+    {from: {x: 640, y: 64}, to: {x: 640, y: 440}}]
+};
+\end{lstlisting}
+Erklärung der Felder:
+\begin{itemize}
+\item
+walls: Die Statischen Wände. Sie dienen nur als Spielfeldbegrenzung.
+\item
+scoreWalls: Die Wände hinter den Schlägern.
+\item
+movinPaths: Die Pfade die ein Schläger sich bewegen kann. Es gibt start und endpunkt. Zwischen diesen kann der Schläger bewegt werden.
+\end{itemize}
+Bis auf die Walls entspricht der Array Index immer der Spieler ID.
+Die aktuelle State Machine funktionierte nur für 2 Spieler.
+In Absprache mit Thorben haben wir 2 kleine Änderungen vorgenommen um einen Multispiler modus möglich zu machen:
+\begin{enumerate}
+\item
+Anpassung der Namen: Aus "FirstPlayerConneted" wurde "Playerconnected" der Zustand wird nun verwendet solange noch nicht alle Spieler anwesend sind. Ebenso wurde aus "SecondPlayerConnected" "AllPlayerConnected" und der Zustand gibt nun wieder wenn das Spiel bereit ist.
+\item
+Anpassung der Übergänge: Von dem "PlayerConnected" Zustand zu "AllPlayerConnected" gibt es jetzt eine andere Bedinung, diese ist das die Spieleranzahl erreicht werden muss. Wenn ein neuer Spieler kommt und nciht alle anwesend sind so wird "PlayerConnected" erneut aufgerufen.
+Anpassung der Übergänge
+\end{enumerate}
