@@ -56,16 +56,19 @@ var build2PlayerField = function (game, wallSprite) {
 
   createStaticWalls(game, wallSprite, field2Player.walls, walls);
 
+  var pointWall1 = createWall(game,wallSprite, field2Player.scoreWalls[0]);
+  var pointWall2 = createWall(game,wallSprite, field2Player.scoreWalls[1]);
+
   fieldInfo = [
-    {"boundA": upperWall, "boundB": lowerWall, "pointWall": leftWall, "opponentScoreText": scorePlayer1, path:field2Player.movingPaths[0]},
-    {"boundA": upperWall, "boundB": lowerWall, "pointWall": rightWall, "opponentScoreText": scorePlayer0}
+    {"pointWall": pointWall1, "opponentScoreText": scorePlayer1, path:field2Player.movingPaths[0]},
+    {"pointWall": pointWall1, "opponentScoreText": scorePlayer0, path:field2Player.movingPaths[1]}
   ];
 
   return walls;
 };
 
 function getPlayerInfoPack(playerNumber) {
-  return playerInfoPack[playerNumber];
+  return fieldInfo[playerNumber];
 }
 
 function createWall(game, sprite, positions) {
@@ -80,5 +83,7 @@ function createStaticWalls(game, sprite, _walls, group) {
 function createTextStyles() {
 
 }
-module.exports.buildField = buildField;
+module.exports.build2PlayerField = build2PlayerField;
+module.exports.build3PlayerField = build2PlayerField;
+module.exports.build4PlayerField = build2PlayerField;
 module.exports.getPlayerInfoPack = getPlayerInfoPack;

@@ -8,7 +8,7 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
   var xDiff = Math.round(20 * Math.sin(fieldInfo.pointWall.body.rotation + (0.5 * Math.PI)));
   var yDiff = Math.round(20 * Math.cos(fieldInfo.pointWall.body.rotation + (0.5 * Math.PI)));
 
-  console.log(xDiff + " : " + yDiff);
+  console.log("diff: " + xDiff + " : " + yDiff);
   Phaser.Sprite.call(this, game, fieldInfo.pointWall.body.x + xDiff, fieldInfo.pointWall.body.y + yDiff, sprite, _frame);
 
   // Set Physic
@@ -16,8 +16,6 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
   this.body.rotation = fieldInfo.pointWall.body.rotation;
   this.body.kinematic = true;
   this.body.setRectangle(32, this.height, -16, 0);
-
-
 
 
   var _buffer = [];
@@ -49,41 +47,21 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
 
     while (_buffer.length > 0) {
       var pos = _buffer.shift();
-      //@TODO: diagonal movement is impossible
-      //if (pos.y - this.height / 2 < fieldInfo.boundA.y) {
-      //  this.body.y = fieldInfo.boundA.y + this.height / 2;
-      //} else if (pos.y + this.height / 2 > fieldInfo.boundB.y) {
-      //  this.body.y = fieldInfo.boundB.y - this.height / 2;
-      //} else {
-      //  this.body.y = pos.y;
-      //}
 
-      //Short names for all vars
-      var pymi = pos.y - this.height / 2;
-      var pyma= pos.y + this.height / 2;
-      //var pxmi = pos.x - this.width / 2;
-      //var pxma = pos.x + this.width / 2;
       var path = fieldInfo.path;
-      var dis = Phaser.Math.distance(path.from.x,path.from.y,path.to.x,path.to.y);
-      var dx = Phaser.Math.abs((path.from.x - path.to.x)) / dis;
-      var dy = Phaser.Math.abs((path.from.y - path.to.y)) / dis;
+      var dis = Phaser.Math.distance(path.from.x, path.from.y, path.to.x, path.to.y);
+      var dx = Math.abs((path.from.x - path.to.x)) / dis;
+      var dy = Math.abs((path.from.y - path.to.y)) / dis;
 
 
-      //if(pymi > path.from.y && pyma < path.to.y) {
-      //  // New pos is not out of bounds
-      //  this.body.y = pymi;
-      //} else if(pyma > path.to.y) {
-      //  this.body.y = pymi;
-      //} else this.body.y = pos.y;
-      //if (pxmi > path.from.x && pxma < path.to.x) {
-      //  // New pos is not out of bounds
-      //  this.body.x = pxmi;
-      //}
-      this.body.x = Math.min(pos.x,dis) * dx;
-      this.body.y = Math.min(pos.y,dis) * dy;
+      // Movement is working.
+      // ToDo: Player can get out of bound on 1 side -> Use Sprite dimensions
+      // ToDo: Player is ON the Path, not slighly before -> Use xDiff & yDiff
+      this.body.x = Math.min(pos.x, dis) * dx;
+      this.body.y = Math.min(pos.y, dis) * dy;
 
 
-      //this.body.y = Math.max(Math.min(fieldInfo.lowerWall.body.y, pos.y - this.height/2) + this.height, fieldInfo.upperWall.body.y);
+
     }
   };
 
