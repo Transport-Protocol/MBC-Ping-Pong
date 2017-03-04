@@ -36,14 +36,20 @@ var state = function (game) {
 
   this.start2Player = function () {
     this.destroyButtons();
+    this.game.properties.mode = 2;
+    this.game.properties.remainingPlayers = 2;
     this.game.state.start("Initial", false, false, 2);
   };
   this.start3Player = function () {
     this.destroyButtons();
+    this.game.properties.mode = 3;
+    this.game.properties.remainingPlayers = 3;
     this.game.state.start("Initial", false, false, 3);
   };
   this.start4Player = function () {
     this.destroyButtons();
+    this.game.properties.mode = 4;
+    this.game.properties.remainingPlayers = 4;
     this.game.state.start("Initial", false, false, 4);
   };
   this.destroyButtons = function () {

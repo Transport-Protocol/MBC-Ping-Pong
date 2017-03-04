@@ -38,7 +38,9 @@ var gameProperties = {
   players: new Map(),
   debug: false,
   gameId: undefined,
-  ball: undefined
+  ball: undefined,
+  mode: 2,
+  remainingPlayers: 0
 };
 
 var game = new Phaser.Game(gameProperties.width, gameProperties.height, Phaser.AUTO, gameProperties.name);

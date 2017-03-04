@@ -7,8 +7,7 @@ var field2Player = {
   scoreWalls: [{from: {x: 640, y: 64}, to: {x: 640, y: 440}},
     {from: {x: 0, y: 440}, to: {x: 0, y: 64}}],
   movingPaths: [{from: {x: 0, y: 64}, to: {x: 0, y: 440}},
-    {from: {x: 640, y: 64}, to: {x: 640, y: 440}}]
-};
+    {from: {x: 640, y: 64}, to: {x: 640, y: 440}}]};
 
 var field3Player = {
   walls: [{from: {x: 99, y: 268}, to: {x: 195, y: 77}},
@@ -19,8 +18,21 @@ var field3Player = {
     {from: {x: 195, y: 460}, to: {x: 99, y: 268}}],
   movingPaths: [{from: {x: 195, y: 77}, to: {x: 446, y: 77}},
     {from: {x: 542, y: 268}, to: {x: 446, y: 460}},
-    {from: {x: 195, y: 460}, to: {x: 99, y: 268}}],
-};
+    {from: {x: 195, y: 460}, to: {x: 99, y: 268}}]};
+
+var field4Player = {
+  walls: [{from: {x: 112, y: 128}, to: {x: 189, y: 51}},
+    {from: {x: 450, y: 51}, to: {x: 528, y: 128}},
+    {from: {x: 528, y: 393}, to: {x: 450, y: 468}},
+    {from: {x: 189, y: 468}, to: {x: 112, y: 393}}],
+  scoreWalls: [{from: {x: 189, y: 51}, to: {x: 450, y: 51}},
+    {from: {x: 528, y: 128}, to: {x: 528, y: 393}},
+    {from: {x: 450, y: 468}, to: {x: 189, y: 468}},
+    {from: {x: 112, y: 393}, to: {x: 112, y: 128}}],
+  movingPaths: [{from: {x: 189, y: 51}, to: {x: 450, y: 51}},
+    {from: {x: 528, y: 128}, to: {x: 528, y: 393}},
+    {from: {x: 450, y: 468}, to: {x: 189, y: 468}},
+    {from: {x: 112, y: 393}, to: {x: 112, y: 128}}]};
 
 // Color Codes for the paddles, although only 4 paddles are used all 6 are defined
 // Grey, Red, Green, Blue, Yellow, Pink
@@ -60,8 +72,8 @@ var build2PlayerField = function (game, wallSprite) {
   var pointWall2 = createWall(game, wallSprite, field2Player.scoreWalls[1]);
 
   fieldInfo = [
-    {"pointWall": pointWall1, "opponentScoreText": scorePlayer1, path: field2Player.movingPaths[0]},
-    {"pointWall": pointWall2, "opponentScoreText": scorePlayer0, path: field2Player.movingPaths[1]}
+    {"pointWall": pointWall2, "opponentScoreText": scorePlayer1, path: field2Player.movingPaths[0]},
+    {"pointWall": pointWall1, "opponentScoreText": scorePlayer0, path: field2Player.movingPaths[1]}
   ];
 
   return walls;
@@ -102,6 +114,48 @@ var build3PlayerField = function (game, wallSprite) {
   return walls;
 };
 
+var build4PlayerField = function (game, wallSprite) {
+  var scorePlayer0 = createText(game, colorCodes.grey);
+  scorePlayer0.setTextBounds(0, 0, (game.width / 2) - 10, 64);
+
+  var scorePlayer1 = createText(game, colorCodes.red);
+  scorePlayer1.setTextBounds((game.width / 2) - 20, 0, 40, 64);
+
+
+  var scorePlayer2 = createText(game, colorCodes.green);
+  scorePlayer2.setTextBounds((game.width / 2) + 20, 0, (game.width / 2) - 20, 64);
+
+  var scorePlayer3 = createText(game, colorCodes.blue);
+  scorePlayer3.setTextBounds(0, 0, (game.width / 2) + 10, 64);
+
+  var walls = game.add.group();
+
+  createStaticWalls(game, wallSprite, field4Player.walls, walls);
+
+  var pointWall1 = createWall(game, wallSprite, field4Player.scoreWalls[0]);
+  var pointWall2 = createWall(game, wallSprite, field4Player.scoreWalls[1]);
+  var pointWall3 = createWall(game, wallSprite, field4Player.scoreWalls[2]);
+  var pointWall4 = createWall(game, wallSprite, field4Player.scoreWalls[3]);
+
+  pointWall1.renderable = false;
+  pointWall2.renderable = false;
+  pointWall3.renderable = false;
+  pointWall4.renderable = false;
+  walls.add(pointWall1);
+  walls.add(pointWall2);
+  walls.add(pointWall3);
+  walls.add(pointWall4);
+
+  fieldInfo = [
+    {"pointWall": pointWall1, "opponentScoreText": scorePlayer0, path: field4Player.movingPaths[0]},
+    {"pointWall": pointWall2, "opponentScoreText": scorePlayer1, path: field4Player.movingPaths[1]},
+    {"pointWall": pointWall3, "opponentScoreText": scorePlayer2, path: field4Player.movingPaths[2]},
+    {"pointWall": pointWall4, "opponentScoreText": scorePlayer3, path: field4Player.movingPaths[3]}
+  ];
+
+  return walls;
+};
+
 function getPlayerInfoPack(playerNumber) {
   return fieldInfo[playerNumber];
 }
@@ -117,9 +171,9 @@ function createStaticWalls(game, sprite, _walls, group) {
 }
 function createText(game, color) {
   var style0 = {font: "bold 32px Arial", fill: color, boundsAlignH: "center", boundsAlignV: "middle"};
-  return game.add.text(0, 0, "0", style0);
+  return game.add.text(0, 0, "10", style0);
 }
 module.exports.build2PlayerField = build2PlayerField;
 module.exports.build3PlayerField = build3PlayerField;
-module.exports.build4PlayerField = build2PlayerField; //ToDo, 4 Player
+module.exports.build4PlayerField = build4PlayerField;
 module.exports.getPlayerInfoPack = getPlayerInfoPack;

@@ -27,13 +27,32 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
   this.body.createBodyCallback(ball, this.collideWithBall, this);
 
   this.collideWithPointwall = function (wallBody, ballBody) {
-    points--;
+
     console.log("Hit PointWall, Points: " + points);
-    _fieldInfo.opponentScoreText.text = "" + (maxPoints - points);
-    if (points <= 0) {
-      _game.state.start("GameEnded", false, false);
-    } else {
-      _ball.reset();
+    if (_game.properties.mode == 2) {
+      points--;
+      _fieldInfo.opponentScoreText.text = "" + (maxPoints - points);
+      if (points <= 0) {
+        _game.state.start("GameEnded", false, false);
+      } else {
+        _ball.reset();
+      }
+    }
+    else {
+      if (this.getLives() > 0) {
+        points--;
+
+        _fieldInfo.opponentScoreText.text = "" + this.getLives();
+        if (this.getLives() == 0) {
+          fieldInfo.pointWall.renderable = true;
+          this.destroy();
+          if (--_game.properties.remainingPlayers <= 1) {
+            _game.state.start("GameEnded", false, false);
+          }
+        } else {
+          _ball.reset();
+        }
+      }
     }
   };
 
@@ -49,18 +68,18 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
       var pos = _buffer.shift();
 
       var path = fieldInfo.path;
+
       var dis = Phaser.Math.distance(path.from.x, path.from.y, path.to.x, path.to.y);
       var dx = ((path.from.x - path.to.x)) / dis;
       var dy = ((path.from.y - path.to.y)) / dis;
 
-      var mM = Math.min(pos.y,dis);
+      var mM = Math.min(pos.y, dis);
 
       // Movement is working.
       // ToDo: Player can get out of bound on 1 side -> Use Sprite dimensions
       // ToDo: Player is ON the Path, not slighly before -> Use xDiff & yDiff
       this.body.x = path.to.x + mM * dx// Math.min(mM * dx, (path.from.x - path.to.x));
       this.body.y = path.to.y + mM * dy // Math.min(mM * dy, (path.from.y - path.to.y));
-
 
 
     }
@@ -75,22 +94,8 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
   };
 
   this.getPlayerName = function () {
-    switch (_frame) {
-      case 0:
-        return "Links";
-        break;
-      case 1:
-        return "Rechts";
-        break;
-      case 2:
-        return "Oben";
-        break;
-      case 3:
-        return "Unten";
-        break;
-      default:
-        return "undefined";
-    }
+    var names = ["Grau", "Rot", "Grün", "Blau"];
+    return names[_frame];
   }
 };
 

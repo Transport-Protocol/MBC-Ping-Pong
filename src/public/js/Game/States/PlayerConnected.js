@@ -12,6 +12,7 @@ var state = function (game) {
   abstractState.call(this, self.game);
 
   this.init = function (maxPlayers) {
+    playercount = 1;
     self.maxplayers = maxPlayers;
     self.wallBuilder = wallBuilder;
     console.log("FirstPlayerConnected");
