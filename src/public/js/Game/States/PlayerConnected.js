@@ -8,7 +8,7 @@ const TIME_TO_CONNECT_SECOND_PLAYER_IN_SECONDS = 30;
 var state = function (game) {
   var self = this;
   self.game = game;
-  var playercount=0;
+  var playercount = 1;
   abstractState.call(this, self.game);
 
   this.init = function (maxPlayers) {
@@ -37,10 +37,12 @@ var state = function (game) {
   };
 
   this.addPlayer = function () {
-    var player = new Player(self.game, self.wallBuilder.getPlayerInfoPack(1), self.game.properties.ball, 'paddle', 1);
+    var player = new Player(self.game, self.wallBuilder.getPlayerInfoPack(playercount), self.game.properties.ball, 'paddle', playercount);
     console.log("NAME: " + player.getPlayerName());
     playercount++;
-    if(playercount == self.maxplayers) {
+    console.log(playercount);
+    console.log(self.maxplayers)
+    if (playercount == self.maxplayers) {
       this.game.state.start("AllPlayersConnected", false, false);
     }
     return player;

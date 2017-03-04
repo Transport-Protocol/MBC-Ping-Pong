@@ -50,15 +50,16 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
 
       var path = fieldInfo.path;
       var dis = Phaser.Math.distance(path.from.x, path.from.y, path.to.x, path.to.y);
-      var dx = Math.abs((path.from.x - path.to.x)) / dis;
-      var dy = Math.abs((path.from.y - path.to.y)) / dis;
+      var dx = ((path.from.x - path.to.x)) / dis;
+      var dy = ((path.from.y - path.to.y)) / dis;
 
+      var mM = Math.min(pos.y,dis);
 
       // Movement is working.
       // ToDo: Player can get out of bound on 1 side -> Use Sprite dimensions
       // ToDo: Player is ON the Path, not slighly before -> Use xDiff & yDiff
-      this.body.x = Math.min(pos.x, dis) * dx;
-      this.body.y = Math.min(pos.y, dis) * dy;
+      this.body.x = path.to.x + mM * dx// Math.min(mM * dx, (path.from.x - path.to.x));
+      this.body.y = path.to.y + mM * dy // Math.min(mM * dy, (path.from.y - path.to.y));
 
 
 
@@ -67,6 +68,10 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
 
   this.getPoints = function () {
     return maxPoints - points;
+  };
+
+  this.getLives = function () {
+    return points;
   };
 
   this.getPlayerName = function () {

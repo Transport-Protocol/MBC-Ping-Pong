@@ -2,28 +2,28 @@ var Player = require('./Game/Player.js');
 var load = require('./Game/States/Load.js');
 var initializeNewGame = require('./Game/States/InitializeNewGame.js');
 var initial = require('./Game/States/Initial.js');
-var firstPlayerConnected = require('./Game/States/PlayerConnected.js');
+var playerConnected = require('./Game/States/PlayerConnected.js');
 var allPlayersConnected = require('./Game/States/AllPlayerConnected.js');
 var gameRunning = require('./Game/States/GameRunning.js');
 var gameEnded = require('./Game/States/GameEnded.js');
 
 Phaser.StateManager.prototype.clearCurrentState = function () {
-  if (this.current){
+  if (this.current) {
     if (this.onShutDownCallback) {
       this.onShutDownCallback.call(this.callbackContext, this.game);
     }
     this.game.scale.reset(this._clearWorld);
-    if (this.game.debug){
+    if (this.game.debug) {
       this.game.debug.reset();
     }
-    if (this._clearWorld){
+    if (this._clearWorld) {
       this.game.camera.reset();
       this.game.input.reset(true);
       this.game.time.removeAll();
       this.game.tweens.removeAll();
       this.game.physics.clear();
       this.game.world.shutdown();
-      if (this._clearCache){
+      if (this._clearCache) {
         this.game.cache.destroy();
       }
     }
@@ -47,7 +47,7 @@ game.properties = gameProperties;
 game.state.add('Load', load);
 game.state.add('InitializeNewGame', initializeNewGame);
 game.state.add('Initial', initial);
-game.state.add('FirstPlayerConnected', firstPlayerConnected);
+game.state.add('PlayerConnected', playerConnected);
 game.state.add('AllPlayersConnected', allPlayersConnected);
 game.state.add('GameRunning', gameRunning);
 game.state.add('GameEnded', gameEnded);

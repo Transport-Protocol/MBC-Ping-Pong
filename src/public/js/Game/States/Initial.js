@@ -35,16 +35,19 @@ var state = function (game) {
 
   this.addPlayer = function () {
     var player = new Player(self.game, self.wallBuilder.getPlayerInfoPack(0), self.game.properties.ball, 'paddle', 0);
-    self.game.state.start("FirstPlayerConnected", false, false, self.wallBuilder);
+    self.game.state.start("PlayerConnected", false, false, self.playerCount);
     return player;
   };
-  this.buildField = function() {
+  this.buildField = function () {
     switch (self.playerCount) {
-      case 2: wallBuilder.build2PlayerField(game,"wall");
+      case 2:
+        wallBuilder.build2PlayerField(game, "wall");
         break;
-      case 3: wallBuilder.build3PlayerField(game, "wall");
+      case 3:
+        wallBuilder.build3PlayerField(game, "wall");
         break;
-      case 4: wallBuilder.build4PlayerField(game,"wall");
+      case 4:
+        wallBuilder.build4PlayerField(game, "wall");
         break;
     }
   }
