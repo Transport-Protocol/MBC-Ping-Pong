@@ -6,8 +6,8 @@ var field2Player = {
     {from: {x: 640, y: 440}, to: {x: 0, y: 440}}],
   scoreWalls: [{from: {x: 640, y: 64}, to: {x: 640, y: 440}},
     {from: {x: 0, y: 440}, to: {x: 0, y: 64}}],
-  movingPaths: [{from: {x: 0, y: 64}, to: {x: 0, y: 440}},
-    {from: {x: 640, y: 64}, to: {x: 640, y: 440}}]};
+  movingPaths: [{from: {x: 0, y: 440}, to: {x: 0, y: 64}},
+    {from: {x: 640, y: 440}, to: {x: 640, y: 64}}]};
 
 var field3Player = {
   walls: [{from: {x: 99, y: 268}, to: {x: 195, y: 77}},
@@ -16,8 +16,8 @@ var field3Player = {
   scoreWalls: [{from: {x: 195, y: 77}, to: {x: 446, y: 77}},
     {from: {x: 542, y: 268}, to: {x: 446, y: 460}},
     {from: {x: 195, y: 460}, to: {x: 99, y: 268}}],
-  movingPaths: [{from: {x: 195, y: 77}, to: {x: 446, y: 77}},
-    {from: {x: 542, y: 268}, to: {x: 446, y: 460}},
+  movingPaths: [{from: {x: 446, y: 77}, to: {x: 195, y: 77}},
+    {from: {x: 446, y: 460}, to: {x: 542, y: 268}},
     {from: {x: 195, y: 460}, to: {x: 99, y: 268}}]};
 
 var field4Player = {
@@ -29,9 +29,9 @@ var field4Player = {
     {from: {x: 528, y: 128}, to: {x: 528, y: 393}},
     {from: {x: 450, y: 468}, to: {x: 189, y: 468}},
     {from: {x: 112, y: 393}, to: {x: 112, y: 128}}],
-  movingPaths: [{from: {x: 189, y: 51}, to: {x: 450, y: 51}},
-    {from: {x: 528, y: 128}, to: {x: 528, y: 393}},
-    {from: {x: 450, y: 468}, to: {x: 189, y: 468}},
+  movingPaths: [{from: {x: 450, y: 51}, to: {x: 189, y: 51}},
+    {from: {x: 528, y: 393}, to: {x: 528, y: 128}},
+    {from: {x: 189, y: 468}, to:{x: 450, y: 468}},
     {from: {x: 112, y: 393}, to: {x: 112, y: 128}}]};
 
 // Color Codes for the paddles, although only 4 paddles are used all 6 are defined
