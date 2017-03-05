@@ -444,6 +444,36 @@ Siehe Abbildung \ref{backfig5}.
 \section{Eigenes Modul: Verwendung}
 
 \subsection{Eigenes Modul Verwendung: Client}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{backend/Modul_UserClientDependencies.PNG}
+\caption{Dependencies Verwendung Server}
+\label{backfig10}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{backend/Modul_UserClientHowTo.PNG}
+\caption{Dependencies Verwendung Server}
+\label{backfig11}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{backend/Modul_UserClientHowToMessageCallback.PNG}
+\caption{Dependencies Verwendung Server}
+\label{backfig12}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{backend/Modul_UserClientHowToSendMessage.PNG}
+\caption{Dependencies Verwendung Server}
+\label{backfig13}
+\end{figure}
+
+
+
 \subsection{Eigenes Modul Verwendung: Server}
 \begin{figure}[ht]
 \centering
@@ -475,7 +505,49 @@ In Abbildung \ref{backfig8} ist zu sehen, wie das Modul für Server genutzt wird
 
 
 \subsection{Eigenes Modul Verwendung: Callbacks}
+Alle wichtigen Ereignisse, welche den reibungslosen Aufbau und Betrieb der Verbindung betrifft, wird intern geregelt. Dem Nutzer des Moduls ist es jedoch möglich, eigene Callbacks zu definieren, die bei gewissen Ereignissen aufgerufen werden.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{backend/Modul_Callbacks.PNG}
+\caption{Callbacks}
+\label{backfig9}
+\end{figure}
+In Abbildung \ref{backfig9} sind die drei für den Nutzer wichtigsten Funktionen zum Eintragen von Callbacks zu erkennen.
 
+\begin{description}
+\item[setMessageCallback]
+Mit dieser Funktion trägt man eine Callback Funktion ein, die Falle einer neuen Nachricht aufgerufen wird. 
+Die Callback Funktion wird hierbei mit drei Parametern aufgerufen:
+
+  \begin{description}
+  \item[Type]
+  Dem Typen den die Nachricht hat, vergeben von dem Sender.
+  
+  \item[From]
+  Der ID des Absenders der Nachricht.
+  
+  \item[Data]
+  Die eigentliche Nutzlast der Nachricht. Format vom Sender bestimmt.
+  \end{description}
+
+\item[setNewConnectionCallback]
+Mit dieser Funktion trägt man eine CallbackFunktion  ein, die im Falle einer neuen erfolgreichen Verbindung zu einem anderen Peer aufgerufen wird.
+Die Callback Funktion wird hierbei mit einem Parameter aufgerufen:
+
+  \begin{description}
+  \item[PeerID]
+  Die ID des neuen Peers.
+  \end{description}
+  
+\item[setDisconnectCallback]
+Mit dieser Funktion trägt man eine Callback Funktion ein, die im Falle des Verbindungsverlusts eines Peers aufgerufen wird.
+Die Callback Funktion wird hierbei mit einem Parameter aufgerufen.
+
+  \begin{description}
+  \item[PeerID]
+  Die ID des Peers, welcher die Verbindung verloren hat.
+  \end{description}
+\end{description}
 
 
 \section{Eigenes Modul: Performance}
