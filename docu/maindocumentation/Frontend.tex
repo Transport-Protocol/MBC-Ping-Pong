@@ -6,7 +6,7 @@ In diesem Teil finden alle Ideen und Gedanken zu dem Projekt Platz welche ich vo
 \mbox{}\\
 Bei Kollision des Balles mit den Wänden, den Schlägern oder gar anderen Bällen wäre ein Partikeleffekt sehr schön.
 \newline
-Ebenfalls könnte man mit Partikeleffekten den Ballverlust (Zerstörung des Balles in den "Toren") sehr schön grafisch unterstreichen.
+Ebenfalls könnte man mit Partikeleffekten den Ballverlust (Zerstörung des Balles in den ''Toren'') sehr schön grafisch unterstreichen.
 \newline
 Möglicherweise dafür geeignete Engine:
 \href{http://soulwire.github.io/sketch.js/}{Sketch.js}
@@ -81,7 +81,7 @@ Als ich die Präsentation des Projektes sah war ich nicht mit den Ideen für ein
 	\caption{Mockup eines 3-Spieler Feldes}
 	\label{figx}
 \end{figure}
-\newline
+\newpage
 \paragraph{4 Spieler}
 \mbox{}\\
 Als weitere Idee kam mir ein Vier-Spieler Feld bei dem sich in einem Quadrat je 2 Spieler gegenüberstehen.
@@ -89,6 +89,13 @@ Als weitere Idee kam mir ein Vier-Spieler Feld bei dem sich in einem Quadrat je 
 Mehr als 4 Spieler sind meiner Meinung nach nicht notwendig. Wenn man bedenkt das sich die Spieler vor einem Bildschirm im Flur sammeln.
 \newline
 Denkbar ist allerdings das man das Konzept für 3 und 4 Spieler für weitere Spieler weiterführt.
+\begin{figure}[ht]
+	\begin{center}
+		\makebox[\textwidth]{\includegraphics[width=300pt]{frontend/Ping-Pong-4p.png}}
+	\end{center}
+	\caption{Mockup eines 4-Spieler Feldes}
+	\label{figx}
+\end{figure}
 \newpage
 \subsection{Power-Ups}
 Kurze Ideensammlung zu möglichen Verstärkungen.
@@ -307,7 +314,7 @@ Mithilfe von CSS kann man die Größe von allen Elementen einer Webseite beeinfl
 Hierfür würde ich ein Object auf eine feste Größe formattieren und dann abfragen wie gr0ß das Object in Pixeln ist.
 \newline
 \newline
-Nach kurzer Recherche stieß ich auf die Webseite "http://www.infobyip.com/detectmonitordpi.php"
+Nach kurzer Recherche stieß ich auf die Webseite ''http://www.infobyip.com/detectmonitordpi.php''
 \newline
 Die Webseite dient dazu die DPI des Gerätes zu bestimmen, genau auf den CSS Funktionen: Es wird ein Quadrat per CSS auf eine bestimmte Größe, zum Beispiel 1 Zoll, formatiert und dann die Größe in Pixeln ausgelesen. Auf diese Weise lässt sich ein DPI wert berechnen.
 \newline
@@ -525,7 +532,7 @@ In der Update Methode wurden über alle Positionen im Buffer iteriert. Das hat d
 \end{quote}
 Die beiden Issues beschrieben Anforderungen an das Spielfeld für ein 2 Spieler Feld.
 \subsection{Problem: Physic Engine} 
-Bei der Erstellung des Spielfeldes fiel auf das die Kollision mit den Wänden nicht funktioniert. Grund hierfür ist die eingesetzte Physic Engine "Phaser.Arcade".
+Bei der Erstellung des Spielfeldes fiel auf das die Kollision mit den Wänden nicht funktioniert. Grund hierfür ist die eingesetzte Physic Engine ''Phaser.Arcade''.
 In Phaser hat man die Wahl zwischen verschiedenen Engines.
 \begin{itemize}
 	\item
@@ -558,9 +565,9 @@ Viele Funktionen die unter Arcade direkt auf dem Sprite ausgeführt wurden werde
 	      	this.ball.body.setCircle(16);
 	      \end{listing}
 	\item
-	      Drehung: Vorher konnten Objete per "obj.angle" gedreht werden, daraus wurde "obj.body.angle"
+	      Drehung: Vorher konnten Objete per ''obj.angle'' gedreht werden, daraus wurde ''obj.body.angle''
 	\item
-	      Beschleunigung: In Arcade musste eine "obj.velocity" auf beiden Achsen angegeben werden, daraus wurde ein "obj.body.thrust()" aufruf
+	      Beschleunigung: In Arcade musste eine ''obj.velocity'' auf beiden Achsen angegeben werden, daraus wurde ein ''obj.body.thrust()'' aufruf
 	\item
 	      Bounding Box der Wände: Diese wurde zuerst falsch erkannt da der Sprite gestreckt wird.
 	      Lösung war es erst die transformation des Sprites durchzuführen udn im Anschluss den Physikalischen Body zu erstellen.
@@ -568,7 +575,7 @@ Viele Funktionen die unter Arcade direkt auf dem Sprite ausgeführt wurden werde
 	\item
 	      Drehung der Sprites: Vorher fand die Drehung am Sprite selber statt, dort war der Ankerpunk auf (0,0) definiert. Beim Body ist der Ankerpunkt standartmäßig der Mittelpunkt des Sprites, also musste die Platzierung des Sprites neu überdacht werden.
 	\item
-	      Bewegung des Schlägers: Die Schläger wurden sonst per x &y Koordinaten gesetzt, P2 nimmt diese aber nicht an
+	      Bewegung des Schlägers: Die Schläger wurden sonst per x \& y Koordinaten gesetzt, P2 nimmt diese aber nicht an
 \end{itemize}
 \subsubsection{Problem Tunneling}
 Wenn der Ball sich zu schnell bewegt kann es vorkommen das er sich durch Objekte durch bewegt. Genannt wird dieses Problem tunneling.
@@ -583,9 +590,9 @@ Am besten werden die Wände nur in ihren Kollisionsboxen aber nicht in der wirkl
 \paragraph{Behandlung: Begrenzung der Geschwindigkeit}
 \mbox{}\\
 Eine weitere Möglichkeit wäre es die Geschwindigkeit zu begrenzen. Allerdings kann dies sehr stark den Spaß am Spiel nehmen.
-\paragraph{Behandlung: Nutzung der P2 Funktion \"CCD\" }
+\paragraph{Behandlung: Nutzung der P2 Funktion ''CCD'' }
 \mbox{}\\
-CCD steht für \"Continuous Collision Detection\". 
+CCD steht für ''Continuous Collision Detection''. 
 \newline
 CCD ist ein recht komplexes Thema, da man versuchen will die Kollisionserkennung sowohl effektiv als auch effizient zu gestalten.
 \newline
@@ -594,88 +601,151 @@ Kollisionen entstehen nicht immer nur am alten und neuen Standpunkt eines Objekt
 CCD ist eine Technik um eben diese Zwischenkollisionen ebenfalls effizient zu erkennen. Dabei werden grundsätzlich Zwischenschritte erstellt und geprüft.
 \newline
 Für die Physic Engine P2 wurde ccd mit eingebaut, ist allerdings standardmäßig deaktiviert.
-Zum aktivieren muss der \"ccdSpeedThreshold\" auf einen Wert >=0 gesetzt werden.
+Zum aktivieren muss der ''ccdSpeedThreshold'' auf einen Wert >=0 gesetzt werden.
 \newline
 Es gibt 2 einstellbare Variablen
 \begin{itemize}
 \item
 \textbf{ccdSpeedThreshold} Gibt die Geschwindigkeit an ab der die Funktion genutzt wird. Bei Angabe eines sehr geringen Wertes kann es zu Performance Problemen kommen da die ccd Berechnungen recht aufwändig sind und erst ab einer gewissen Geschwindigkeit Sinn machen.
 \item
-\textbf{ccdIterations} Hiermit lässt sich die Genauigkeit definieren, also die Anzahl der Durchgänge. Eine hohe Zahl erzielt bessere Ergebnisse ist allerdings auch aufwändiger.
+\textbf{ccdIterations} Hiermit lässt sich die Genauigkeit definieren, also die Anzahl der Durchgänge. Eine hohe Zahl erzielt bessere Ergebnisse allerdings wird die Berechnung dadurch deutlich aufwändiger.
 \end{itemize}
+\newpage
 \paragraph{Lösung}
 \mbox{}\\
 Es wurden die verschiedenen Lösungen probiert und folgende Resultate beobachtet:
 \newline
-\textbf{Vergrößern der Hitboxen} Dem ersten Eindruck nach wurde das Problem behoben indem die Wände und Schläger dickere Kollisions-Boxen bekamen, unklar ist ob die Todeszonen richtig erkannt werden.
+\textbf{Vergrößern der Hitboxen} 
+\newline 
+Dem ersten Eindruck nach wurde das Problem behoben indem die Wände und Schläger dickere Kollisions-Boxen bekamen, unklar ist ob die Todeszonen, also die Wände welche sich hinter den Schlägern befinden, richtig erkannt werden.
 \newline
-\textbf{Aktivierung von ccd} Das aktivieren von ccd schien für einige Geschwindigkeiten das Problem zu beheben. Allerdings nicht bei sehr hohen Geschwindigkeiten.
+\textbf{Aktivierung von ccd} 
+\newline 
+Das aktivieren von ccd schien für einige Geschwindigkeiten das Problem zu beheben. Allerdings nicht bei sehr hohen Geschwindigkeiten, hierzu könnte man die Iterationen noch weiter erhöhen dies hat allerdings eine höhere CPU Auslastung zur Folge.
 \newline
 \newline
-\textbf{Endergebnis: } Die Vergrößerung der Hitboxen erwies sich als gute Lösung da dadurch die CPU nicht unnötig belastet wird. Zusätzlich könnte man noch ccd aktivieren um sicher zu gehen das die Wände der Levelbegrenzung sicher erkannt werden.
-
+\textbf{Endergebnis: } Die Vergrößerung der Hitboxen erwies sich als gute Lösung da dadurch die CPU nicht unnötig belastet wird. Zusätzlich könnte man noch ccd aktivieren um sicher zu gehen das die Wände der Levelbegrenzungen sicher erkannt werden.
+\newpage
 \section{Erstellung des 3 und 4 Spieler Modus}
+\subsection{Änderungen gegenüber des 2 Spielermodus}
+Im 2 Spieler Modus läuft das Spiel etwas anders ab als im Multiplayer Modus.
+\begin{enumerate}
+	\item[Spielfeld]
+	Für jeden Spielmodus gibt es ein Spielfeld in dem sich alle Spieler gegenüberstehen.
+	\newline
+	Im 3 Spieler Modus entspricht dies einem Sechseck wobei immer eine Wand und ein Tor abwechselnd vorhanden sind.
+	\newline
+	Im 4 Spieler Modus entspricht das Spielfeld einem Achteck mit unterschiedlichen Seitenlängen. Die Kürzeren Seiten sind für die Wände und die Längeren sind die Tore.
+	\newline
+	Mockups beider Spielfelder befinden sich im Abschnitt ''Ideensammling, Spielfelder''
+	
+	\item[Punktvergabe]
+	Im 2 Spieler Modus hat man für jeden Treffer einen Punkt erhalten und bei erreichen von 10 Punkten hat der Spieler gewonnen.
+	\newline
+	In den Multiplayer Spielmodi beginnt jeder Spieler mit 10 Leben und es wird bei jedem Treffen dem entsprechendem Spieler ein Leben abgezogen.
+	\newline
+	Wenn ein Spieler kein Leben mehr hat wird er aus dem Spiel genommen und die restlichen Spieler können weiter spielen.
+	
+	\item[Steuerung]
+	Die Bewegung der Schläger war im 2 Spieler Modus nur Vertikal, also auf der Y Achse. Die Implementierung war recht einfach und lies keine anderen Bewegungen zu.
+	\newline
+	Im 3 Spieler Modus müssen sich spieler sowohl horizontal als auch Diagonal bewegen können.
+	\newline
+	Nach einigen versuchen habe ich mich dafür entschieden dem jeweiligen Spielfeld Pfade für jeden Spieler hinzuzufügen.
+	\newline
+	Vom Controller wird nur noch die Y Achse genutzt und diese wird dann auf den Pfad gerechnet um so die neue Position zu bestimmen.
+\end{enumerate}
 \subsection{Aufgaben}
 \begin{itemize}
-\item
-Anpassung der State Machine
-\item
-Anpassung des Wall-Builders
-\item
-Anpassung der Spieler Begrenzung
-\item
-Einbinden der Level-Auswahl
-\item
-Erstellung der Spieler-Arrays
-\item
-Anpassung im End-State: Siegerbestimmung
-\item
-Anzeige der Punkte je Spieler
-\item
-Erstellung von Wänden nach SpielerTod
-\item
-Bearbeiten der Spieler Steuerung
+	\item
+	\textbf{Anpassung der State Machine}
+	\newline
+	Die State Machine muss angepasst werden um einen Mehrspielermodus zu erlauben.
+	\item
+	\textbf{Anpassung des Wall-Builders}
+	Im Wallbuilder müssen die neuen Spielfelder definiert werden. Das beinhaltet auch die Position der Punktzahlen und die Spielerpositionen.
+	\item
+	\textbf{Anpassung der Spieler Steuerung}
+	Aktuell ist die Steuerung nicht für Diagonale oder Horizontale Steuerung ausgelegt. Dies könnte die schwierigste Aufgabe bei der Erstellung der Multiplayer Modi sein.
+	\item
+	\textbf{Einbinden der Level-Auswahl}
+	Den Spielern muss im Vorfelde die Möglichkeit gegeben werden den Spielmodus zu wählen.
+	\item
+	\textbf{Erstellung der Spieler-Arrays}
+	\item
+	\textbf{Anpassung im End-State: Siegerbestimmung}
+	Es ist denkbar das die Siegerbestimmung geändert werden muss. Aktuell werden Punkte hochgezählt und der Spieler welcher als erstes 10 Punkte erreicht hat gewonnen. Im Multiplayer Modus wird man von 10 leben runter spielen.
+	\item
+	\textbf{Anzeige der Punkte je Spieler}
+	Für jeden Spieler muss die Punktzahl gut sichtbar dargestellt werden. Es muss klar sein welche Score zu welchem Spieler gehört.
+	\item
+	\textbf{Erstellung von Wänden nach SpielerTod}
+	Im Multiplayer Modus spielt man ein Sudden Death Spiel. Also Spieler fliegen beim erreichen von 0 Leben aus dem Spiel. Die anderen müssen weiter spielen können ohne das der Ball durch das dann leere Tor gelangen kann.
 \end{itemize}
-\subsection{Änderungen gegenüber des 2 Spielermodus}
 \subsection{Anpassung der State Machine}
-\subsection{Anpassung des WallBuilders}
+In Zusammenarbeit mit unserem Architekten haben wir die State Machine überarbeitet um einen Mehrspielermodus zu erlauben.
+\newline
+Grundsätzlich sind folgende Änderungen vorgenommen worden:
+\begin{enumerate}
+	\item 
+	Zustand ''FirstPlayerConnected'' wird zu ''PlayerConnected'',
+	\newline
+	Der Zustand wird genutzt solange nicht alle Spieler verbunden sind. In dem Zustand wird jeder verbundene Spieler gezählt und sobald alle Verbunden sind geht es in den Zustand ''AllPlayersConnected''
+	\item
+	Zustand ''SecondPlayerConnected'' wird zu ''AllPlayerConnected'',
+	\newline
+	Die Funktion des Zustandes bleibt die selbe: Er dient dazu einen Timer zu starten nachdem Alle Spieler verbunden sind. Danach wird das Spiel gestartet.
+\end{enumerate}
 \subsection{Anpassung des Spieler Movements}
 Aktuell war der Bereich den der Spieler nutzen kann nur oben und unten Begrenzt. Mit der diagonalen Bewegung im 3 Spieler Modus muss die Positionsberechnung angepasst werden.
 \newline
-Im Wallbuilder werden den Spielern ab sofort Pfade mitgegeben auf denen sie sich bewegen dürfen. Hierbei muss beachtet werden das immer x&y Positionen beachtet werden. Da der Schläger ansonsten von dem Pfad losgelöst wird.
+Im Wallbuilder werden den Spielern ab sofort Pfade mitgegeben auf denen sie sich bewegen dürfen. Hierbei muss beachtet werden das immer x \& y Positionen beachtet werden. Da der Schläger ansonsten von dem Pfad losgelöst wird.
+\newline
+Die Lösung sieht wie folgt aus:
+\newline
+\begin{lstlisting}
+var dis = Phaser.Math.distance(path.from.x, path.from.y, 
+          path.to.x, path.to.y);
+var dx = ((path.from.x - path.to.x)) / dis;
+var dy = ((path.from.y - path.to.y)) / dis;
+
+var mM = Math.min(pos.y, dis);
+
+this.body.x = path.to.x + mM * dx;
+this.body.y = path.to.y + mM * dy;
+\end{lstlisting}
+Erklärung:
+\newline
+Es wird die Distanz des Bewegungspfades genommen (dis) und dann eine relative Änderung pro Achse berechnet.
+\newline
+mM Steht für ''Max Movement'' und begrenzt die Nutzereingabe.
+\newline
+Dann wird die Position ausgerechnet mit dem Startpunkt auf dem Pfad plus die relative Änderung multipliziert mit der Bewegung.
 \subsection{Einbinden der Levelauswahl}
-Die Levelauswahl habe ich in den Ersten State, den "InitialiseNewGame" State eingebunden in Form von Buttons für die 3 Spielmodi.
+Die Levelauswahl habe ich in den Ersten State, den ''InitialiseNewGame'' Zustand eingebunden in Form von Buttons für die 3 Spielmodi.
 Es wird die gewählte Spielerzahl an den nächsten State gegeben.
-\subsection{Siegerbestimmung}
-Die Siegerbestimmung 
-Der Wallbuilder muss dahingehend angepasst werden dass nicht nur ein 2 SPieler Feld sondern auch die beiden anderen Felder erstellt werden können.
-Hierzu habe ich für jedes Feld ein Object erstellt welches wie folgt aufgebaut ist:
+\newline
+Beim Klick auf einen der Buttons wird der ''Initial'' Zustand gestartet, die Buttons zerstört und in den Game Properties werden Variablen für die Spieleranzahl, Gamemode und verbleibende Spieleranzahl gesetzt.
+\subsection{Anpassung des WallBuilders}
+Der Wallbuilder muss dahingehend angepasst werden dass nicht nur ein 2 Spieler Feld sondern auch die beiden anderen Felder erstellt werden können.
+Hierzu habe ich für jedes Feld ein Objekt erstellt welches wie folgt aufgebaut ist:
 \begin{lstlisting}
 var field2Player = {
-  walls: [{from: {x: 0, y: 64}, to: {x: 640, y: 64}},
-    {from: {x: 640, y: 440}, to: {x: 0, y: 440}}],
-  scoreWalls: [{from: {x: 640, y: 64}, to: {x: 640, y: 440}},
-    {from: {x: 0, y: 440}, to: {x: 0, y: 64}}],
-  movingPaths: [{from: {x: 0, y: 64}, to: {x: 0, y: 440}},
-    {from: {x: 640, y: 64}, to: {x: 640, y: 440}}]
+walls: [{from: {x: 0, y: 64}, to: {x: 640, y: 64}},
+{from: {x: 640, y: 440}, to: {x: 0, y: 440}}],
+scoreWalls: [{from: {x: 640, y: 64}, to: {x: 640, y: 440}},
+{from: {x: 0, y: 440}, to: {x: 0, y: 64}}],
+movingPaths: [{from: {x: 0, y: 64}, to: {x: 0, y: 440}},
+{from: {x: 640, y: 64}, to: {x: 640, y: 440}}]
 };
 \end{lstlisting}
 Erklärung der Felder:
 \begin{itemize}
-\item
-walls: Die Statischen Wände. Sie dienen nur als Spielfeldbegrenzung.
-\item
-scoreWalls: Die Wände hinter den Schlägern.
-\item
-movinPaths: Die Pfade die ein Schläger sich bewegen kann. Es gibt start und endpunkt. Zwischen diesen kann der Schläger bewegt werden.
+	\item
+	walls: Die Statischen Wände. Sie dienen nur als Spielfeldbegrenzung.
+	\item
+	scoreWalls: Die Wände hinter den Schlägern. Sie sind unsichtbar und der Ball kollidiert nicht mit ihnen solange der Spieler noch im Spiel ist.
+	\item
+	movinPaths: Die Pfade die ein Schläger sich bewegen kann. Es gibt start und endpunkt. Zwischen diesen kann der Schläger bewegt werden.
 \end{itemize}
 Bis auf die Walls entspricht der Array Index immer der Spieler ID.
-Die aktuelle State Machine funktionierte nur für 2 Spieler.
-In Absprache mit Thorben haben wir 2 kleine Änderungen vorgenommen um einen Multispiler modus möglich zu machen:
-\begin{enumerate}
-\item
-Anpassung der Namen: Aus "FirstPlayerConneted" wurde "Playerconnected" der Zustand wird nun verwendet solange noch nicht alle Spieler anwesend sind. Ebenso wurde aus "SecondPlayerConnected" "AllPlayerConnected" und der Zustand gibt nun wieder wenn das Spiel bereit ist.
-\item
-Anpassung der Übergänge: Von dem "PlayerConnected" Zustand zu "AllPlayerConnected" gibt es jetzt eine andere Bedinung, diese ist das die Spieleranzahl erreicht werden muss. Wenn ein neuer Spieler kommt und nciht alle anwesend sind so wird "PlayerConnected" erneut aufgerufen.
-Anpassung der Übergänge
-\end{enumerate}

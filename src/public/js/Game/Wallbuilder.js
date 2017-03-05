@@ -6,33 +6,36 @@ var field2Player = {
     {from: {x: 640, y: 440}, to: {x: 0, y: 440}}],
   scoreWalls: [{from: {x: 640, y: 64}, to: {x: 640, y: 440}},
     {from: {x: 0, y: 440}, to: {x: 0, y: 64}}],
-  movingPaths: [{from: {x: 0, y: 440}, to: {x: 0, y: 64}},
-    {from: {x: 640, y: 440}, to: {x: 640, y: 64}}]};
+  movingPaths: [{from: {x: 20, y: 440}, to: {x: 20, y: 64}},
+    {from: {x: 620, y: 440}, to: {x: 620, y: 64}}]
+};
 
 var field3Player = {
   walls: [{from: {x: 99, y: 268}, to: {x: 195, y: 77}},
     {from: {x: 446, y: 77}, to: {x: 542, y: 268}},
     {from: {x: 446, y: 460}, to: {x: 195, y: 460}}],
-  scoreWalls: [{from: {x: 195, y: 77}, to: {x: 446, y: 77}},
-    {from: {x: 542, y: 268}, to: {x: 446, y: 460}},
-    {from: {x: 195, y: 460}, to: {x: 99, y: 268}}],
+  scoreWalls: [{from: {x: 195, y: 57}, to: {x: 446, y: 57}},
+    {from: {x: 542 + 14, y: 268 + 14}, to: {x: 446 + 14, y: 460 + 14}},
+    {from: {x: 195 - 14, y: 460 + 14}, to: {x: 99 - 14, y: 268 + 14}}],
   movingPaths: [{from: {x: 446, y: 77}, to: {x: 195, y: 77}},
     {from: {x: 446, y: 460}, to: {x: 542, y: 268}},
-    {from: {x: 195, y: 460}, to: {x: 99, y: 268}}]};
+    {from: {x: 195, y: 460}, to: {x: 99, y: 268}}]
+};
 
 var field4Player = {
   walls: [{from: {x: 112, y: 128}, to: {x: 189, y: 51}},
     {from: {x: 450, y: 51}, to: {x: 528, y: 128}},
     {from: {x: 528, y: 393}, to: {x: 450, y: 468}},
     {from: {x: 189, y: 468}, to: {x: 112, y: 393}}],
-  scoreWalls: [{from: {x: 189, y: 51}, to: {x: 450, y: 51}},
-    {from: {x: 528, y: 128}, to: {x: 528, y: 393}},
-    {from: {x: 450, y: 468}, to: {x: 189, y: 468}},
-    {from: {x: 112, y: 393}, to: {x: 112, y: 128}}],
+  scoreWalls: [{from: {x: 189, y: 31}, to: {x: 450, y: 31}},
+    {from: {x: 548, y: 128}, to: {x: 548, y: 393}},
+    {from: {x: 450, y: 488}, to: {x: 189, y: 488}},
+    {from: {x: 92, y: 393}, to: {x: 92, y: 128}}],
   movingPaths: [{from: {x: 450, y: 51}, to: {x: 189, y: 51}},
     {from: {x: 528, y: 393}, to: {x: 528, y: 128}},
-    {from: {x: 189, y: 468}, to:{x: 450, y: 468}},
-    {from: {x: 112, y: 393}, to: {x: 112, y: 128}}]};
+    {from: {x: 189, y: 468}, to: {x: 450, y: 468}},
+    {from: {x: 112, y: 393}, to: {x: 112, y: 128}}]
+};
 
 // Color Codes for the paddles, although only 4 paddles are used all 6 are defined
 // Grey, Red, Green, Blue, Yellow, Pink
@@ -115,18 +118,19 @@ var build3PlayerField = function (game, wallSprite) {
 };
 
 var build4PlayerField = function (game, wallSprite) {
+  resizeWindow(game, game.properties.width, game.properties.height + 40)
   var scorePlayer0 = createText(game, colorCodes.grey);
-  scorePlayer0.setTextBounds(0, 0, (game.width / 2) - 10, 64);
+  scorePlayer0.setTextBounds(0, 0, (game.width / 4), 64);
 
   var scorePlayer1 = createText(game, colorCodes.red);
-  scorePlayer1.setTextBounds((game.width / 2) - 20, 0, 40, 64);
+  scorePlayer1.setTextBounds((game.width / 4), 0, (game.width / 4), 64);
 
 
   var scorePlayer2 = createText(game, colorCodes.green);
-  scorePlayer2.setTextBounds((game.width / 2) + 20, 0, (game.width / 2) - 20, 64);
+  scorePlayer2.setTextBounds((game.width / 2), 0, (game.width / 4), 64);
 
   var scorePlayer3 = createText(game, colorCodes.blue);
-  scorePlayer3.setTextBounds(0, 0, (game.width / 2) + 10, 64);
+  scorePlayer3.setTextBounds((game.width / 4) * 3, 0, (game.width / 4), 64);
 
   var walls = game.add.group();
 
@@ -173,6 +177,21 @@ function createText(game, color) {
   var style0 = {font: "bold 32px Arial", fill: color, boundsAlignH: "center", boundsAlignV: "middle"};
   return game.add.text(0, 0, "10", style0);
 }
+function resizeWindow(game, _width, _height) {
+  game.width = _width;
+  game.height = _height;
+  game.stage.width = _width;
+  game.stage.height = _height;
+  if (game.renderType === Phaser.WEBGL) {
+    game.renderer.resize(_width, _height);
+  }
+  game.world.setBounds(0, 0, _width, _height);
+  game.camera.setSize(_width, _height);
+  game.camera.setBoundsToWorld();
+  game.scale.setShowAll();
+  game.scale.refresh();
+}
+
 module.exports.build2PlayerField = build2PlayerField;
 module.exports.build3PlayerField = build3PlayerField;
 module.exports.build4PlayerField = build4PlayerField;
