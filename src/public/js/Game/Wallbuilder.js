@@ -33,7 +33,7 @@ var field4Player = {
     {from: {x: 92, y: 393}, to: {x: 92, y: 128}}],
   movingPaths: [{from: {x: 450, y: 51}, to: {x: 189, y: 51}},
     {from: {x: 528, y: 393}, to: {x: 528, y: 128}},
-    {from: {x: 189, y: 468}, to: {x: 450, y: 468}},
+    {from: {x: 450, y: 468}, to: {x: 189, y: 468}},
     {from: {x: 112, y: 393}, to: {x: 112, y: 128}}]
 };
 

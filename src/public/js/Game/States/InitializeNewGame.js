@@ -23,6 +23,7 @@ var state = function (game) {
     }
   };
   this.create = function () {
+    this.sizeToNormal();
 
     // Create Buttons:
     this.game.button2Player = game.add.button(game.world.centerX - 160 - 64, 200, 'button2', this.start2Player, this, 2, 1, 0);
@@ -56,25 +57,27 @@ var state = function (game) {
     this.game.button2Player.destroy();
     this.game.button3Player.destroy();
     this.game.button4Player.destroy();
+  };
+  this.sizeToNormal = function () {
+    this.game.width = this.game.properties.width;
+    this.game.height = this.game.properties.height;
+    this.game.stage.width = this.game.properties.width;
+    this.game.stage.height = this.game.properties.height;
+    if (this.game.renderType === Phaser.WEBGL) {
+      this.game.renderer.resize(this.game.properties.width, this.game.properties.height);
+    }
+    this.game.world.setBounds(0, 0, this.game.properties.width, this.game.properties.height);
+    this.game.camera.setSize(this.game.properties.width, this.game.properties.height);
+    this.game.camera.setBoundsToWorld();
+    this.game.scale.setShowAll();
+    this.game.scale.refresh();
+
   }
 };
 
 
 //In case we need to adjust the game view:
-function resizeWindow(_width, _height) {
-  game.width = _width;
-  game.height = _height;
-  game.stage.width = _width;
-  game.stage.height = _height;
-  if (game.renderType === Phaser.WEBGL) {
-    game.renderer.resize(_width, _height);
-  }
-  game.world.setBounds(0, 0, _width, _height);
-  game.camera.setSize(_width, _height);
-  game.camera.setBoundsToWorld();
-  game.scale.setShowAll();
-  game.scale.refresh();
-}
+
 
 state.prototype = Object.create(abstractState.prototype);
 state.prototype.constructor = state;
