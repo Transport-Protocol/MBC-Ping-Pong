@@ -1,23 +1,18 @@
-var Player = function (game, wallPack, ball, key, frame) {
+var Player = function (game, fieldInfo, ball, sprite, frame) {
   var _ball = ball;
-  var _wallPack = wallPack;
+  var _fieldInfo = fieldInfo;
   var _game = game;
   var _frame = frame;
   var points = 10;
   var maxPoints = points;
-  var xDiff = Math.round(20 * Math.sin(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
-  var yDiff = Math.round(20 * Math.cos(wallPack.pointWall.body.rotation + (0.5 * Math.PI)));
-  console.log(xDiff + " : " + yDiff);
-  Phaser.Sprite.call(this, game, wallPack.pointWall.body.x + xDiff, wallPack.pointWall.body.y + yDiff, key, _frame);
+  var place = placePlayer(fieldInfo);
+  Phaser.Sprite.call(this, game, place.x, place.y, sprite, _frame);
 
   // Set Physic
   game.physics.p2.enable(this, this.game.properties.debug);
-  this.body.rotation = wallPack.pointWall.body.rotation;
+  this.body.rotation = fieldInfo.pointWall.body.rotation;
   this.body.kinematic = true;
   this.body.setRectangle(32, this.height, -16, 0);
-
-
-
 
   var _buffer = [];
 
@@ -27,36 +22,57 @@ var Player = function (game, wallPack, ball, key, frame) {
 
   this.body.createBodyCallback(ball, this.collideWithBall, this);
 
+
   this.collideWithPointwall = function (wallBody, ballBody) {
-    points--;
     console.log("Hit PointWall, Points: " + points);
-    _wallPack.opponentScoreText.text = "" + (maxPoints - points);
-    if (points <= 0) {
-      _game.state.start("GameEnded", false, false);
-    } else {
-      _ball.reset();
+    if (_game.properties.mode == 2) {
+      points--;
+      _fieldInfo.opponentScoreText.text = "" + (maxPoints - points);
+      if (points <= 0) {
+        _game.state.start("GameEnded", false, false);
+      } else {
+        _ball.reset();
+      }
+    }
+    else {
+      if (this.getLives() > 0) {
+        points--;
+
+        _fieldInfo.opponentScoreText.text = "" + this.getLives();
+        if (this.getLives() == 0) {
+          fieldInfo.pointWall.renderable = true;
+          this.destroy();
+          if (--_game.properties.remainingPlayers <= 1) {
+            _game.state.start("GameEnded", false, false);
+          }
+        } else {
+          _ball.reset();
+        }
+      }
     }
   };
 
-  wallPack.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
+  fieldInfo.pointWall.body.createBodyCallback(ball, this.collideWithPointwall, this);
 
   this.addPositionToBuffer = function (x, y) {
     _buffer.push({"x": x, "y": y});
   };
 
   this.update = function () {
-
     while (_buffer.length > 0) {
       var pos = _buffer.shift();
-      //@TODO: diagonal movement is impossible
-      if (pos.y - this.height / 2 < wallPack.upperWall.y) {
-        this.body.y = wallPack.upperWall.y + this.height / 2;
-      } else if (pos.y + this.height / 2 > wallPack.lowerWall.y) {
-        this.body.y = wallPack.lowerWall.y - this.height / 2;
-      } else {
-        this.body.y = pos.y;
-      }
-      //this.body.y = Math.max(Math.min(wallPack.lowerWall.body.y, pos.y - this.height/2) + this.height, wallPack.upperWall.body.y);
+
+      var path = fieldInfo.path;
+
+      var dis = Phaser.Math.distance(path.from.x, path.from.y, path.to.x, path.to.y);
+      var dx = ((path.from.x - path.to.x)) / dis;
+      var dy = ((path.from.y - path.to.y)) / dis;
+
+      var mM = Math.min(pos.y + this.height / 2, dis - this.height / 2);
+
+      // Movement is working.
+      this.body.x = path.to.x + mM * dx;
+      this.body.y = path.to.y + mM * dy;
     }
   };
 
@@ -64,24 +80,28 @@ var Player = function (game, wallPack, ball, key, frame) {
     return maxPoints - points;
   };
 
+  this.getLives = function () {
+    return points;
+  };
+
   this.getPlayerName = function () {
-    switch (_frame) {
-      case 0:
-        return "Links";
-        break;
-      case 1:
-        return "Rechts";
-        break;
-      case 2:
-        return "Oben";
-        break;
-      case 3:
-        return "Unten";
-        break;
-      default:
-        return "undefined";
-    }
-  }
+    var names = ["Grau", "Rot", "Grün", "Blau"];
+    return names[_frame];
+  };
+
+
+};
+
+function placePlayer(fieldInfo) {
+  var path = fieldInfo.path;
+
+  var dis = Phaser.Math.distance(path.from.x, path.from.y, path.to.x, path.to.y);
+  var dx = ((path.from.x - path.to.x)) / dis;
+  var dy = ((path.from.y - path.to.y)) / dis;
+
+  var mM = dis / 2;
+
+  return {"x": path.to.x + mM * dx, "y": path.to.y + mM * dy};
 };
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
