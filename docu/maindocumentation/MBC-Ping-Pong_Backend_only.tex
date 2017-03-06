@@ -1,0 +1,177 @@
+\documentclass[draft=false
+              ,paper=a4
+              ,twoside=false
+              ,fontsize=11pt
+              ,headsepline
+              ,BCOR10mm
+              ,DIV11
+              ]{scrbook}
+\usepackage[ngerman,english]{babel}
+%% see http://www.tex.ac.uk/cgi-bin/texfaq2html?label=uselmfonts
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage{libertine}
+\usepackage{pifont}
+\usepackage{microtype}
+\usepackage{textcomp}
+\usepackage[german,refpage]{nomencl}
+\usepackage{setspace}
+\usepackage{makeidx}
+\usepackage{listings}
+\usepackage{natbib}
+\usepackage[ngerman,colorlinks=true]{hyperref}
+\usepackage{soul}
+\usepackage{hawstyle}
+\usepackage{lipsum} %% for sample text
+\usepackage{tocbibind}
+\usepackage{amsmath} 
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage[section]{placeins}
+\usepackage{grffile}
+\usepackage{float}
+
+%% define some colors
+\colorlet{BackgroundColor}{gray!20}
+\colorlet{KeywordColor}{blue}
+\colorlet{CommentColor}{black!60}
+%% for tables
+\colorlet{HeadColor}{gray!60}
+\colorlet{Color1}{blue!10}
+\colorlet{Color2}{white}
+
+%% configure colors
+\HAWifprinter{
+  \colorlet{BackgroundColor}{gray!20}
+  \colorlet{KeywordColor}{black}
+  \colorlet{CommentColor}{gray}
+  % for tables
+  \colorlet{HeadColor}{gray!60}
+  \colorlet{Color1}{gray!40}
+  \colorlet{Color2}{white}
+}{}
+\lstset{%
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=5pt,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{KeywordColor}\bfseries,
+  identifierstyle=\color{black},
+  commentstyle=\color{CommentColor},
+  backgroundcolor=\color{BackgroundColor},
+  captionpos=b,
+  fontadjust=true
+}
+\lstset{escapeinside={(*@}{@*)}, % used to enter latex code inside listings
+        morekeywords={uint32_t, int32_t}
+}
+\ifpdfoutput{
+  \hypersetup{bookmarksopen=false,bookmarksnumbered,linktocpage}
+}{}
+
+%% more fancy C++
+\DeclareRobustCommand{\cxx}{C\raisebox{0.25ex}{{\scriptsize +\kern-0.25ex +}}}
+
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+
+% unknown hyphenations
+\hyphenation{
+}
+
+%% recalculate text area
+\typearea[current]{last}
+
+\makeindex
+\makenomenclature
+
+\begin{document}
+\selectlanguage{ngerman}
+
+%%%%%
+%% customize (see readme.pdf for supported values)
+\HAWThesisProperties{Author={Andreas Müller}
+                    ,Title={MBC-Ping-Pong Backend}
+                    ,EnglishTitle={MBC-Ping-Pong Backend}
+                    ,ThesisType={Projektarbeit}
+                    ,ExaminationType={Wahlpflichtfach}
+                    ,DegreeProgramme={Bachelor of Science Angewandte Informatik}
+                    ,ThesisExperts={Prof. Dr. Martin Becke}
+                    ,ReleaseDate={\today}
+                  }
+
+%% title
+\frontmatter
+
+%% output title page
+\maketitle
+
+\onehalfspacing
+
+%% add abstract pages
+%% note: this is one command on multiple lines
+\HAWAbstractPage
+%% German abstract
+{Ping-Pong, NodeJS, JavaScript, WebRTC}%
+{In diesem Dokument wird das Projekt im MBC-Ping-Pong, das im Rahmen des Wahlpflichtfaches Modernebrowserkommunikation an der HAW-Hamburg erstellt wird, behandelt. Dieses Dokument behandelt das Backend und dem damit entstandenen Kommunikationsmodul. }
+%% English abstract
+{Ping-Pong, NodeJS, JavaScript, WebRTC}%
+{This document is about the Project MBC-Ping-Pong, which is made for the elective course Modernebrowserkommunikation at HAW-Hamburg. This document is about the Backend and the thus implemented communication module. }
+
+\newpage
+\singlespacing
+
+\tableofcontents
+\newpage
+%% enable if these lists should be shown on their own page
+\listoftables
+\listoffigures
+%%\lstlistoflistings
+
+%% main
+\mainmatter
+\onehalfspacing
+%% write to the log/stdout
+\typeout{===== File: chapter 1}
+%% include chapter file (chapter1.tex)
+%%\include{chapter1}
+
+
+\include{Backend}
+
+See also \cite{sample_bib}.
+
+
+%%%%
+
+%% appendix if used
+%%\appendix
+%%\typeout{===== File: appendix}
+%%\include{appendix}
+
+% bibliography and other stuff
+\backmatter
+
+\typeout{===== Section: literature}
+%% read the documentation for customizing the style
+\bibliographystyle{dinat}
+\bibliography{MBC-Ping-Pong_Backend_only}
+
+\typeout{===== Section: nomenclature}
+%% uncomment if a TOC entry is needed
+%%\addcontentsline{toc}{chapter}{Glossar}
+\renewcommand{\nomname}{Glossar}
+\clearpage
+\markboth{\nomname}{\nomname} %% see nomencl doc, page 9, section 4.1
+\printnomenclature
+
+%% index
+\typeout{===== Section: index}
+\printindex
+
+\HAWasurency
+
+\end{document}

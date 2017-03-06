@@ -1,20 +1,39 @@
 \chapter{Backend}
 
+
+\section{Benennungen}
+Folgend einige Begriffe, die häufig verwendet werden.
+\begin{description}
+\item[Multi-Peer]
+Ein Multi-Peer ist ein Peer, welcher gleichzeitig Verbindungen zu mehreren anderen Peers pflegt.
+
+\item[Single-Peer]
+Ein Single-Peer ist ein Peer, welcher nur eine Verbindung zu einem anderen Peer pflegt.
+
+\item[ControlPeer]
+Der ControlPeer ist in diesem Projekt ein Peer, welcher Steuereingaben von dem Spieler annimmt und an den OutputClient sendet.
+
+\item[OutputClient]
+Der OutputClient ist in diesem Projekt ein Peer, welcher die Steuerangaben von den ControlPeer zugesendet bekommst und diese auswertet.
+\end{description}
+
+
+
 \section{Kommunikation}
 
 \subsection{Zeitkritische Informationen}
 Als zeitkritisch werden Informationen eingestuft, sofern sie die direkten 
-Eingaben der ControlClients und eventuelles Feedback des OutputClient betreffen. 
-Da es sich um ein Reaktionsspiel handel,t müssen diese Daten zeitnah von Sender 
+Eingaben eines Peers, hier der ControlClients, und eventuelles Feedback eines anderes Peers, hier des OutputClient, betreffen. 
+Da es sich bei diesem Projekt um ein Reaktionsspiel handelt, müssen diese Daten zeitnah von Sender 
 zu Empfänger gelangen. Solch eine Relation ist nur über eine Peer-to-Peer 
-Verbindung zu realisieren.
+Verbindung unter Verwendung von UDP zu realisieren.
 
 
 
 \subsection{Möglichkeit 1: Predefined Packages 'rtc.io'}
 Der NodeJS Server wird als Verbindungsserver für die Etablierung einer 
 Peer-to-Peer Verbindung zwischen ControlClients und OutputClient genutzt. Als 
-Technik wird konret WebRTC eingesetzt. Auf dem NodeJS-Server wir das Package 
+Technik wird konkret WebRTC eingesetzt. Auf dem NodeJS-Server wird das Package 
 "rtc-switchboard" eingesetzt, welches eine Grundlage für einen  
 Signalisierungsserver ist. Die Clients nutzen "rtc-quickconnect" um neues 
 Channels anzufordern und eine Peer-to-Peer Verbindung zu etablieren.
@@ -88,17 +107,21 @@ Signalling events werden von Client-Server Kommunikation direkt zu P2P
 \begin{itemize}
 \item
 Wenig Einfluss auf die Upgrade-Mechanismen.
+
+\item
+Teils sehr instabil.
 \end{itemize}
 
 
 
 \subsection{Möglichkeit 4: Eigenes Kommunikationsmodul}
-Aus Basis der WebRTC Standartimplementierung von den Browsern, kann eine eigene Schicht entwickelt werden, welche den Kommunikatinsaufbau (das Signalling) und die Kommunikationsabläufe regelt. Dies müsste auf einer generischen Basis geschehen um allen Anforderungen des Programmes gerecht zu werden.
+Aus Basis der WebRTC Standartimplementierung von den Browsern, kann eine eigene Schicht entwickelt werden, welche den Kommunikatinsaufbau (das Signalling) und die Kommunikationsabläufe regelt. 
+Dies müsste auf einer generischen Basis geschehen um allen Anforderungen des Programmes gerecht zu werden.
 
 \subsubsection{Vorteile}
 \begin{itemize}
 \item
-Volle Kontroller über Signalling und Verwaltungsabläufe der Verbindungen.
+Volle Kontrolle über Signalling und Verwaltungsabläufe der Verbindungen.
 
 \item
 Möglichkeit für schnelle Anpassungen.
@@ -137,21 +160,26 @@ verursacht aber intern wieder mehr Fehler und sorgt für eine inkonsistente Modu
 
 
 
-\subsection{Fazit}
+\subsection{Entscheidung}
 Die eigene Implementation auf Basis des WebRTC bietet die meisten Möglichkeiten, birgt jedoch auch die meisten Risiken. 
-RTC.io bietet eine Implementation die sehr gut für Prototypen geeignet ist, aber neben dem Zeitunkritischen Signalling eine eigene Einheit bietet, welche eine Generalisierung des WebRTC darstellt und somit viel Overhead besitzt. 
-Die P2P-Imeplementierung von Socket.io steht von der Implementierungs-Komplexität in der Mitte. Es bietet viele bereits bekannte Mechanismen des Client-Server Signalling über Events, welche mit einem Upgrade nun auch von Client zu Client funktionieren. Dagegen spricht jedoch die instabilität der P2P-Implementation von Socket.io.
+RTC.io bietet eine Implementation die sehr gut für Prototypen geeignet ist, aber neben dem zeitunkritischen Signalling eine eigene Einheit bietet, welche eine Generalisierung des WebRTC darstellt und somit viel Overhead besitzt. 
+Die P2P-Imeplementierung von Socket.io steht von der Implementierungs-Komplexität in der Mitte. 
+Es bietet viele bereits bekannte Mechanismen des Client-Server Signalling über Events, welche mit einem Upgrade nun auch von Client zu Client funktionieren. 
+Dagegen spricht jedoch die instabilität der P2P-Implementation von Socket.io. \\ \\
 
-Eine eigene Implementation eines Modules auf Basis der von den Browsern gegebenen WebRTC-Schnittstelle ist die Wahl. Sie bietet die größtmögliche Flexibilität im Bezug auf Veränderbarkeit und Anpassung im laufenden Entwicklungszyklus. Als Risiko ist besonders der große Aufwand anzusehen.
+Eine eigene Implementation eines Modules auf Basis der von den Browsern gegebenen WebRTC-Schnittstelle ist die Wahl. 
+Sie bietet die größtmögliche Flexibilität im Bezug auf Veränderbarkeit und Anpassung im laufenden Entwicklungszyklus. 
+Als Risiko ist besonders der große Aufwand anzusehen.
 
 
 
 \section{Eigenes Modul Kommunikation}
+
 \subsection{Anforderungen an das eigene Modul für WebRTC}
 \begin{itemize}
 \item 
 Es muss möglich sein, unsere ControlPeers nur mit dem DisplayPeer zu verbinden, 
-nicht aber untereinander (Sterntopologie, wobei der DisplayPeer das Zentrum ist).
+nicht aber untereinander (Sterntopologie, wobei der DisplayPeer der Knoten ist).
 
 \item
 Der DisplayPeer muss zu jedem ihm zugeordneten ControlPeer verbunden sein.
@@ -169,7 +197,7 @@ Das Signalling muss weiterhin über den Server stattfinden.
 \subsection{Zuweisungslogik Server}
 Der Server hat bezüglich der Zuweisungen für Verbindungen die Aufgabe alle 
 Clients zu gruppieren. Dies soll ähnlich wie bei Socket.io über eine Raumlogik 
-geschehen. Es existieren Räume, in welche die Sockets auf dem Server (je Client 
+geschehen. Es existieren Räume, in welche die WebSockets auf dem Server (je Client 
 also einer) eingeordnet werden.
 
 
@@ -218,6 +246,7 @@ Signalling gesetztes Attribut in den Signalling Nachrichten: "from". Über diese
 Attribut weiß der Multi-Peer von wem diese Signalling-Message kommt und kann so 
 alle ankommenden Informationen diesem Single-Peer zuordnen. Somit wird unter dem 
 Alias des Single-Peer ein eigenes "webRTCConnection"-Objekt verwaltet/abgelegt.
+Verwendet wird hierzu ein "Assoziativer" Array, näheres in \ref{associativearray}.
 
 
 
@@ -250,7 +279,7 @@ diesem Projekt ein Spiel darstellt, ein Single-Peer (Control-Peer) aber nur
 einem bestehenden Spiel beitreten kann. Sollte der Raum bereits existieren und 
 alle weiteren Spielablaufrelevanten Informationen stimmen (das Spiel darf zum 
 Beispiel noch nicht angefangen haben), so tritt der Single-Peer diesem Raum bei. 
-Direkt nach dem Beitreten eines Raumes, wird eine Signal an den Server gesendet, 
+Direkt nach dem Beitreten eines Raumes, wird ein Signal an den Server gesendet, 
 dass wir da sind.
 
 \item[Server]
@@ -325,8 +354,8 @@ finden. Es ist ein Object dieses Typs zu erzeugen.
 
 \item[Modul.Server]
 Unter Modul.Server ist eine Repräsentation des Servers zu finden. Für jeden auf 
-dem Server neu Verbundenen Client muss eine neue (anonyme) Instanz dieses Typs 
-erstellt und dabei der Socket der mit dem Client verbunden ist übergeben werden.
+dem Server neu Verbundenen Client muss eine neue (anonyme möglich) Instanz dieses Typs 
+erstellt und dabei der WebSocket (socket.io), der mit dem Client verbunden, ist übergeben werden.
 
 \item[Modul.ServerRooms]
 Unter Modul.ServerRooms ist eine Simple Liste der derzeitigen Räume auf dem 
@@ -366,12 +395,15 @@ Peers.
 \section{Eigenes Modul: Generischer Ansatz}
 
 \subsection{Generische Anforderung}
-Als Anfoforderung gilt, dass die Implementierung des Moduls von unserer Nutzung für das Ping-Pong Projekt entkoppelt ist. Dies ist als gegeben anzusehen, wenn die Implementation keine Hinweise auf dieses Projekt hinterlässt und Möglichkeiten zu Umsetzung anderer beliebiger Projekte bietet, ohne Anpassungen vornehmen zu müssen.
+Als Anforderung gilt, dass die Implementierung des Moduls von unserer Nutzung für das Ping-Pong Projekt entkoppelt ist. 
+Dies ist als gegeben anzusehen, wenn die Implementation keine Hinweise auf dieses Projekt hinterlässt und Möglichkeiten zu Umsetzung anderer beliebiger Projekte bietet, ohne Anpassungen vornehmen zu müssen.
 
 
 
 \subsection{Generische Umsetzung}
 Im folgenden wird die allgemeine generische Umsetzung am Beispiel der Callbacks und Topologien gezeigt.
+
+
 
 \subsubsection{Generische Umsetzung: Allgemein}
 Im allgemeinen gibt es zwei Klassen von Peers, die ein Client nutzen kann.
@@ -386,7 +418,7 @@ Im allgemeinen gibt es zwei Klassen von Peers, die ein Client nutzen kann.
   \end{description}
 \end{quote}
 
-Aus Kombinationen dieser Modi lassen sich verschiedene Topologien bilden. Näheres unter "Generische Umsetzung: Topologien".
+Aus Kombinationen dieser Modi lassen sich verschiedene Topologien bilden. Näheres unter \ref{generictopology}.
 
 
 
@@ -407,11 +439,11 @@ Diese Ereignisse umfassen z.B:
   \end{description}
 \end{quote}
 
-Weiteres zu der direkten Verwendung der Callback-Functionen unter "Eigenes Modul Verwendung: Callbacks".
+Weiteres zu der direkten Verwendung der Callback-Functionen unter \ref{callbacks}.
 
 
 
-\subsubsection{Generische Umsetzung: Topologien}
+\subsubsection{Generische Umsetzung: Topologien} \label{generictopology}
 Es lassen sich durch die Verwendung der zwei Modi verschiedene Topologien bilden.
 
 
@@ -452,7 +484,7 @@ Es lassen sich durch die Verwendung der zwei Modi verschiedene Topologien bilden
 
 \section{Eigenes Modul: Verwendung}
 
-\subsection{Eigenes Modul Verwendung: Client}
+\subsection{Verwendung des Client}
 
 \subsubsection{Abhängigkeiten}
 \begin{figure}[htH]
@@ -527,7 +559,7 @@ Die Nutzlast der Nachricht. Hierbei ist hervorzuheben, dass dies Nutzlast im For
 
 
 
-\subsection{Eigenes Modul Verwendung: Server}
+\subsection{Verwendung des Server}
 \subsubsection{Abhängigkeiten}
 \begin{figure}[htH]
 \centering
@@ -564,7 +596,7 @@ In Abbildung \ref{backfig8} ist zu sehen, wie das Modul für Server genutzt wird
 
 
 
-\subsection{Eigenes Modul Verwendung: Callbacks}
+\subsection{Verwendung der Callbacks} \label{callbacks}
 Alle wichtigen Ereignisse, welche den reibungslosen Aufbau und Betrieb der Verbindung betrifft, wird intern geregelt. Dem Nutzer des Moduls ist es jedoch möglich, eigene Callbacks zu definieren, die bei gewissen Ereignissen aufgerufen werden.
 \begin{figure}[htH]
 \centering
@@ -611,7 +643,7 @@ Die Callback Funktion wird hierbei mit einem Parameter aufgerufen.
 
 
 
-\subsection{Eigenes Modul Verwendung: Optionen} \label{moduleoptions}
+\subsection{Verwendung der Optionen} \label{moduleoptions}
 \begin{description}
 \item[Client]
 Beim Erstellen eines Client-Objektes können gewisse Optionen mit übergeben werden. Hierbei kann eine beliebige Anzahl dieser genutzt werden. Wird eine Option nicht genutzt, tritt ein default in Kraft (default mit = markiert):
@@ -737,7 +769,7 @@ Sobal das weiche Kriterium nicht mehr erfüllt ist, ist ein Erfolg im allgemeine
 
 
 
-\subsection{Allgemeiner Performanceaspekt}
+\subsection{Allgemeiner Performanceaspekt} \label{associativearray}
 Bei diesen Tests sollte berücksichtigt werden, dass der Verarbeitungsaufwand nach erhalt der Nachrichten sich lediglich auf das richtige weiterleiten der Nachricht beschränkt. 
 Dabei wird die Nachricht an eine Callback Funktion weitergereicht und dann eine neue Nachricht an einen Peer versendet. 
 Tragend für die Performance ist hier die Verwaltung der Verbindungen.
@@ -765,7 +797,7 @@ Concurrency ist mit JavaScript unter den hier genutzten Techniken nicht möglich
 
 
 
-\subsection{Eigenes Modul Performance: Beispiel am Projekt}
+\subsection{Performance: Beispiel am Projekt}
 
 \subsubsection{Beschreibung}
 Dieser Test soll die Bedingungen des Projektes wiederspiegeln.
@@ -839,7 +871,7 @@ Bezogen auf das Ping-Pong Projekt, welches Spieler-/Peerzahlen unter 10 nutzt, s
 
 
 
-\subsection{Eigenes Modul Performance: Beispiel für Chat}
+\subsection{Performance: Beispiel für Chat}
 
 \subsubsection{Beschreibung}
 Folgender Test nimmt sich eine Chat-Anwendung als Beispiel.
@@ -900,7 +932,7 @@ Chatanwendungen auf dieser Basis stellen theoretisch keine Probleme dar.
 
 
 
-\subsection{Eigenes Modul Performance: Beispiel extreme}
+\subsection{Performance: Beispiel extreme}
 \subsubsection{Beschreibung}
 Das extreme Beispiel soll zeigen, wie sich eine hohe Sendefrequenz auswirkt. Beispiel hierfür soll sein, dass Steuerdaten zu jedem Bild verarbeitet werden sollen. Hierbei markant, es soll sich um einen 144Hz Monitor handeln. (Aufgrund Rundung: 142.85Hz)
 
@@ -929,7 +961,7 @@ Das extreme Beispiel soll zeigen, wie sich eine hohe Sendefrequenz auswirkt. Bei
 \begin{figure}[htH]
 \centering
 \includegraphics[width=0.9\textwidth]{backend/Diagramm_Performance_144hz.PNG}
-\caption{Diagramm Performancetest Chat}
+\caption{Diagramm Performancetest 144Hz}
 \label{backfig18}
 \end{figure}
 In Abbildung \ref{backfig16} ist das Ergebnis der Tests zu erkennen. 
@@ -947,7 +979,7 @@ Befindet sich die gelbe Linie über der roten Linie ist das "Soft"-Kriterium nic
 \begin{figure}[htH]
 \centering
 \includegraphics[width=0.9\textwidth]{backend/Tabelle_Performance_144hz.PNG}
-\caption{Tabelle Performancetest Chat}
+\caption{Tabelle Performancetest 144Hz}
 \label{backfig19}
 \end{figure}
 In Abbildung \ref{backfig19} sind die Ergebnisse noch einmal Tabellarisch dargestellt.
@@ -981,7 +1013,7 @@ Sofern das "Hard"-Kriterium kein muss ist, können solche Mengen an Nachrichten 
 
 \section{Eigenes Modul: Möglichkeiten}
 
-\subsection{Eigenes Modul Möglichkeiten: Verwendbar}
+\subsection{Verwendbarkeit}
 Das Modul ist wie im Projekt genutzt getestet und verwendbar. 
 Es ist generisch nutzbar.
 Einige zusätzliche Features, welche auch für das Projekt nicht von Relevanz waren, sind nur teilweise implementiert oder nicht getestet. 
@@ -1008,7 +1040,7 @@ Backup funktionalität über WebSocket. Grund ist, dass ein Test in verschiedene
 \end{itemize}
 
 
-\subsection{Eigenes Modul Möglichkeiten: Erweiterbar}
+\subsection{Erweiterbarkeit}
 \begin{itemize}
 \item
 Angesichts der verschiedenen möglichen Topologien gibt es für die Peers nur zwei verschiedene Verhalten. 
@@ -1032,3 +1064,8 @@ Diese Nutzer-Implementation könnte dann auch die Teilvermaschung ermöglichen.
 
 
 \section{Fazit der Arbeit am Modul}
+Die große Fehlermenge anderer Module zeigt, wie komplex ein genau definiertes Thema sein kann.
+Etliche verschiedene kleine Abweichungen der Browserspezifischen WebRTC-Implementationen führen dazu, dass auf viele "Marotten" eingegangen werden muss.
+Auch wenn dieses Modul einen bis dato guten Ansatz liefert, fehlen noch viele bereits beschriebene Features, um dieses Modul ein vollständiges nennen zu können.
+Die Erstellung eines solchen Moduls ist vom Umfang her größer einzuordnen, als anfänglich erwegt. 
+Viele Refactoringschritte wurden nicht durchgeführt, dar der Zeitliche Aspekt dieses Projektes dies nicht mehr zu ließ.
