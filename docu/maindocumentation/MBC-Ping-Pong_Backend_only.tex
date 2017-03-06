@@ -93,9 +93,9 @@
 
 %%%%%
 %% customize (see readme.pdf for supported values)
-\HAWThesisProperties{Author={Andreas Müller, Claus Torben Haug, Jan Dennis Bartels, Marjan Bachtiari}
-                    ,Title={MBC-Ping-Pong}
-                    ,EnglishTitle={MBC-Ping-Pong}
+\HAWThesisProperties{Author={Andreas Müller}
+                    ,Title={MBC-Ping-Pong Backend}
+                    ,EnglishTitle={MBC-Ping-Pong Backend}
                     ,ThesisType={Projektarbeit}
                     ,ExaminationType={Wahlpflichtfach}
                     ,DegreeProgramme={Bachelor of Science Angewandte Informatik}
@@ -116,10 +116,10 @@
 \HAWAbstractPage
 %% German abstract
 {Ping-Pong, NodeJS, JavaScript, WebRTC}%
-{In diesem Dokument wird das Projekt im MBC-Ping-Pong, das im Rahmen des Wahlpflichtfaches Modernebrowserkommunikation an der HAW-Hamburg erstellt wird, behandelt. Hierbei handelt es sich um eine Pong Clone welcher auf einem zentralen Bildschirm spielbar ist und mnittels WebRTC gesteuert wird. Es wird auf die Architektur, JavaScript, Frontend und Backend eingegangen. }
+{In diesem Dokument wird das Projekt im MBC-Ping-Pong, das im Rahmen des Wahlpflichtfaches Modernebrowserkommunikation an der HAW-Hamburg erstellt wird, behandelt. Dieses Dokument behandelt das Backend und dem damit entstandenen Kommunikationsmodul. }
 %% English abstract
 {Ping-Pong, NodeJS, JavaScript, WebRTC}%
-{This document is about the Project MBC-Ping-Pong, which is made for the elective course Modernebrowserkommunikation at HAW-Hamburg. Its about a Pong clone, played on a central screen nd controled via WebRTC. The architecture, JavaScript, frontend and backend are discussed. }
+{This document is about the Project MBC-Ping-Pong, which is made for the elective course Modernebrowserkommunikation at HAW-Hamburg. This document is about the Backend and the thus implemented communication module. }
 
 \newpage
 \singlespacing
@@ -139,13 +139,9 @@
 %% include chapter file (chapter1.tex)
 %%\include{chapter1}
 
-\include{Architektur}
-
-\include{JavaScript}
 
 \include{Backend}
 
-\include{Frontend}
 See also \cite{sample_bib}.
 
 
@@ -162,7 +158,7 @@ See also \cite{sample_bib}.
 \typeout{===== Section: literature}
 %% read the documentation for customizing the style
 \bibliographystyle{dinat}
-\bibliography{MBC-Ping-Pong}
+\bibliography{MBC-Ping-Pong_Backend_only}
 
 \typeout{===== Section: nomenclature}
 %% uncomment if a TOC entry is needed
