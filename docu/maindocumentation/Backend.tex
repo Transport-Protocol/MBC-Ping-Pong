@@ -204,10 +204,10 @@ also einer) eingeordnet werden.
 Hierbei unterscheiden sich die Clients in ihrem Kommunikationsmodus:
 \begin{description}
 \item[Single]
-Ein Client mit dem "Single" Modus pflegt nur eine direkte WebRTC Verbindung.
+Ein Client mit dem ''Single'' Modus pflegt nur eine direkte WebRTC Verbindung.
 
 \item[Multi]
-Ein Client mit dem "Multi" Modus pflegt mehrere direkte WebRTC Vebindungen 
+Ein Client mit dem ''Multi'' Modus pflegt mehrere direkte WebRTC Vebindungen 
 gleichzeitig und agiert zwischen den ganzen Peers als "Host".
 \end{description}
 
@@ -253,7 +253,7 @@ Verwendet wird hierzu ein "Assoziativer" Array, näheres in \ref{associativearra
 \subsection{Identifizierung der Peers}
 Die Peers selber erhalten in allen Signalling-Messages ein Attribut, über 
 welches sie den Ursprung ermitteln können, um so Signale Peers zuordnen zu 
-können. Diese "ID" wird vom Server vergeben und entspricht einfach nur der 
+können. Diese \"ID'' wird vom Server vergeben und entspricht einfach nur der 
 Socket ID welche die einzelnen Clients in Verbindung zum Server haben.
 Da nur der Server diese ID vergibt ist diese auch eindeutig.
 
@@ -304,7 +304,7 @@ diese an den Signalisierenden Single-Peer.
 \begin{description}
 \item[Multi-Peer]
 Erhält ein Multi-Peer einen ICE-Candidate wird dieser der Passenden Verbindung 
-hinzugefügt und löst das "negotationneeded"-Event aus, welches ein neues Offer 
+hinzugefügt und löst das ''negotiationneeded''-Event aus, welches ein neues Offer 
 in Form von SDP Signalisiert.
 
 \item[Single-Peer]
@@ -411,10 +411,10 @@ Im allgemeinen gibt es zwei Klassen von Peers, die ein Client nutzen kann.
 \begin{quote}
   \begin{description}
   \item[Single-Peer]
-  Ein Client der den Modus "Single-Peer" nutzt gibt damit an, dass er maximal eine direkte Verbindung zu einem anderen Peer pflegen möchte.
+  Ein Client der den Modus ''Single-Peer'' nutzt gibt damit an, dass er maximal eine direkte Verbindung zu einem anderen Peer pflegen möchte.
 
   \item[Multi-Peer]
-  Ein Client der den Modus "Multi-Peer" nutzt gibt damit an, dass er eine oder mehr direkte Verbindungen zu Peers pflegen möchte.
+  Ein Client der den Modus ''Multi-Peer'' nutzt gibt damit an, dass er eine oder mehr direkte Verbindungen zu Peers pflegen möchte.
   \end{description}
 \end{quote}
 
@@ -494,7 +494,7 @@ Es lassen sich durch die Verwendung der zwei Modi verschiedene Topologien bilden
 \label{backfig10}
 \end{figure}
 In Abbildung \ref{backfig10} sind die Clientseitigen Abhängigkeiten für das Modul zu sehen.
-Die Client-Implementation von socket.io "socket.io-client" wird für das Signalling benötigt.
+Die Client-Implementation von socket.io ''socket.io-client'' wird für das Signalling benötigt.
 Zur Nutzung des Moduls muss dieses außerdem "required" werden. Hierzu wird der Pfad zu dem Modul als Parameter an das require übergeben und der Client Export genutzt.
 
 
@@ -693,16 +693,16 @@ Ablauf eines jeden Tests:
 Es wurde ein Node.JS Server mit Minimalimplementation des Moduls gestartet. (Für Minimalimplementation siehe \ref{serveruse})
 
 \item
-Ein einzelner "Multi-Peer" wurde gestartet. Dieser tritt einem Testraum bei.
+Ein einzelner ''Multi-Peer'' wurde gestartet. Dieser tritt einem Testraum bei.
 
 \item
-Mit Hilfe eines kleinen Test-Programms wurde eine gewisse Anzahl an "Single-Peer" Sendern gestartet und via WebRTC mit dem "Multi-Peer" Host im gleichen Raum verbunden.
+Mit Hilfe eines kleinen Test-Programms wurde eine gewisse Anzahl an ''Single-Peer'' Sendern gestartet und via WebRTC mit dem "Multi-Peer" Host im gleichen Raum verbunden.
 
 \item
 Nachdem alle Peers erfolgreich verbunden sind wird eine Startzeit des Tests gespeichert.
 
 \item
-Die Sender fangen nun an in einer gewissen Frequenz bestimmt oft eine Nachricht an den "Multi-Peer" zu senden.
+Die Sender fangen nun an in einer gewissen Frequenz bestimmt oft eine Nachricht an den ''Multi-Peer'' zu senden.
 Die Payload dieser Nachricht besteht aus:
   \begin{description}
   \item[ID]
@@ -718,10 +718,10 @@ Die Payload dieser Nachricht besteht aus:
 Aus ID und Index lässt sich eine Nachricht exakt zuweisen.
 
 \item
-Empfängt der "Multi-Peer" eine Nachricht schickt er diese einfach direkt zum Absender zurück.
+Empfängt der ''Multi-Peer'' eine Nachricht schickt er diese einfach direkt zum Absender zurück.
 
 \item
-Empfangt einer der "Single-Peer" eine Nachricht, tragen sie in ein Ergebnisobjekt den Sende- und Empfangszeitpunkt ein.
+Empfangt einer der ''Single-Peer'' eine Nachricht, tragen sie in ein Ergebnisobjekt den Sende- und Empfangszeitpunkt ein.
 
 \item
 Sind alle Sender mit ihren Sende-Iterationen durch und es wurde die gleiche Anzahl an Nachrichten wieder empfangen (Anzahl der Ergebnisobjekte), wird wieder ein Zeitstempel generiert.
@@ -773,12 +773,12 @@ Sobal das weiche Kriterium nicht mehr erfüllt ist, ist ein Erfolg im allgemeine
 Bei diesen Tests sollte berücksichtigt werden, dass der Verarbeitungsaufwand nach erhalt der Nachrichten sich lediglich auf das richtige weiterleiten der Nachricht beschränkt. 
 Dabei wird die Nachricht an eine Callback Funktion weitergereicht und dann eine neue Nachricht an einen Peer versendet. 
 Tragend für die Performance ist hier die Verwaltung der Verbindungen.
-Alle Verbindungen werden in "assoziativen" Arrays verwaltet. Da ein "assoziatives" Array in JavaScript eigentlich nicht existiert, sind dies Objekte mit Attributen. 
+Alle Verbindungen werden in ''assoziativen'' Arrays verwaltet. Da ein ''assoziatives'' Array in JavaScript eigentlich nicht existiert, sind dies Objekte mit Attributen. 
 
 
 
 \subsubsection{Lookup}
-Je nach Browser kann das "lookup" verschiedene Aufwände annehmen.
+Je nach Browser kann das ''lookup'' verschiedene Aufwände annehmen.
 Bei modernen Browsern kann von einem Worst-Case von \mathcal O\left( log_{ 2 }\left( N \right) \right) ausgegangen werden.
 Bei modernen Browsern kann von einem Best-Case von \mathcal O\left( 1 \right) ausgegangen werden.
 Bei älteren Browsern kann von einem Worst-Case von \mathcal O\left( N \right) ausgegangen werden.
@@ -786,7 +786,7 @@ Bei älteren Browsern kann von einem Worst-Case von \mathcal O\left( N \right) a
 
 
 \subsubsection{Zuweisung}
-Zuweisung von Werten auf bereits bestehende Attribute von Objekten fällt unter gleichen Aufwand wie "lookup".
+Zuweisung von Werten auf bereits bestehende Attribute von Objekten fällt unter gleichen Aufwand wie ''lookup''.
 Zuweisung von Werten auf neue Attribute hat einen Aufwand von \mathcal O\left( 1 \right) im Best-Case bis \mathcal O\left( N \right) im Worst-Case je Browserimplementation. In modernen Browsern ist von \mathcal O\left( 1 \right) auszugehen.
 
 
@@ -836,8 +836,8 @@ Auf der X-Achse ist die Anzahl der Sender dargestellt.
 Die Balken stellen die maximale Verzögerung dar. 
 Die gelbe Linie stellt die durchschnittliche Verzögerung dar.
 Die rote Linie stellt die Sende-Verzögerung pro Nachricht dar.
-Befindet sich ein Balken über der roten Linie ist das "Hard"-Kriterium nicht mehr erfüllt.
-Befindet sich die gelbe Linie über der roten Linie ist das "Soft"-Kriterium nicht mehr erfüllt.
+Befindet sich ein Balken über der roten Linie ist das ''Hard''-Kriterium nicht mehr erfüllt.
+Befindet sich die gelbe Linie über der roten Linie ist das ''Soft''-Kriterium nicht mehr erfüllt.
 
 
 
@@ -849,24 +849,24 @@ Befindet sich die gelbe Linie über der roten Linie ist das "Soft"-Kriterium nic
 \label{backfig15}
 \end{figure}
 In Abbilding \ref{backfig15} ist das Ergebnis noch einmal Tabellarisch dargestellt.
-Zu erkennen ist, dass das "Hard"-Kriterium noch bis 100 Peers erfüllt ist. Dies entsrpicht einem Nachrichtendurchsatz von 2000 Nachrichten pro Sekunde. Das "Soft"-Kriterium ist noch bis 125 Peers erfüllt. Dies entspricht einem Nachrichtendurchsatz von 2500 Nachrichten pro Sekunde. Markante Punkte:
+Zu erkennen ist, dass das ''Hard''-Kriterium noch bis 100 Peers erfüllt ist. Dies entsrpicht einem Nachrichtendurchsatz von 2000 Nachrichten pro Sekunde. Das ''Soft''-Kriterium ist noch bis 125 Peers erfüllt. Dies entspricht einem Nachrichtendurchsatz von 2500 Nachrichten pro Sekunde. Markante Punkte:
 \begin{quote}
   \begin{description}
   \item[25 Sender]
   Bei der Steigerung von 15 auf 25 Sender steigt die maximale Verzögerung nicht, jedoch die durchschnittliche Verzögerung um 53%.
 
   \item[75 Sender]
-  Bei 75 Sendern erreicht die maximale Verzögerung zum ersten mal mehr als 50\% des "Soft"-Kriterium.
+  Bei 75 Sendern erreicht die maximale Verzögerung zum ersten mal mehr als 50\% des ''Soft''-Kriterium.
 
   \item[125 Sender]
-  Bei 125 Sendern ist das "Hard"-Kriterium nicht mehr erfüllt.
+  Bei 125 Sendern ist das ''Hard''-Kriterium nicht mehr erfüllt.
 
   \item[150 Sender]
-  Bei 150 Sendern ist das "Soft"-Kriterium nicht mehr erfüllt.
+  Bei 150 Sendern ist das ''Soft''-Kriterium nicht mehr erfüllt.
   \end{description}
 \end{quote}
 
-Bezogen auf das Ping-Pong Projekt, welches Spieler-/Peerzahlen unter 10 nutzt, sind keine Auffälligkeiten zu erkennen und sowohl "Soft"- als auch "Hard"-Kriterium sind erfüllt.
+Bezogen auf das Ping-Pong Projekt, welches Spieler-/Peerzahlen unter 10 nutzt, sind keine Auffälligkeiten zu erkennen und sowohl ''Soft''- als auch ''Hard''-Kriterium sind erfüllt.
 
 
 
@@ -910,8 +910,8 @@ Auf der X-Achse ist die Anzahl der Sender dargestellt.
 Die Balken stellen die maximale Verzögerung dar. 
 Die gelbe Linie stellt die durchschnittliche Verzögerung dar.
 Die rote Linie stellt die Sende-Verzögerung pro Nachricht dar.
-Befindet sich ein Balken über der roten Linie ist das "Hard"-Kriterium nicht mehr erfüllt.
-Befindet sich die gelbe Linie über der roten Linie ist das "Soft"-Kriterium nicht mehr erfüllt.
+Befindet sich ein Balken über der roten Linie ist das ''Hard''-Kriterium nicht mehr erfüllt.
+Befindet sich die gelbe Linie über der roten Linie ist das ''Soft''-Kriterium nicht mehr erfüllt.
 
 
 
@@ -923,7 +923,7 @@ Befindet sich die gelbe Linie über der roten Linie ist das "Soft"-Kriterium nic
 \label{backfig17}
 \end{figure}
 In Abbildung \ref{backfig17} ist das Ergebnis noch einmal Tabellarisch dargestellt.
-Zu erkennen ist, dass auch bei 250 Sendern noch die "Soft"- und "Hard"-Kriterien erfüllt sind.
+Zu erkennen ist, dass auch bei 250 Sendern noch die ''Soft''- und ''Hard''-Kriterien erfüllt sind.
 Ein Test mit mehr Peers stellte sich als problematisch da, da der Browser je nach Implementation bei einer großen Anzahl gleichzeitiger Verbindungen anfängt einzelne Verbindungen, die eine Weile nicht genutzt wurden, zu schließen. Dies trat auch auf, da die Initialisierungsphase des Tests diese Inaktivitätsschwälle überschritt. 
 Gleichmäßige Testdurchläufe waren nicht mehr möglich.
 Bester Einzeldurchlauf: 950 Peers. Inkonsistent.
@@ -970,8 +970,8 @@ Auf der X-Achse ist die Anzahl der Sender dargestellt.
 Die Balken stellen die maximale Verzögerung dar. 
 Die gelbe Linie stellt die durchschnittliche Verzögerung dar.
 Die rote Linie stellt die Sende-Verzögerung pro Nachricht dar.
-Befindet sich ein Balken über der roten Linie ist das "Hard"-Kriterium nicht mehr erfüllt.
-Befindet sich die gelbe Linie über der roten Linie ist das "Soft"-Kriterium nicht mehr erfüllt.
+Befindet sich ein Balken über der roten Linie ist das ''Hard''-Kriterium nicht mehr erfüllt.
+Befindet sich die gelbe Linie über der roten Linie ist das ''Soft''-Kriterium nicht mehr erfüllt.
 
 
 
@@ -983,15 +983,15 @@ Befindet sich die gelbe Linie über der roten Linie ist das "Soft"-Kriterium nic
 \label{backfig19}
 \end{figure}
 In Abbildung \ref{backfig19} sind die Ergebnisse noch einmal Tabellarisch dargestellt.
-Zu erkennen ist, dass das "Hard"-Kriterium schon bei 20 Sendern nicht mehr erfüllt ist.
-Außerdem zu erkennen ist, dass ab 35 Sendern auch das "Soft"-Kriterium nicht mehr erfüllt ist.
+Zu erkennen ist, dass das ''Hard''-Kriterium schon bei 20 Sendern nicht mehr erfüllt ist.
+Außerdem zu erkennen ist, dass ab 35 Sendern auch das ''Soft''-Kriterium nicht mehr erfüllt ist.
 
 Markante Punkte:
 
 \begin{quote}
   \begin{description}
   \item[20 Sender]
-  Bei 20 Sendern ist das "Hard"-Kriterium nicht mehr erfüllt, die durchschnittliche Verögerung aber noch sehr gut.
+  Bei 20 Sendern ist das ''Hard''-Kriterium nicht mehr erfüllt, die durchschnittliche Verögerung aber noch sehr gut.
 
   \item[25 Sender]
   Im Gegensatz zu 20 Sendern, hat sich bei 25 Sendern die Maximale Verzögerung um 245\% auf 38ms erhöht. Anzeichen für einen zeitweisen Nachrichtenstau.
@@ -1007,7 +1007,7 @@ Markante Punkte:
   \end{description}
 \end{quote}
 
-Sofern das "Hard"-Kriterium kein muss ist, können solche Mengen an Nachrichten noch bis 30 Sender verarbeitet werden.
+Sofern das ''Hard''-Kriterium kein muss ist, können solche Mengen an Nachrichten noch bis 30 Sender verarbeitet werden.
 
 
 
@@ -1044,7 +1044,7 @@ Backup funktionalität über WebSocket. Grund ist, dass ein Test in verschiedene
 \begin{itemize}
 \item
 Angesichts der verschiedenen möglichen Topologien gibt es für die Peers nur zwei verschiedene Verhalten. 
-Entweder sie pflegen nur eine Verbindune, oder mehrere.
+Entweder sie pflegen nur eine Verbindung, oder mehrere.
 Da dieses Verhalten bereits modelliert ist, ist die implementation neuer Topologien auf Serverseite zu geschehen, welche die Räume verwaltet.
 
 \item
@@ -1065,7 +1065,7 @@ Diese Nutzer-Implementation könnte dann auch die Teilvermaschung ermöglichen.
 
 \section{Fazit der Arbeit am Modul}
 Die große Fehlermenge anderer Module zeigt, wie komplex ein genau definiertes Thema sein kann.
-Etliche verschiedene kleine Abweichungen der Browserspezifischen WebRTC-Implementationen führen dazu, dass auf viele "Marotten" eingegangen werden muss.
+Etliche verschiedene kleine Abweichungen der Browserspezifischen WebRTC-Implementationen führen dazu, dass auf viele ''Marotten'' eingegangen werden muss.
 Auch wenn dieses Modul einen bis dato guten Ansatz liefert, fehlen noch viele bereits beschriebene Features, um dieses Modul ein vollständiges nennen zu können.
 Die Erstellung eines solchen Moduls ist vom Umfang her größer einzuordnen, als anfänglich erwegt. 
 Viele Refactoringschritte wurden nicht durchgeführt, dar der Zeitliche Aspekt dieses Projektes dies nicht mehr zu ließ.
