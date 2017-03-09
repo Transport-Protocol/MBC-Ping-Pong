@@ -17,6 +17,11 @@ var Wall = function (game, sprite, from, to) {
 
   // Vergrößere die BoundingBox um tunneling zu minimieren
   this.body.setRectangle(64, this.height, -32, 0);
+
+  this.move=function(from,to) {
+    this.body.x = from.x + Math.sign(to.x - from.x) * (Phaser.Math.difference(from.x, to.x) / 2);
+    this.body.y = from.y + Math.sign(to.y - from.y) * (Phaser.Math.difference(from.y, to.y) / 2);
+  }
 };
 
 Wall.prototype = Object.create(Phaser.Sprite.prototype);

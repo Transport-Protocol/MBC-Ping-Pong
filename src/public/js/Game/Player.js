@@ -41,13 +41,13 @@ var Player = function (game, fieldInfo, ball, sprite, frame) {
         _fieldInfo.opponentScoreText.text = "" + this.getLives();
         if (this.getLives() == 0) {
           fieldInfo.pointWall.renderable = true;
+          fieldInfo.pointWall.move(fieldInfo.path.from, fieldInfo.path.to);
           this.destroy();
           if (--_game.properties.remainingPlayers <= 1) {
             _game.state.start("GameEnded", false, false);
           }
-        } else {
-          _ball.reset();
         }
+        _ball.reset();
       }
     }
   };
